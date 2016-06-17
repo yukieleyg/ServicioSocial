@@ -1,0 +1,106 @@
+body
+{
+	border-radius: 5px;
+	font-family: "Times New Roman";
+	margin: 0 auto;
+	max-width: 1024px;
+}
+body header img
+{
+	float: right;
+	margin: -100px 30px;
+	width: 100px;
+}
+body header h1
+{
+	margin: 10px 0px 0px 30px;
+}
+h1{
+	text-align: center;
+	font-size: 24px;
+}
+nav{
+	display:none;
+	color:black;
+}
+section 
+{
+	text-align: center;
+}
+table tr th{
+	text-align: center;
+}
+#sep{
+	position:absolute;
+	width: 315px;
+	float:left;
+
+}
+#entradaUsuario{
+	font-family: "Helvetica";
+}
+#mostrarClave{
+	bottom: 60px; 
+	left: 160px;
+}
+#titulo-entrar{
+	color:white;
+}
+#txtDocente, #txtClave{
+	border-bottom: 1px solid purple;
+}
+#user{
+	display:none;
+	font-family: "Helvetica";
+	font-weight: bold;
+	margin-bottom: -15px;
+	text-align: right;
+	width: 220px;
+}
+#user a{
+	width: 100%;
+}
+#user i{
+	vertical-align: bottom;
+}
+.entradaUsuario
+{
+	margin: 0 auto;
+	margin-top: 80px;
+	width: 350px;
+}
+.gruposDocente{
+	display: none;
+	margin-left: 60px;
+	margin-top: 120px;
+	width:900px;
+}
+
+.DocenteParciales{
+	display: none;
+	margin-left: 60px;
+	margin-top: 120px;
+	width:900px;
+}
+
+.DocenteUnidad{
+	display: none;
+	margin-left: 60px;
+	margin-top: 120px;
+	width:900px;
+}
+.page-header{
+	margin-top: 70px;
+}
+.titulotabla{
+	font-size: 20px;
+}
+
+.fechaseguimiento
+{
+	display: none;
+	margin-left: 60px;
+	margin-top: 120px;
+	width:900px;
+}
+}
