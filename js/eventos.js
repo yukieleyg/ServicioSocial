@@ -34,5 +34,6 @@
 		
 	}
 
-
+	$("#btnEntrar").on("click",entrar);
+}
 $(document).on("ready",inicio);
