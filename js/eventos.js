@@ -38,7 +38,19 @@
 		}
 		
 	}
+	var muestraClave = function(){
+		var val = $("#mostrarClave").find("i");
+		if(val.html() == "visibility"){
+			$("#txtClave").attr("type","password");
+			val.html("visibility_off");
+		}else{
+			$("#txtClave").attr("type","text");
+			val.html("visibility");
+		}
 
+	}
+
+	$("#mostrarClave").on("click",muestraClave);
 	$("#btnEntrar").on("click",entrar);
 }
 $(document).on("ready",inicio);
