@@ -49,7 +49,11 @@
 		}
 
 	}
+	var muestraAlumnos = function(){
+		window.location="/listadoalumnos.html";
 
+	}
+	$("#listadoAlumnos").on("click",muestraAlumnos);
 	$("#mostrarClave").on("click",muestraClave);
 	$("#btnEntrar").on("click",entrar);
 }
