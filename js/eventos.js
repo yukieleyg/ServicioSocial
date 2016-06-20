@@ -4,16 +4,21 @@
 	var clave="";
 
 	var entrar = function(){
-		debugger
+		
 
 		usuario = $("#txtUsuario").val();
 		clave   = $("#txtClave").val();
 
-		if(docente=="" || clave==""){
+		var parametros ="opc=validaentrada"+
+							"&usuario="+usuario+
+							"&clave="+clave+
+							"&id="+Math.random();
+
+		if(usuario=="" || clave==""){
 			alert("Complete los campos para acceder");
 		}else{
 			$.ajax({
-				type: "GET",
+				type: "POST",
 				dataType: "json",
 				url: "php/utilerias.php",
 				data: parametros,
