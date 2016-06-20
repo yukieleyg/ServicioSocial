@@ -1,7 +1,7 @@
 <?php
 function conexionBD(){
-	$cn= mysql_connect("localhost","root","");
-	mysql_select_db("serviciosocial");
+	$cn= mysql_connect("itculiacan.edu.mx","sieapibduser","B5fa4x_7*.*");
+	mysql_select_db("sieapibd");
 	return $cn;
 }
 function validaentrada()
@@ -9,13 +9,13 @@ function validaentrada()
 	$respuesta=false;
 	$nombre		="";
 	$usuario	= "'".$_POST["usuario"]."'";
-	$clave		= "'".md5($_POST["clave"])."'";
+	$clave		= "'".$_POST["clave"]."'";
 	$cn 		= conexionBD();
-	$qryvalida	= sprintf("select * from usuarios where usuario=%s and clave=%s limit 1",$usuario,$clave);
+	$qryvalida	= sprintf("select * from DALUMN where ALUCTR=%s and ALUPAS=%s limit 1",$usuario,$clave);
 	$res		= mysql_query($qryvalida);
 
 	if($row= mysql_fetch_array($res)){
-		$nombre		= $row["nombre"];
+		$nombre		= $row["ALUNOM"];
 		$respuesta	=	true;
 		
 	}
