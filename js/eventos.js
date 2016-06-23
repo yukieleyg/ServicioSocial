@@ -4,8 +4,6 @@
 	var clave="";
 
 	var entrar = function(){
-		
-
 		usuario = $("#txtUsuario").val();
 		clave   = $("#txtClave").val();
 
@@ -24,12 +22,20 @@
 				data: parametros,
 
 				success: function(data){
-
 					if(data.respuesta){
-						$(".entradaUsuario").hide("slow");
-						$("#barra").show("slow");
-						$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
-						$("#user").show("slow");
+						switch(data.tipo){
+							case '1':
+								alert("admin");
+								$(".entradaUsuario").hide("slow");
+								$("#barra").show("slow");
+								$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
+								$("#user").show("slow");
+								break;
+							case '2':
+								alert("dependencia");break;
+							case '3':
+								alert("alumno");break;
+						}
 					}else{
 						alert("Usuario no registrado");
 					}
@@ -49,11 +55,7 @@
 		}
 
 	}
-	var muestraAlumnos = function(){
-		window.location="/listadoalumnos.html";
 
-	}
-	$("#listadoAlumnos").on("click",muestraAlumnos);
 	$("#mostrarClave").on("click",muestraClave);
 	$("#btnEntrar").on("click",entrar);
 }

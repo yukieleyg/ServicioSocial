@@ -20,6 +20,7 @@
 			</div>	
 		</div>
 		<div class="right" id="user"></div>
+		<?php include 'encabezado.php';?>
 		<nav class="navbar navbar-default left" id="barra">
 			<ul>
 				<li>
