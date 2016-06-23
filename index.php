@@ -9,38 +9,27 @@
 	<link rel="stylesheet" href="css/estilos.css">
 </head>
 <body background="img/fondo.jpg">
-	<header>
-		<div class='page-header'>
-			<div id="titulo">
-				<h1>SERVICIO SOCIAL<br><small>INSTITUTO TECNOLÓGICO DE CULIACÁN</small></h1>	
-			</div>
-			<div id="logoitc">
-				<img src="img/logoitc.png" alt="Instituto Tecnológico de Culiacán" id="logo">
-				<img src="img/sep.png" id="sep">
-			</div>	
-		</div>
-		<div class="right" id="user"></div>
-		<nav class="navbar navbar-default left" id="barra">
-			<ul>
-				<li>
-					<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="listadoAlumnos"><i class="material-icons right">supervisor_account</i>Alumnos</a>
-				</li>
-				<li>
-					<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestrafecha"><i class="material-icons right">today</i>Dependencias</a>
-				</li>
-				<li>
-					<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestraParciales"><i class="material-icons right">today</i>Programas</a>
+	<?php include 'encabezado.php';?>
+	<nav class="navbar navbar-default left" id="barra">
+		<ul>
+			<li>
+				<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="listadoAlumnos" href="admin/listadoalumnos.html"><i class="material-icons right">supervisor_account</i>Alumnos</a>
+			</li>
+			<li>
+				<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestrafecha"><i class="material-icons right">today</i>Dependencias</a>
+			</li>
+			<li>
+				<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestraParciales"><i class="material-icons right">today</i>Programas</a>
 
-				</li>
-				<li>
-					<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestraUnidades"><i class="material-icons right">today</i>Evaluaciones</a>
-				</li>
-				<li class="right">
-					<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" href="index.html"><i class="material-icons right">exit_to_app</i>Salir</a>
-				</li>
-			</ul>
-		</nav>
-	</header>
+			</li>
+			<li>
+				<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" id="muestraUnidades"><i class="material-icons right">today</i>Evaluaciones</a>
+			</li>
+			<li class="right">
+				<a class="waves-effect waves-teal btn-flat grey-text text-darken-1" href="index.html"><i class="material-icons right">exit_to_app</i>Salir</a>
+			</li>
+		</ul>
+	</nav>
 	<section>
 		<div class="entradaUsuario card-panel" id="entradaUsuario">
 			<div class="card-panel  purple darken-1">
