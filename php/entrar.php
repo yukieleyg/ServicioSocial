@@ -11,8 +11,10 @@ function conexionLocal(){
 }
 function validaentrada()
 {
-	$respuesta=false;
-	$nombre		="";
+	$respuesta	= false;
+	$creditos 	= false;
+	$porcentaje	= 0.0;
+	$nombre		= "";
 	$usuario	= "'".$_POST["usuario"]."'";
 	$clave		= "'".$_POST["clave"]."'";
 	$cn 		= conexionBD();
@@ -24,6 +26,18 @@ function validaentrada()
 		$nombre		= $row["ALUNOM"];
 		$respuesta	= true;
 		$tipo		= 3;
+
+			$qryvalida 	= sprintf("select alm.aluctr, TRUNCATE((inf.calcac/p.placre),2) AS PORC from DALUMN alm INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR inner join DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE where alm.ALUCTR=%s",$usuario);
+			$res = mysql_query($qryvalida);
+
+				if($row= mysql_fetch_array($res)){
+					$porcentaje = $row["PORC"];
+					if($porcentaje>0.70){
+						$creditos=true;
+					}
+				}
+
+
 	}else{
 		$clave		= "'".md5($_POST["clave"])."'";
 		$cn 		= conexionLocal();
@@ -36,7 +50,7 @@ function validaentrada()
 		}
 
 	}
-	$arrayJSON = array('respuesta' => $respuesta,'nombre' => $nombre, 'tipo' => $tipo);
+	$arrayJSON = array('respuesta' => $respuesta, 'creditos'=> $creditos,'nombre' => $nombre, 'tipo' => $tipo);
 	print json_encode($arrayJSON);
 }
 

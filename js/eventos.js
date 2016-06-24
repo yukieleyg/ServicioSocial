@@ -33,8 +33,15 @@
 								break;
 							case '2':
 								alert("dependencia");break;
-							case '3':
-								alert("alumno");break;
+							case 3:
+								if(data.creditos){
+									alert("alumno");
+									//programacion para cuando el alumno pueda a entrar al sistema
+									break;
+								}else{
+									alert("No cuentas con los créditos suficientes");
+								}break;
+								
 						}
 					}else{
 						alert("Usuario no registrado");
