@@ -61,7 +61,6 @@
 		}
 
 	}
-
 	$("#mostrarClave").on("click",muestraClave);
 	$("#btnEntrar").on("click",entrar);
 }

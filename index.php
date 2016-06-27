@@ -6,7 +6,9 @@
 	<link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="css/dropdown.css">
 	<link rel="stylesheet" href="css/estilos.css">
+
 </head>
 <body background="img/fondo.jpg">
 	
