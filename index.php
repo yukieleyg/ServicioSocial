@@ -35,7 +35,11 @@
 		</div>
 
 	</section>
+	<section>	
+		<?php include 'adminAlumnosVista.php';?>
+	</section>
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="js/eventos.js"></script>
+	<script src="js/admin.js"></script>
 </body>
 </html>

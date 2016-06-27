@@ -44,9 +44,16 @@ function validaentrada()
 		$qryvalida 	= sprintf("select * from usuarios where cveusuario=%s and clave=%s limit 1", $usuario,$clave);
 		$res 		= mysql_query($qryvalida);
 		if($row = mysql_fetch_array($res)){
-			$nombre 	= $row["cveusuario"];
 			$respuesta 	= true;
 			$tipo		= $row["tipousuario"];
+			if($tipo == 2){
+				$qrynombred = sprintf("select * from dependencias where cveusuario_1=%s limit 1", $usuario);
+				$res2 		= mysql_query($qrynombred);
+				$row2		= mysql_fetch_array($res2);
+				$nombre		= $row2["nomdependencia"]; 
+			}else{
+				$nombre 	= $row["cveusuario"];
+			}
 		}
 
 	}
@@ -64,6 +71,4 @@ switch ($opc) {
 		# code...
 		break;
 }
-
-
 ?>

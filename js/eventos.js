@@ -25,14 +25,13 @@
 					if(data.respuesta){
 						switch(data.tipo){
 							case '1':
-								alert("admin");
 								$(".entradaUsuario").hide("slow");
 								$("#barra").show("slow");
 								$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
 								$("#user").show("slow");
 								break;
 							case '2':
-								alert("dependencia");break;
+								alert("dependencia" + data.nombre);break;
 							case 3:
 								if(data.creditos){
 									alert("alumno");
