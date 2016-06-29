@@ -48,7 +48,7 @@ table tr th{
 	bottom: 60px; 
 	left: 160px;
 }
-#tablaSolicitudes{
+#divSolicitudes{
 	display: none;
 }
 #tablaSolicitudes tr{

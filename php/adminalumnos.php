@@ -5,7 +5,6 @@ function muestraSolicitudes(){
 		$cn0		= conexionLocal();
 		$qryvalida0	= sprintf("select cveusuario_1,estado,cveprograma_1 from solicitudes");
 		$res0		= mysql_query($qryvalida0);
-		$cn 		= conexionBD();
 		$tabla		= "";
 		$tabla		.= "<thead><tr>";
 		$tabla		.= "<th>No. de Control</th>";
@@ -14,15 +13,23 @@ function muestraSolicitudes(){
 		$tabla		.=	"<th>Programa</th>";
 		$tabla		.=	"</thead></tr>";
 
-		while($row0= mysql_fetch_array($res0)){
-			$cveusuario = $row0["cveusuario_1"];
+		while($row0 = mysql_fetch_array($res0)){
+			$cveusuario  = $row0["cveusuario_1"];
+			$cveprograma = $row0["cveprograma_1"];
+			$cn1		= conexionLocal();
+			$qryvalida1	= sprintf("select * from programas");
+			$res1		= mysql_query($qryvalida1);
+			$row1		= mysql_fetch_array($res1);
+
+
+
+			$cn 		= conexionBD();
 			$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
 			$res		= mysql_query($qryvalida);
 			$row 		= mysql_fetch_array($res);
 			$tabla		.= "<tr>";
 			$tabla		.= "<td>".$row["ALUCTR"]."</td>";
 			$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
-			#$tabla		.= "<td>".$row0["cveprograma_1"]."</td>";
 			if($row0["estado"]==0){
 				$tabla		.= "<td>"."PENDIENTE"."</td>";
 			}else if($row0["estado"]==1){
@@ -30,11 +37,9 @@ function muestraSolicitudes(){
 			}else{
 				$tabla		.="<td>"."RECHAZADO"."</td>";
 			}
-			$cveprograma = $row0["cveprograma_1"];
-			$qryPrgma	 = sprintf("select nombre from programas where cveprograma = %s",$cveprograma);
-			$programa	 = mysql_query($qryPrgma);
-			#$row2		 = mysql_fetch_array($programa);
-			#$tabla		.= "<td>".$row2["nombre"]."</td>";
+			
+
+			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla		.= "</tr>";
 			$respuesta = true;
 		}

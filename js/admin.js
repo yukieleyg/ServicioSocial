@@ -11,9 +11,10 @@ var admin = function (){
 
 			success: function(data){
 				if(data.respuesta){
+
 					$("#tablaSolicitudes").html(" ");
 					$("#tablaSolicitudes").append(data.tabla);
-					$("#tablaSolicitudes").show();
+					$("#divSolicitudes").show();
 				}
 				
 			}
