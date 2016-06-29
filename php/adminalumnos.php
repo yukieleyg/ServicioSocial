@@ -1,18 +1,18 @@
 <?php
 	require_once('entrar.php');
-function mostrarExpedientes(){
+function muestraSolicitudes(){
 		$respuesta	= false;
 		$cn0		= conexionLocal();
-		$qryvalida0	= sprintf("select cveusuario_1,estado from solicitudes");
+		$qryvalida0	= sprintf("select cveusuario_1,estado,cveprograma_1 from solicitudes");
 		$res0		= mysql_query($qryvalida0);
 		$cn 		= conexionBD();
 		$tabla		= "";
-		$tabla		.= "<tr>";
+		$tabla		.= "<thead><tr>";
 		$tabla		.= "<th>No. de Control</th>";
 		$tabla		.=	"<th>Nombre</th>";
-		#$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Estatus</th>";
-		$tabla		.=	"</tr>";
+		$tabla		.=	"<th>Programa</th>";
+		$tabla		.=	"</thead></tr>";
 
 		while($row0= mysql_fetch_array($res0)){
 			$cveusuario = $row0["cveusuario_1"];
@@ -21,9 +21,20 @@ function mostrarExpedientes(){
 			$row 		= mysql_fetch_array($res);
 			$tabla		.= "<tr>";
 			$tabla		.= "<td>".$row["ALUCTR"]."</td>";
-			$tabla		.= "<td>".$row["ALUNOM"]."</td>";
-			$tabla		.= "<td>".$row0["estado"]."</td>";
-			#$tabla		.= "<td>".$row["ALUNOM"]."</td>";
+			$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+			#$tabla		.= "<td>".$row0["cveprograma_1"]."</td>";
+			if($row0["estado"]==0){
+				$tabla		.= "<td>"."PENDIENTE"."</td>";
+			}else if($row0["estado"]==1){
+				$tabla		.="<td>"."ACEPTADO"."</td>";
+			}else{
+				$tabla		.="<td>"."RECHAZADO"."</td>";
+			}
+			$cveprograma = $row0["cveprograma_1"];
+			$qryPrgma	 = sprintf("select nombre from programas where cveprograma = %s",$cveprograma);
+			$programa	 = mysql_query($qryPrgma);
+			#$row2		 = mysql_fetch_array($programa);
+			#$tabla		.= "<td>".$row2["nombre"]."</td>";
 			$tabla		.= "</tr>";
 			$respuesta = true;
 		}
@@ -34,8 +45,8 @@ function mostrarExpedientes(){
 
 $opc= $_POST["opc"];
 switch ($opc){
-	case 'mostrarExpedientes':
-		mostrarExpedientes();
+	case 'muestraSolicitudes':
+		muestraSolicitudes();
 		break;
 	
 	default:

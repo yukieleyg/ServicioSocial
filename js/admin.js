@@ -1,8 +1,8 @@
 var admin = function (){
 	var parametros="";
 	
-	var alumnosExpedientes = function(){
-		var parametros ="opc=mostrarExpedientes";
+	var alumnosSolicitudes = function(){
+		var parametros ="opc=muestraSolicitudes";
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -11,8 +11,9 @@ var admin = function (){
 
 			success: function(data){
 				if(data.respuesta){
-					$("#tablaExpedientes").append(data.tabla);
-					$("#tablaExpedientes").show();
+					$("#tablaSolicitudes").html(" ");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#tablaSolicitudes").show();
 				}
 				
 			}
@@ -20,6 +21,6 @@ var admin = function (){
 
 		
 	}
-	$("#muestraAlumnos").on("click",alumnosExpedientes);
+	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 }
 $(document).on("ready",admin);

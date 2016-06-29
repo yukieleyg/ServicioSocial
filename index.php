@@ -13,8 +13,9 @@
 <body background="img/fondo.jpg">
 	
 		<?php include 'encabezado.php';?>
-		<?php include '/datos/admin/admin_nav.php';?>
-	
+		<div id="divBarra">	
+				<?php include '/datos/admin/admin_nav.php';?>
+		</div>
 	<section>
 		<div class="entradaUsuario card-panel" id="entradaUsuario">
 			<div class="card-panel  purple darken-1">

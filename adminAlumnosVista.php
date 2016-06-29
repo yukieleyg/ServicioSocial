@@ -1,4 +1,4 @@
-<div class="card-panel" id="divExpedientes">
-	<table id="tablaExpedientes">
+<div class="card-panel" id="divSolicitudes">
+	<table id="tablaSolicitudes">
 	</table>
 </div>

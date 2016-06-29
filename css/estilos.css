@@ -20,15 +20,20 @@ h1{
 	font-size: 24px;
 }
 nav{
+	width: 1190px;
 	display:none;
 	color:black;
 }
+
 section 
 {
 	text-align: center;
 }
 table tr th{
 	text-align: center;
+}
+#divBarra{
+	margin-left: -100px;
 }
 #sep{
 	position:absolute;
@@ -43,8 +48,11 @@ table tr th{
 	bottom: 60px; 
 	left: 160px;
 }
-#tablaExpedientes{
+#tablaSolicitudes{
 	display: none;
+}
+#tablaSolicitudes tr{
+	text-align: right;
 }
 #titulo-entrar{
 	color:white;
