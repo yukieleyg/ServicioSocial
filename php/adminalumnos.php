@@ -11,13 +11,14 @@ function muestraSolicitudes(){
 		$tabla		.=	"<th>Nombre</th>";
 		$tabla		.=	"<th>Estatus</th>";
 		$tabla		.=	"<th>Programa</th>";
+		$tabla		.=	"<th></th>";
 		$tabla		.=	"</thead></tr>";
 
 		while($row0 = mysql_fetch_array($res0)){
 			$cveusuario  = $row0["cveusuario_1"];
 			$cveprograma = $row0["cveprograma_1"];
 			$cn1		= conexionLocal();
-			$qryvalida1	= sprintf("select * from programas");
+			$qryvalida1	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
 			$res1		= mysql_query($qryvalida1);
 			$row1		= mysql_fetch_array($res1);
 
@@ -40,6 +41,11 @@ function muestraSolicitudes(){
 			
 
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
+			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."'><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' ><i class= 'material-icons'>close</i></a></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue'><i class = 'material-icons'>file_download</i></button></td>";
+			
+			//$tabla		.= "<><>"
 			$tabla		.= "</tr>";
 			$respuesta = true;
 		}
@@ -47,13 +53,24 @@ function muestraSolicitudes(){
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta );
 	print json_encode($arrayJSON);
 }
-
+function aceptarSolicitudes (){
+	$respuesta	= false;
+	$usuario	= "'".$_POST["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("select * from solicitudes where cveusuario_1 =%s",$usuario);
+	$res		= mysql_query($qryvalida);
+	$row  		= mysql_fetch_array($res);
+	var_dump("Solicitud Aceptada");
+		
+}
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'muestraSolicitudes':
 		muestraSolicitudes();
 		break;
-	
+	case 'aceptarSolicitudes':
+		aceptarSolicitudes();
+		break;
 	default:
 		# code...
 		break;

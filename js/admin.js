@@ -22,6 +22,28 @@ var admin = function (){
 
 		
 	}
+	var aceptarSolicitudes = function(){
+		var solicitud = $(this).val();
+		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
+		
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "php/adminalumnos.php",
+			data: parametros,
+
+			success: function(data){
+				if(data.respuesta){
+					$("#tablaSolicitudes").html(" ");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#divSolicitudes").show();
+				}
+			}
+
+
+		})
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
+	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 }
 $(document).on("ready",admin);
