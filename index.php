@@ -12,7 +12,7 @@
 </head>
 <body background="img/fondo.jpg">
 	
-		<?php include 'encabezado.php';?>
+		<?php include '/datos/encabezado.php';?>
 		<div id="divBarra">	
 				<?php include '/datos/admin/admin_nav.php';?>
 		</div>
@@ -39,7 +39,7 @@
 
 	</section>
 	<section>	
-		<?php include 'adminAlumnosVista.php';?>
+		<?php include '/datos/admin/adminAlumnosVista.php';?>
 	</section>
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 	<script src="js/eventos.js"></script>

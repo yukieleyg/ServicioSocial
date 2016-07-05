@@ -57,11 +57,20 @@ function aceptarSolicitudes (){
 	$respuesta	= false;
 	$usuario	= "'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("select * from solicitudes where cveusuario_1 =%s",$usuario);
+	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
 	$res		= mysql_query($qryvalida);
-	$row  		= mysql_fetch_array($res);
-	var_dump("Solicitud Aceptada");
-		
+	$row 		= mysql_fetch_array($res);
+	$cnU 		= conexionLocal();
+	$aceptado 	= 1;
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$aceptado,$usuario);	
+	$resU 		= mysql_query($qryvalidaU);
+	if($resU){
+		$respuesta = true;
+	}
+
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+
 }
 $opc= $_POST["opc"];
 switch ($opc){

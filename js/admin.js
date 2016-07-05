@@ -25,23 +25,28 @@ var admin = function (){
 	var aceptarSolicitudes = function(){
 		var solicitud = $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
-		
-		$.ajax({
-			type: "POST",
-			dataType: "json",
-			url: "php/adminalumnos.php",
-			data: parametros,
+		var r = confirm("¿Estas seguro de que quieres aceptar la solicitud del usuario "+solicitud+"?");
+		if(r){
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "php/adminalumnos.php",
+					data: parametros,
 
-			success: function(data){
-				if(data.respuesta){
-					$("#tablaSolicitudes").html(" ");
-					$("#tablaSolicitudes").append(data.tabla);
-					$("#divSolicitudes").show();
-				}
-			}
+					success: function(data){
+						if(data.respuesta){
+							alumnosSolicitudes();
+						}else{
+							alert("Esta solicitud no puede ser aceptada");
+						}
+					}
 
 
-		})
+				})
+
+
+		}		
+
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);

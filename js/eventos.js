@@ -27,6 +27,7 @@
 							case '1':
 								$(".entradaUsuario").hide("slow");
 								$("#barra").show("slow");
+								$("#user").html(" ");
 								$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
 								$("#user").show("slow");
 								break;
@@ -43,7 +44,7 @@
 								
 						}
 					}else{
-						alert("Usuario no registrado");
+						alert("Datos Incorrectos");
 					}
 				}
 			});
