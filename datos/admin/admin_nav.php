@@ -9,7 +9,14 @@
 							<li><a id="muestraAlumnos">Alumnos</a></li>
 						</ul>
 					</li>
-						<a class="waves-effect waves-teal btn-flat text-darken-1" id="muestrafecha"><i class="material-icons right">business</i>Asignar SS</a>
+					<li class="dropdown">
+						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuRegistro"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a id="registroEmpresas">Empresas</a></li>
+							<li><a id="registroProgramas">Programas</a></li>
+							<li><a id="registroAlumnos">Alumnos</a></li>
+						</ul>
+					</li>
 					
 						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#"><i class="material-icons right">class</i>Tarjeta de Control</a>
 

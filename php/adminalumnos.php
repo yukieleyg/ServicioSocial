@@ -39,13 +39,22 @@ function muestraSolicitudes(){
 				$tabla		.="<td>"."RECHAZADO"."</td>";
 			}
 			
-
-			$tabla		.= "<td>".$row1["nombre"]."</td>";
-			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."'><i class= 'material-icons'>done_all</i></button></td>";
-			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue'><i class = 'material-icons'>file_download</i></button></td>";
+			if($row0["estado"]!=0){
+				$tabla		.= "<td>".$row1["nombre"]."</td>";
+				$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' disabled><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."'><i class = 'material-icons'>file_download</i></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
 			
-			//$tabla		.= "<><>"
+			}else{
+				$tabla		.= "<td>".$row1["nombre"]."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' ><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' ><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."' ><i class = 'material-icons'>file_download</i></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
+
+			}
+
 			$tabla		.= "</tr>";
 			$respuesta = true;
 		}
@@ -72,6 +81,28 @@ function aceptarSolicitudes (){
 	print json_encode($arrayJSON);
 
 }
+function rechazarSolicitudes (){
+	$respuesta	= false;
+	$usuario	= "'".$_POST["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$cnU 		= conexionLocal();
+	$rechazado 	= 2;
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$rechazado,$usuario);	
+	$resU 		= mysql_query($qryvalidaU);
+	if($resU){
+		$respuesta = true;
+	}
+
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+
+}
+/*function detallesAlumno(){
+
+}*/
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'muestraSolicitudes':
@@ -80,6 +111,14 @@ switch ($opc){
 	case 'aceptarSolicitudes':
 		aceptarSolicitudes();
 		break;
+	case 'rechazarSolicitudes':
+		rechazarSolicitudes();
+		break;
+	/*case 'descargarSolicitud':
+		#break;
+	case 'detallesAlumno':
+		detallesAlumno();
+		break;*/
 	default:
 		# code...
 		break;
