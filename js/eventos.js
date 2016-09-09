@@ -62,6 +62,33 @@
 		}
 
 	}
+
+	const TECLA_ENTER = 13;
+	var txtCajas = $("#entradaUsuario").find("input");
+
+	
+	var teclatxtCajas = function(tecla)
+	{
+		var cajaActual = txtCajas.index(this);
+		if(tecla.which == TECLA_ENTER)
+		{
+			if(txtCajas[cajaActual + 1]!=null)
+			{
+				var cajaSiguiente=txtCajas[cajaActual + 1];
+				cajaSiguiente.focus();
+			}
+		}
+	}
+	var login =function(tecla){
+		if(tecla.which == TECLA_ENTER)
+		{
+			$("#btnEntrar").click();
+		}
+	}
+
+
+	$(txtCajas[1]).on("keypress",login);
+	$(txtCajas).on("keypress",teclatxtCajas);
 	$("#mostrarClave").on("click",muestraClave);
 	$("#btnEntrar").on("click",entrar);
 }
