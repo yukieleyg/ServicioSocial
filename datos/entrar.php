@@ -1,14 +1,5 @@
 <?php
-function conexionBD(){
-	$cn= mysql_connect("itculiacan.edu.mx","sieapibduser","B5fa4x_7*.*");
-	mysql_select_db("sieapibd");
-	return $cn;
-}
-function conexionLocal(){
-	$cn = mysql_connect("localhost","root","");
-	mysql_select_db("serviciosocial");
-	return $cn;
-}
+require_once('conexion.php');
 function validaentrada()
 {
 	$respuesta	= false;

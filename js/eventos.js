@@ -18,7 +18,7 @@
 			$.ajax({
 				type: "POST",
 				dataType: "json",
-				url: "php/entrar.php",
+				url: "../datos/entrar.php",
 				data: parametros,
 
 				success: function(data){
@@ -86,7 +86,7 @@
 		}
 	}
 
-
+	$('select').material_select();
 	$(txtCajas[1]).on("keypress",login);
 	$(txtCajas).on("keypress",teclatxtCajas);
 	$("#mostrarClave").on("click",muestraClave);

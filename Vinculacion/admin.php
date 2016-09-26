@@ -1,5 +1,11 @@
-<br>
-<br>	
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+	<link rel="stylesheet" href="../css/vinculacion.css">
+	<script src="../js/vinculacion.js"></script>	
+</head>
+<body>
 <nav class="navbar navbar-default left" id="barra">	
 				<ul>
 					<li class="dropdown">
@@ -18,7 +24,7 @@
 						</ul>
 					</li>
 					
-						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#"><i class="material-icons right">class</i>Tarjeta de Control</a>
+						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">class</i>Tarjeta de Control</a>
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">toc</i>Resultados</a>
 
@@ -28,3 +34,13 @@
 
 			</ul>
 </nav>
+
+<div id="listadoAlumnos">
+	<?php include'adminAlumnosVista.php'; ?>
+</div>
+<div id="tarjetaControl">
+	<?php include 'divTarjetaControlVista.php'; ?>
+</div>
+	
+</body>
+</html>

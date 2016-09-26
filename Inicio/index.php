@@ -1,21 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-	<meta charset="UTF-8">
-	<title>Servicio Social ITC</title>
-	<link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	<link rel="stylesheet" href="css/dropdown.css">
-	<link rel="stylesheet" href="css/estilos.css">
-
+	<?php include 'head.php';?>
+	<?php include 'encabezado.php';?>
 </head>
-<body background="img/fondo.jpg">
+<body background="../img/fondo.jpg">
 	
-		<?php include '/datos/encabezado.php';?>
-		<div id="divBarra">	
+<!--		<div id="divBarra">	
 				<?php include '/datos/admin/admin_nav.php';?>
-		</div>
+		</div>-->
 	<section>
 		<div class="entradaUsuario card-panel" id="entradaUsuario">
 			<div class="card-panel  purple darken-1">
@@ -38,11 +31,23 @@
 		</div>
 
 	</section>
-	<section>	
+	<!--<section>	
 		<?php include '/datos/admin/adminAlumnosVista.php';?>
 	</section>
-	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-	<script src="js/eventos.js"></script>
-	<script src="js/admin.js"></script>
+	<section>
+		<?php include '/datos/admin/TarjetaControlVista.php';?>
+	</section>
+	-->
+	<section id="vinculacion">
+		<?php include '../Vinculacion/admin.php'; ?>
+	</section>
+	
+
+	<script src="../js/eventos.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
 </body>
+<footer>
+	<?php include 'footer.php';?>
+</footer>
 </html>

@@ -6,7 +6,7 @@ var admin = function (){
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url:"php/adminalumnos.php",
+			url:"../datos/vinculacion.php",
 			data: parametros,
 
 			success: function(data){
@@ -20,7 +20,7 @@ var admin = function (){
 			}
 		});
 
-		
+		$("#listadoAlumnos").show();
 	}
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
@@ -30,7 +30,7 @@ var admin = function (){
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/adminalumnos.php",
+					url: "../datos/vinculacion.php",
 					data: parametros,
 
 					success: function(data){
@@ -56,7 +56,7 @@ var admin = function (){
 				$.ajax({
 					type: "POST",
 					dataType: "json",
-					url: "php/adminalumnos.php",
+					url: "../datos/vinculacion.php",
 					data: parametros,
 
 					success: function(data){
@@ -73,6 +73,11 @@ var admin = function (){
 
 		}		
 
+	}
+
+	var muestraTarjeta = function (){
+		console.log("si");
+		$("#tarjetaControl").show("slow");
 	}
 	/*var detallesAlumno = function() {
 		var solicitud 	= $(this).val();
@@ -99,5 +104,6 @@ var admin = function (){
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	//$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
+	$("#menuTarjeta").on("click",muestraTarjeta);
 }
 $(document).on("ready",admin);
