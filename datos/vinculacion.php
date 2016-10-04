@@ -103,6 +103,76 @@ function rechazarSolicitudes (){
 /*function detallesAlumno(){
 
 }*/
+/*function obtenerTarjetaAlm(){
+	$respuesta=false;
+	$usuario	= "'".$_POST["ncontrol"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("select * from usuarios where cveusuario=%s limit 1", $usuario);
+	$res		= mysql_query($qryvalida);
+	if($row= mysql_fetch_array($res)){
+		$respuesta=true;
+		$nombre 	= $row["cveusuario"];
+
+	}
+	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre);
+	print json_encode($arrayJSON);
+
+}*/
+function existeusuario($usuario){
+	$conexion 		= conexionLocal();
+	$consultaruser	= sprintf("select * from usuarios where cveusuario=%s limit 1",$usuario);
+	$res 			= mysql_query($consultaruser);
+	if($row = mysql_fetch_array($res))
+	{	
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+function registrarEmpresa(){
+	$respuesta 	=false;
+	$msj="";
+
+	$depnom 	= "'".$_POST["txtdepnom"]."'";
+	$depusuario = "'".$_POST["txtdepusuario"]."'";
+	$deprfc 	= "'".$_POST["txtdeprfc"]."'";
+	$deptitular = "'".$_POST["txtdeptitular"]."'";
+	$depdir = "'".$_POST["txtdeptitular"]."'";
+	$deptel 	= "'".$_POST["txtdeptel"]."'";
+	$depest 	= "'".$_POST["txtdepest"]."'";
+	
+	$conexion 	= conexionLocal();
+	//$consultaruser	=sprintf("select * from usuarios where cveusuario=%s limit 1",$usuario,$clave);
+	if(!existeusuario($depusuario)){
+		print("puede insertar");
+		//agregar usuario a la base de datos
+		$consUsuario=sprintf("insert into usuarios values(%s,'password',2)",$depusuario);
+		mysql_query($consUsuario);
+
+		if(mysql_affected_rows()>0){
+			print("usuario insertado");
+		}
+
+		//agregar la empresa a la BD
+		$consulta = sprintf("insert into dependencias values(NULL,%s,%s,%s,%s,%s,%s,%s)",$depnom,$depusuario,$deprfc,$deptitular,$depdir,$deptel,$depest);
+		$resconsulta= mysql_query($consulta);
+
+		if(mysql_affected_rows()>0){
+			$respuesta=true;
+		}
+	}else{
+		//ya existe el usuario
+		$msj="Elige un nombre de usuario diferente.";
+	}
+
+	
+	$salidaJSON = array ('respuesta' => $respuesta, 'mensaje'=>$msj);
+	print json_encode($salidaJSON);
+}
+
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'muestraSolicitudes':
@@ -119,6 +189,13 @@ switch ($opc){
 	case 'detallesAlumno':
 		detallesAlumno();
 		break;*/
+	case 'obtenerTarjetaAlm':
+		obtenerTarjetaAlm();
+		break;
+	case 'registrarEmpresa':
+		registrarEmpresa();
+		# code...
+		break;
 	default:
 		# code...
 		break;

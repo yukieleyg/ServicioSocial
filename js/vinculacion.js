@@ -1,6 +1,6 @@
 var admin = function (){
 	var parametros="";
-	
+	const TECLA_ENTER = 13;
 	var alumnosSolicitudes = function(){
 		var parametros ="opc=muestraSolicitudes";
 		$.ajax({
@@ -27,48 +27,48 @@ var admin = function (){
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
 		var r = confirm("¿Estas seguro de que quieres aceptar la solicitud del usuario "+solicitud+"?");
 		if(r){
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "../datos/vinculacion.php",
-					data: parametros,
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "../datos/vinculacion.php",
+				data: parametros,
 
-					success: function(data){
-						if(data.respuesta){
-							alumnosSolicitudes();
-						}else{
-							alert("Esta solicitud no puede ser aceptada");
-						}
+				success: function(data){
+					if(data.respuesta){
+						alumnosSolicitudes();
+					}else{
+						alert("Esta solicitud no puede ser aceptada");
 					}
+				}
 
 
-				})
+			})
 
 
 		}		
 
 	}
- 	var rechazarSolicitudes = function(){
+	var rechazarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=rechazarSolicitudes"+"&solicitud="+solicitud;
 		var r = confirm("¿Estas seguro de que quieres rechazar la solicitud del usuario "+solicitud+"?");
 		if(r){
-				$.ajax({
-					type: "POST",
-					dataType: "json",
-					url: "../datos/vinculacion.php",
-					data: parametros,
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "../datos/vinculacion.php",
+				data: parametros,
 
-					success: function(data){
-						if(data.respuesta){
-							alumnosSolicitudes();
-						}else{
-							alert("Esta solicitud no puede ser rechazada");
-						}
+				success: function(data){
+					if(data.respuesta){
+						alumnosSolicitudes();
+					}else{
+						alert("Esta solicitud no puede ser rechazada");
 					}
+				}
 
 
-				})
+			})
 
 
 		}		
@@ -76,7 +76,7 @@ var admin = function (){
 	}
 
 	var muestraTarjeta = function (){
-		console.log("si");
+		$('#opcVinculacion>div').hide();
 		$("#tarjetaControl").show("slow");
 	}
 	/*var detallesAlumno = function() {
@@ -100,10 +100,66 @@ var admin = function (){
 			}
 		})
 	}*/
+
+	var buscarTarjeta =function(tecla){
+		if(tecla.which == TECLA_ENTER)
+		{
+			var ncontrol = $("#txtbuscaTarjeta").val();
+			var parametros ="opc=obtenerTarjetaAlm"+
+												"&ncontrol="+ncontrol;
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						//provisional
+						alert(data.nombre);
+					}
+
+				}
+			});
+		}
+		
+	}
+
+	var muestraRegEmpresas= function(){
+		$('#opcVinculacion>div').hide();
+		$("#registroEmpresas").show("slow");
+	}
+
+	var registrarEmpresa= function(){
+		var parametros = $("#frmRegistroEmpresa").serialize()+"&opc=registrarEmpresa"+"&id="+Math.random();
+		//serialize concatena los parametros contenidos en el formulario
+		console.log(parametros);
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						//provisional
+						
+					}else{
+						alert(data.mensaje);
+					}
+
+				}
+		});
+
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	//$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
+	$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
+	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
+	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
 }
 $(document).on("ready",admin);
