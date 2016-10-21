@@ -128,6 +128,7 @@ var admin = function (){
 	var muestraRegEmpresas= function(){
 		$('#opcVinculacion>div').hide();
 		$("#registroEmpresas").show("slow");
+
 	}
 
 	var registrarEmpresa= function(){
@@ -141,17 +142,118 @@ var admin = function (){
 				data: parametros,
 
 				success: function(data){
-					if(data.respuesta){
-						//provisional
-						
-					}else{
-						alert(data.mensaje);
-					}
-
+				 if(data.respuesta){
+				 	console.log("recibe");
+				 	Materialize.toast('Registro de empresa exitoso', 4000);
+				 	$(':input','#frmRegistroEmpresa')
+ 					.not(':button, :submit, :reset, :hidden')
+ 					.val('')
+ 					.removeAttr('checked')
+ 					.removeAttr('selected');
+				    
+				 }else{
+				 	Materialize.toast(data.mensaje, 4000);
+				 }
 				}
+
 		});
 
 	}
+
+	var llenaDepProgramas= function(){
+		var parametros = $("#selprogdep").val()+"&opc=llenaDepProgramas"+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var opcs=data.opciones;
+				 	$("#selprogdep").append(opcs).html();
+				 	$('select').material_select();
+				 }			 
+				}
+		});
+	}
+
+	var muestraRegProgramas= function(){
+		llenaDepProgramas();
+		$('#opcVinculacion>div').hide();
+		$("#registroProgramas").show("slow");
+	}
+	var llenaActProg= function(){
+		var parametros = $("#selprogact").val()+"&opc=llenaActProg"+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var opcs=data.opciones;
+				 	$("#selprogact").append(opcs).html();
+				 	$('select').material_select();
+				 }			 
+				}
+		});
+	}
+
+
+
+	var registroProgramas=function(){
+		var parametros = $("#frmRegistroProgramas").serialize()+"&opc=registrarPrograma"+"&id="+Math.random();
+		console.log($("#selprogest").val());
+		console.log(parametros);
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+				 if(data.respuesta){
+				 	console.log("recibe");
+				 	Materialize.toast('Registro de programa exitoso', 4000);
+				 
+ 					$('input:not([type=radio],[type=submit])').val("");
+ 					$('textarea').val("");
+ 					$('input[type="radio"]').prop('checked', false);
+ 					$('select').prop('selectedIndex',0);
+ 					$('select').material_select();
+				    
+				 }else{
+				 	Materialize.toast(data.mensaje, 4000);
+				 }
+				}
+
+		});
+	}
+
+	$("#selprogdep").change(function() {
+ 		$("#second-choice").load("getter.php?choice=" + $("#first-choice").val());
+	});
+	var cargadepartamentos= function(){
+		var parametros={selprogdep:$("#selprogdep").val(), opc:'llenaDptoProgramas'};
+		//var parametros = $("#selprogdep").val()+"&opc=llenaDptoProgramas"+"&id="+Math.random();
+		console.log(parametros);
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var opcs=data.opciones;
+				 	$("#selprogdpto").find('option').remove();
+				 	$("#selprogdpto").append('<option>Seleccione departamento..</option>');
+				 	$("#selprogdpto").append(opcs).html();
+				 	$('select').material_select();
+				 }			 
+				}
+		});
+	}
+
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -161,5 +263,10 @@ var admin = function (){
 	$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
+
+	$("#menuregistroProgramas").on("click",muestraRegProgramas);
+	$("#selprogdep").on("change", cargadepartamentos);
+	$("#frmRegistroProgramas").on("submit",registroProgramas);
+
 }
 $(document).on("ready",admin);

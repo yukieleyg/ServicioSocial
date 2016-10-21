@@ -18,9 +18,9 @@
 					<li class="dropdown">
 						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuRegistro"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a id="registroEmpresas">Empresas</a></li>
-							<li><a id="registroProgramas">Programas</a></li>
-							<li><a id="registroAlumnos">Alumnos</a></li>
+							<li><a id="menuregistroEmpresas">Empresas</a></li>
+							<li><a id="menuregistroProgramas">Programas</a></li>
+							<li><a id="menuregistroAlumnos">Alumnos</a></li>
 						</ul>
 					</li>
 					
@@ -34,13 +34,21 @@
 
 			</ul>
 </nav>
-
+<section id="opcVinculacion" class="display">
+	
 <div id="listadoAlumnos">
 	<?php include'adminAlumnosVista.php'; ?>
 </div>
 <div id="tarjetaControl">
 	<?php include 'divTarjetaControlVista.php'; ?>
 </div>
+<div id="registroEmpresas" class="card">
+	<?php include 'divRegistroEmpresa.php' ?>
+</div>
+<div id="registroProgramas" class="card">
+	<?php include 'divRegistroProgramas.php' ?>
+</div>
 	
+</section>
 </body>
 </html>

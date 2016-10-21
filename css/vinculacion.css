@@ -1,3 +1,9 @@
-#listadoAlumnos, #tarjetaControl{
+#listadoAlumnos, #tarjetaControl,#datosAlm,#info_programa_horas, #controlexpediente1,#controlexpediente2, #registroEmpresas, #registroProgramas{
 	display: none;
+}
+#barra{
+	margin: -25px 0px 0px -80px;
+}
+.display{
+	margin-top: 80px;
 }
