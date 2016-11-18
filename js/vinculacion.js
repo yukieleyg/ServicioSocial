@@ -230,9 +230,9 @@ var admin = function (){
 		});
 	}
 
-	$("#selprogdep").change(function() {
+	/*$("#selprogdep").change(function() {
  		$("#second-choice").load("getter.php?choice=" + $("#first-choice").val());
-	});
+	});*/
 	var cargadepartamentos= function(){
 		var parametros={selprogdep:$("#selprogdep").val(), opc:'llenaDptoProgramas'};
 		//var parametros = $("#selprogdep").val()+"&opc=llenaDptoProgramas"+"&id="+Math.random();
@@ -253,6 +253,55 @@ var admin = function (){
 				}
 		});
 	}
+	var muestralistaprogramas=function(){
+		console.log("muestraprogramas");
+		$('#opcVinculacion>div').hide();
+		$("#listadoProgramas").show("slow");
+		var parametros="opc=tablaprogramas";
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$("#tblprogramas").find('tr').remove();
+					$("#tblprogramas").append(data.renglones).html();
+				}
+			}
+		});
+
+	}
+
+    var disponibilidad=function(){
+    	var username = $("#txtdepusuario").val(); // Get username textbox using $(this)
+        var Result = $('#resultado'); // Get ID of the result DIV where we display the results
+        if(username.length > 2) { // if greater than 2 (minimum 3)
+            Result.html('Cargando...'); // you can use loading animation here
+            var parametros = 'action=disponible&username='+username;
+            $.ajax({ // Send the username val to available.php
+            type : 'POST',
+            data : parametros,
+            url  : '../datos/disponible.php',
+            success: function(responseText){ // Get the result
+                if(responseText == 0){
+                    Result.html('<span class="success"  style="color:green">Disponible</span>');
+                }
+                else if(responseText > 0){
+                    Result.html('<span class="error" style="color:red">No disponible</span>');
+                }
+                else{
+                    alert('Problem with sql query');
+                }
+            }
+            });
+        }else{
+            Result.html('Ingresa al menos 3 caracteres');
+        }
+        if(username.length == 0) {
+            Result.html('');
+        }
+    }
 
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
@@ -267,6 +316,8 @@ var admin = function (){
 	$("#menuregistroProgramas").on("click",muestraRegProgramas);
 	$("#selprogdep").on("change", cargadepartamentos);
 	$("#frmRegistroProgramas").on("submit",registroProgramas);
+	$("#muestraProgramas").on("click",muestralistaprogramas);
 
+	$("#txtdepusuario").on('keyup',disponibilidad);
 }
 $(document).on("ready",admin);
