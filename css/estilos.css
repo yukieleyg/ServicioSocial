@@ -41,6 +41,9 @@ table tr th{
 	float:left;
 
 }
+#divDetalles{
+	display: none;
+}
 #entradaUsuario{
 	font-family: "Helvetica";
 }
@@ -113,4 +116,10 @@ table tr th{
 	margin-left: 60px;
 	margin-top: 120px;
 	width:900px;
+}
+#divDatos1{
+	display:inline;
+}
+.lInputs{
+	margin-right: 400px;
 }

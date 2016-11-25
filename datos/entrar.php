@@ -8,12 +8,12 @@ function validaentrada()
 	$nombre		= "";
 	$usuario	= "'".$_POST["usuario"]."'";
 	$clave		= "'".$_POST["clave"]."'";
-	$cn 		= conexionBD();
+	/*$cn 		= conexionBD();
 	$qryvalida	= sprintf("select * from DALUMN where ALUCTR=%s and ALUPAS=%s limit 1",$usuario,$clave);
 	$res		= mysql_query($qryvalida);
 	$tipo 		= 0;
 	//print $qryvalida;
-	if($row= mysql_fetch_array($res)){
+	/*if($row= mysql_fetch_array($res)){
 		$nombre		= $row["ALUNOM"];
 		$respuesta	= true;
 		$tipo		= 3;
@@ -29,7 +29,7 @@ function validaentrada()
 				}
 
 
-	}else{
+	}else{*/
 		$clave		= "'".md5($_POST["clave"])."'";
 		$cn 		= conexionLocal();
 		$qryvalida 	= sprintf("select * from usuarios where cveusuario=%s and clave=%s limit 1", $usuario,$clave);
@@ -47,7 +47,7 @@ function validaentrada()
 			}
 		}
 
-	}
+	//}
 	$arrayJSON = array('respuesta' => $respuesta, 'creditos'=> $creditos,'nombre' => $nombre, 'tipo' => $tipo);
 	print json_encode($arrayJSON);
 }
