@@ -57,9 +57,6 @@ table tr th{
 #titulo-entrar{
 	color:white;
 }
-#txtDocente, #txtClave{
-	border-bottom: 1px solid purple;
-}
 #user{
 	display:none;
 	font-family: "Helvetica";
@@ -79,26 +76,6 @@ table tr th{
 	margin: 0 auto;
 	margin-top: 80px;
 	width: 350px;
-}
-.gruposDocente{
-	display: none;
-	margin-left: 60px;
-	margin-top: 120px;
-	width:900px;
-}
-
-.DocenteParciales{
-	display: none;
-	margin-left: 60px;
-	margin-top: 120px;
-	width:900px;
-}
-
-.DocenteUnidad{
-	display: none;
-	margin-left: 60px;
-	margin-top: 120px;
-	width:900px;
 }
 .page-header{
 	margin-top: 70px;

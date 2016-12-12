@@ -103,21 +103,58 @@ function rechazarSolicitudes (){
 /*function detallesAlumno(){
 
 }*/
-/*function obtenerTarjetaAlm(){
+function obtenerTarjetaAlm(){
 	$respuesta=false;
-	$usuario	= "'".$_POST["ncontrol"]."'";
+	$alumno="";
+	$nocontrol	= "'".$_POST["ncontrol"]."'";
+	$mensaje	="No se encuentra expediente";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("select * from usuarios where cveusuario=%s limit 1", $usuario);
+	$qryvalida	= sprintf("select * from expedientes where cveusuario_1=%s limit 1", $nocontrol);
 	$res		= mysql_query($qryvalida);
 	if($row= mysql_fetch_array($res)){
-		$respuesta=true;
-		$nombre 	= $row["cveusuario"];
-
+		$respuesta	=true;
+		$nocontrol 	= $row["cveusuario_1"];
+		$mensaje	="";
+		$alumno=getAlumno($nocontrol);
 	}
-	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre);
+	$arrayJSON = array('respuesta' => $respuesta, 'alumno' => json_decode($alumno));
 	print json_encode($arrayJSON);
 
-}*/
+}
+function getAlumno($nocontrol){
+	$cn=conexionBD();
+	$qry=sprintf("select a.ALUAPP, a.ALUAPM, a.ALUNOM, a.ALUSEX, a.ALUCLL, a.ALUNUM, a.ALUCOL, a.ALUTE1, FLOOR(DATEDIFF(CURDATE(),ALUNAC)/365) as EDAD from DALUMN a where a.ALUCTR=%s",$nocontrol);
+	$res		= mysql_query($qry);
+	$nombre="";
+	$edad="-";
+	$sexo="";
+	$domic="";
+	$telef="";
+	$creditos="";
+	if($row= mysql_fetch_array($res)){
+		$nombre=$row["ALUAPP"]." ".$row["ALUAPM"]." ".$row["ALUNOM"];
+		$edad=$row["EDAD"];
+		$sexo=($row["ALUSEX"]==1) ?'M':'F';
+		$domic=$row["ALUCLL"]." ".$row["ALUNUM"]." ".$row["ALUCOL"];
+		$telef=$row["ALUTE1"];
+		$creditos=getCreditos($nocontrol);
+	}
+	
+	$alumno=array('nocontrol'=>$nocontrol,'nombre'=>$nombre,'edad'=>$edad,'sexo'=>$sexo,'domicilio'=>$domic, 'telefono'=>$telef,'creditos'=>$creditos);
+	return json_encode($alumno);
+}
+function getCreditos($nocontrol){
+	$cn=conexionBD();
+	$respuesta=false;
+	$qryvalida 	= sprintf("select CALCAC from DCALUM where ALUCTR=%s",$nocontrol);
+	$res= mysql_query($qryvalida);
+	if($row=mysql_fetch_array($res)){
+		$respuesta=$row["CALCAC"];
+		return $respuesta;
+	}
+	return $respuesta;
+}
+
 function existeusuario($usuario){
 	$conexion 		= conexionLocal();
 	$consultaruser	= sprintf("select * from usuarios where cveusuario=%s and tipousuario=2 limit 1",$usuario);
@@ -291,7 +328,28 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 
 	}
+	function tablaprogramas(){
+		$respuesta	= false;
+		$cn=conexionLocal();
+		$qry= sprintf("select nombre,cvedependencia,vacantes,carrerapref from programas");
+		$res= mysql_query($qry);
 
+		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Vacantes</th><th>Carrera</th></tr></thead><tbody>";
+
+		while($renglon=mysql_fetch_array($res)){
+			$nombre 	= $renglon["nombre"];
+			$dependencia= $renglon["cvedependencia"];
+			$vacantes 	= $renglon["vacantes"];
+			$carrera 	= $renglon["carrerapref"];
+
+			$tabla.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td></tr>";	
+		}
+		$tabla.="</tbody>";
+		$respuesta=true;
+		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
+	
+}
 
 	$opc= $_POST["opc"];
 	switch ($opc){
@@ -330,6 +388,10 @@ function llenaDptoProgramas(){
 			break;
 		case 'llenaActProg':
 		llenaActProg();
+			# code...
+			break;
+		case 'tablaprogramas':
+		tablaprogramas();
 			# code...
 			break;
 		default:

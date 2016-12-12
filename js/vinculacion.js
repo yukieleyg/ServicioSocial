@@ -101,7 +101,7 @@ var admin = function (){
 		})
 	}*/
 
-	var buscarTarjeta =function(tecla){
+	/*var buscarTarjeta =function(tecla){
 		if(tecla.which == TECLA_ENTER)
 		{
 			var ncontrol = $("#txtbuscaTarjeta").val();
@@ -123,7 +123,7 @@ var admin = function (){
 			});
 		}
 		
-	}
+	}*/
 
 	var muestraRegEmpresas= function(){
 		$('#opcVinculacion>div').hide();
@@ -303,13 +303,47 @@ var admin = function (){
         }
     }
 
+    var buscarTarjeta =function(){
+		console.log("buscarTarjeta");
+			var ncontrol = $("#txtbuscaTarjeta").val();
+			var parametros ="opc=obtenerTarjetaAlm"+
+												"&ncontrol="+ncontrol;
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						$("#datosAlm:text").val("");
+						$("#datosAlm").show("slow");
+
+						alert("SI hay exp");
+						alert(data.alumno.nombre);
+						$("#tnombre").val(data.alumno.nombre);
+						$("#tedad").val(data.alumno.edad);
+						$("#tsexo").val(data.alumno.sexo).material_select();
+
+						$("#tdomicilio").val(data.alumno.domicilio);
+						$("#ttelefono").val(data.alumno.telefono);
+						$("#tncontrol").val(data.alumno.nocontrol);
+						$("#tcreditos").val(data.alumno.creditos);
+					}else{
+						alert("No se encontro el expediente");
+					}
+
+				}
+			});		
+	}
+
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	//$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
-	$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
+	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
 
@@ -319,5 +353,6 @@ var admin = function (){
 	$("#muestraProgramas").on("click",muestralistaprogramas);
 
 	$("#txtdepusuario").on('keyup',disponibilidad);
+	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
 }
 $(document).on("ready",admin);
