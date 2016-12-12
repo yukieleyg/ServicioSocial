@@ -43,14 +43,14 @@ function muestraSolicitudes(){
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' disabled><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."'><i class = 'material-icons'>file_download</i></button></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."'><a href='../datos/descargarArchivos.php?usuario=".$cveusuario."'><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
 			
 		}else{
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' ><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."' ><i class = 'material-icons'>file_download</i></button></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."' ><a href='../datos/descargarArchivos.php?usuario=".$cveusuario."'><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
 
 		}
@@ -100,9 +100,7 @@ function rechazarSolicitudes (){
 	print json_encode($arrayJSON);
 
 }
-/*function detallesAlumno(){
 
-}*/
 function obtenerTarjetaAlm(){
 	$respuesta=false;
 	$alumno="";
@@ -153,6 +151,61 @@ function getCreditos($nocontrol){
 		return $respuesta;
 	}
 	return $respuesta;
+}
+
+
+function detallesAlumno(){
+ 	$respuesta	= false;
+	$usuario	="'".$_POST["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$estado     = $row["estado"];
+	/*//	HACER SELECT DEL PROGRAMA Y DEPENDENCIA
+	$qryvalida	= sprintf("select * from programas where cveprograma = %s",$programa);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+
+	$nombreprog	= $row["nombre"];*/
+	$cn2		= conexionBD();
+	$qryvalida1 = sprintf("SELECT * from DALUMN where ALUCTR =%s",$usuario);
+	$res1		= mysql_query($qryvalida1);
+	$row1 		= mysql_fetch_array($res1);
+	$nombre		=	$row1["ALUNOM"].' '.$row1["ALUAPP"].' '.$row1["ALUAPM"];;
+	$tel		=	$row1["ALUTE1"];
+	$calle		=	$row1["ALUCLL"];
+	$num		=	$row1["ALUNUM"];
+	$colonia	=	$row1["ALUCOL"];
+	$numcontrol	=	$row1["ALUCTR"];
+	$sexo		=	$row1["ALUSEX"];
+	$email		=	$row1["ALUMAI"];
+	$direccion	=   $calle.' '.$num.' '.$colonia;
+	$qryvalida1 = sprintf("SELECT * from DCALUM where ALUCTR =%s",$usuario);
+	$res1		= mysql_query($qryvalida1);
+	$row1 		= mysql_fetch_array($res1);
+	$carcve		= $row1["CARCVE"];
+	$semestre	= $row1["CALNPE"];
+	$qryvalida1 = sprintf("SELECT * from DCARRE where CARCVE =%s",$carcve);
+	$res1		= mysql_query($qryvalida1);
+	$row1 		= mysql_fetch_array($res1);
+	$nomcarrera = $row1["CARNOM"];
+	$qryvalida	= sprintf("select PARFOL1 from DPARAM where PARCVE= 'PRDO'");
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$periodoAct	= $row["PARFOL1"];
+	$meses		= substr($periodoAct, 3,1);
+	if($meses==1){
+		$meses = " ENERO - JUNIO";
+	} else {
+		if($meses==3){
+		$meses = "AGOSTO-DICIEMBRE";
+		}
+	}
+	$respuesta	= true;
+	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre, 'direccion' => $direccion, 'email' => $email, 'numcontrol' => $numcontrol, 'tel' => $tel, 
+	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado);
+	print json_encode($arrayJSON);
 }
 
 function existeusuario($usuario){
@@ -363,10 +416,10 @@ function llenaDptoProgramas(){
 		rechazarSolicitudes();
 		break;
 	/*case 'descargarSolicitud':
-		#break;
-	case 'detallesAlumno':
+		#break;*/
+		case 'detallesAlumno':
 		detallesAlumno();
-		break;*/
+		break;
 		case 'obtenerTarjetaAlm':
 		obtenerTarjetaAlm();
 		break;

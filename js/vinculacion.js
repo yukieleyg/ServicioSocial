@@ -79,27 +79,30 @@ var admin = function (){
 		$('#opcVinculacion>div').hide();
 		$("#tarjetaControl").show("slow");
 	}
-	/*var detallesAlumno = function() {
+	var detallesAlumno = function() {
 		var solicitud 	= $(this).val();
-		var parametros 	= "opc=detallesAlumno"+"&solicitud"+solicitud;
+		var parametros 	= "opc=detallesAlumno"+"&solicitud="+solicitud;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
-			url: "php/adminalumnos.php",
+			url: "../datos/vinculacion.php",
 			data:parametros,
-
-
+			
 			success: function(data){
 				if(data.respuesta){
-					#tablaSolicitudes.hide();
-					#detallesAlumno.append(data.tabla);
-					#detallesAlumno.show();
-				}else{
-					alert("Error");
+					$("#inputNombre").val(data.nombre);
+					$("#inputEmail").val(data.email);
+					$("#inputCarrera").val(data.carrera);
+					$("#inputSemestre").val(data.semestre);
+					$("#inputDireccion").val(data.direccion);
+					$("#inputPeriodo").val(data.periodoAct);
+					$("#inputEstado").val(data.estado);
+					$("#divSolicitudes").hide();
+					$("#divDetalles").show();
 				}
 			}
 		})
-	}*/
+	}
 
 	/*var buscarTarjeta =function(tecla){
 		if(tecla.which == TECLA_ENTER)
@@ -341,7 +344,7 @@ var admin = function (){
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
-	//$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
+	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
