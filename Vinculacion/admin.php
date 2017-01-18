@@ -8,22 +8,18 @@
 <body>
 <nav class="navbar navbar-default left grey lighten-4" id="barra">	
 				<ul>
-					<li class="dropdown" style="width: 15%;">
-						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuAlumnos"><i class="material-icons right">supervisor_account</i>Listado Sem.<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a id="muestraSolicitudes">Solicitudes</a></li>
-							<li><a id="muestraAlumnos">Alumnos&nbsp;&nbsp;</a></li>
-							<li><a id="muestraProgramas">Programas</a></li>
+					 <a class='dropdown-button btn grey lighten-4 btn-flat' href='#' data-beloworigin="true" data-activates='dropdownListSem' data-hover="true" id="menuAlumnos" style="color:black;"><i class="material-icons right">supervisor_account</i>Listado Sem.<b class="caret"></b></a>
+						<ul class="dropdown-content" id="dropdownListSem">
+							<li><a id="muestraSolicitudes"  style="color:black;">Solicitudes</a></li>
+							<li><a id="muestraAlumnos"  style="color:black;">Alumnos&nbsp;&nbsp;</a></li>
+							<li><a id="muestraProgramas"  style="color:black;">Programas</a></li>
 						</ul>
-					</li>
-					<li class="dropdown" style="width: 15%;">
-						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuRegistro"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
-						<ul class="dropdown-menu">
-							<li><a id="menuregistroEmpresas">Empresas</a></li>
-							<li><a id="menuregistroProgramas">Programas</a></li>
-							<li><a id="menuregistroAlumnos">Alumnos</a></li>
+						<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownRegistro' data-hover="true" id="menuRegistro" style="color:black;"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
+						<ul class="dropdown-content" id="dropdownRegistro">
+							<li><a id="menuregistroEmpresas"  style="color:black;">Empresas</a></li>
+							<li><a id="menuregistroProgramas"  style="color:black;">Programas</a></li>
+							<li><a id="menuregistroAlumnos" style="color:black;" >Alumnos</a></li>
 						</ul>
-					</li>
 					
 						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">class</i>Tarjeta de Control</a>
 
