@@ -123,3 +123,6 @@ table tr th{
 .lInputs{
 	margin-right: 400px;
 }
+#btnEntrar{
+	display: inline-block;
+}

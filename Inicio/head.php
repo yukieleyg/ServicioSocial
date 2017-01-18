@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 	<title>Servicio Social ITC</title>
-	<link rel="stylesheet" href="../css/bootstrap/css/bootstrap.min.css">
+	<!--link rel="stylesheet" href="../css/bootstrap/css/bootstrap.min.css"-->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/css/materialize.min.css">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	<link rel="stylesheet" href="../css/dropdown.css">

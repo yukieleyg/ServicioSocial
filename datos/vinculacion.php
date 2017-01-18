@@ -126,6 +126,7 @@ function detallesAlumno(){
 	$numcontrol	=	$row1["ALUCTR"];
 	$sexo		=	$row1["ALUSEX"];
 	$email		=	$row1["ALUMAI"];
+	$tel		=	$row1["ALUTE1"];
 	$direccion	=   $calle.' '.$num.' '.$colonia;
 	$qryvalida1 = sprintf("SELECT * from DCALUM where ALUCTR =%s",$usuario);
 	$res1		= mysql_query($qryvalida1);
@@ -150,7 +151,7 @@ function detallesAlumno(){
 	}
 	$respuesta	= true;
 	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre, 'direccion' => $direccion, 'email' => $email, 'numcontrol' => $numcontrol, 'tel' => $tel, 
-	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado);
+	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel);
 	print json_encode($arrayJSON);
 }
 function existeusuario($usuario){
@@ -327,7 +328,9 @@ function llenaDptoProgramas(){
 
 	}
 
+	function modificarSolicitud(){
 
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -339,8 +342,6 @@ function llenaDptoProgramas(){
 		case 'rechazarSolicitudes':
 		rechazarSolicitudes();
 		break;
-	/*case 'descargarSolicitud':
-		#break;*/
 		case 'detallesAlumno':
 		detallesAlumno();
 		break;
@@ -366,6 +367,9 @@ function llenaDptoProgramas(){
 		case 'llenaActProg':
 		llenaActProg();
 			# code...
+			break;
+		case 'modificarSolicitud':
+		modificarSolicitud();
 			break;
 		default:
 		# code...

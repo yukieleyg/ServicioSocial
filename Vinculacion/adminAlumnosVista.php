@@ -1,7 +1,9 @@
+<br><br><br>
 <div class="card-panel" id="divSolicitudes">
 	<table id="tablaSolicitudes">
 	</table>
 </div>
+<form id="frmDetallesAlumno" name="frmDetallesAlumno" action="">
 <div class="card-panel" id="divDetalles" align="center">
 	<label class="label label-default etiqueta">Detalles del Alumno</label><br><br><br>
 	<div  class="row" style="margin-left:170px;" name="divDatos1">
@@ -13,7 +15,12 @@
 	<div class="row" style="margin-left:170px;"  name="divDatos1">
 			<div class="col s5" style="text-align:left">
 				<label class="lInputs">Periodo:   </label><br><input class="cInputs"type="text" id="inputPeriodo" disabled="true"><br>
-				<label class="lInputs">Estado:   </label><br><input class="cInputs"type="text" id="inputEstado" disabled="true"><br>
+				<label class="lInputs">Estado:   </label><br>
+				<select name="selectEstado" id="selectEstado">
+					<option value="0">Pendiente</option>
+					<option value="1">Aceptado</option>
+					<option value="2">Rechazado</option>	
+				</select><br>
 				
 			</div>
 			<div class="col s5" style="text-align:left">
@@ -23,16 +30,14 @@
 	</div>
 	<div class="row" style="margin-left:170px;"  name="divDatos3">
 		<div class="col s5" style="text-align:left">
-			<label class="lInputs">Dependencia:   </label>
-			<select name="selectDependencia" id="selectInput" style="display: inline-block!important;"> 
-			</select>
+			<label class="lInputs">Dependencia:   </label><br>
+			<select name="" id=""></select><br>
 			<label class="lInputs">Telefono:   </label> <br><input class="cInputs"type="text" id="inputTelefono" disabled="true"><br>			
 		</div>
 		<div class="col s5" style="text-align:left">
 			<label class="lInputs">Programa: </label>
 			<br>
-			<select name="selectPrograma" id="hola" style="display: inline-block!important;"> 
-			</select>
+			<select name="" id=""></select><br>
 			<label class="lInputs">Email:   </label> <br><input class="cInputs"type="text" id="inputEmail" disabled="true"><br>
 		</div>
 	</div>
@@ -41,5 +46,9 @@
 			<label class="lInputs">Dirección:   </label> <br><input class="cInputs" type="text" id="inputDireccion" disabled><br>	
 			<label class="lInputs">Observaciones:   </label><br><textarea class="cInputs" type="textarea" id="inputMotivo" rows="4" cols="50"></textarea><br>
 		</div>
+	</div><br>
+	<div style="margin-left:550px;">
+		<input type="submit" class="btn btn-success">
 	</div>
+</form>
 </div>

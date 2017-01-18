@@ -6,16 +6,16 @@
 	<script src="../js/vinculacion.js"></script>	
 </head>
 <body>
-<nav class="navbar navbar-default left" id="barra">	
+<nav class="navbar navbar-default left grey lighten-4" id="barra">	
 				<ul>
-					<li class="dropdown">
+					<li class="dropdown" style="width: 15%;">
 						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuAlumnos"><i class="material-icons right">supervisor_account</i>Listado Sem.<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="muestraSolicitudes">Solicitudes</a></li>
 							<li><a id="muestraAlumnos">Alumnos</a></li>
 						</ul>
 					</li>
-					<li class="dropdown">
+					<li class="dropdown" style="width: 15%;">
 						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuRegistro"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="menuregistroEmpresas">Empresas</a></li>

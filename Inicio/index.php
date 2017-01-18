@@ -11,8 +11,8 @@
 		</div>-->
 	<section>
 		<div class="entradaUsuario card-panel" id="entradaUsuario">
-			<div class="card-panel  purple darken-1">
-				<h3 class="panel-title" id="titulo-entrar">DATOS DEL USUARIO</h3>
+			<div class="card-title purple darken-1" style="padding: 10%;" id= "divUsuario" name="divUsuario">	
+				<span id="titulo-entrar" >DATOS DEL USUARIO</span>	
 			</div>
 			<div class="row">
 				<div class="input-field col s11">
@@ -27,7 +27,9 @@
 					<a class="btn-floating btn-small waves-effect waves-light purple darken-1" id="mostrarClave"><i class="material-icons">visibility_off</i></a>
 				</div>
 			</div>
-			<button id="btnEntrar" class="btn btn-success btn-block green"><i class="material-icons left">send</i>Entrar</button>
+			<div id="divEntrar" name="divEntrar" class="center-align" >
+				<button  class="btn btn-success green" id="btnEntrar" name="btnEntrar"><i class="material-icons left">send</i>Entrar</button>
+			</div>
 		</div>
 
 	</section>

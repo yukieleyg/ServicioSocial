@@ -90,13 +90,15 @@ var admin = function (){
 			
 			success: function(data){
 				if(data.respuesta){
+					$("#inputTelefono").val(data.tel);
 					$("#inputNombre").val(data.nombre);
 					$("#inputEmail").val(data.email);
 					$("#inputCarrera").val(data.carrera);
 					$("#inputSemestre").val(data.semestre);
 					$("#inputDireccion").val(data.direccion);
 					$("#inputPeriodo").val(data.periodoAct);
-					$("#inputEstado").val(data.estado);
+					$("#selectEstado").val(data.estado+"");
+					$("#selectEstado").material_select();
 					$("#divSolicitudes").hide();
 					$("#divDetalles").show();
 				}
@@ -256,7 +258,6 @@ var admin = function (){
 				}
 		});
 	}
-
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);

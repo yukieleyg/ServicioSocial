@@ -3,7 +3,9 @@
 }
 #barra{
 	margin: -25px 0px 0px -80px;
+	background-color: gray;
+
 }
 .display{
-	margin-top: 80px;
+	margin-top: 30%;
 }
