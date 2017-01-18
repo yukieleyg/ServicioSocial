@@ -12,7 +12,8 @@
 						<a data-toggle="dropdown" class="waves-effect waves-teal btn-flat text-darken-1" id="menuAlumnos"><i class="material-icons right">supervisor_account</i>Listado Sem.<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="muestraSolicitudes">Solicitudes</a></li>
-							<li><a id="muestraAlumnos">Alumnos</a></li>
+							<li><a id="muestraAlumnos">Alumnos&nbsp;&nbsp;</a></li>
+							<li><a id="muestraProgramas">Programas</a></li>
 						</ul>
 					</li>
 					<li class="dropdown" style="width: 15%;">
@@ -35,19 +36,23 @@
 			</ul>
 </nav>
 <section id="opcVinculacion" class="display">
-	
-<div id="listadoAlumnos">
-	<?php include'adminAlumnosVista.php'; ?>
-</div>
-<div id="tarjetaControl">
-	<?php include 'divTarjetaControlVista.php'; ?>
-</div>
-<div id="registroEmpresas" class="card">
-	<?php include 'divRegistroEmpresa.php' ?>
-</div>
-<div id="registroProgramas" class="card">
-	<?php include 'divRegistroProgramas.php' ?>
-</div>
+	<br><br>	
+	<div id="listadoAlumnos">
+		<?php include'adminAlumnosVista.php'; ?>
+	</div>
+	<div id="listadoProgramas" class="card">
+		<?php include'divListadoProgramas.php'; ?>
+	</div>
+	</div>
+	<div id="tarjetaControl" class="card">
+		<?php include 'divTarjetaControlVista.php'; ?>
+	</div>
+	<div id="registroEmpresas" class="card">
+		<?php include 'divRegistroEmpresa.php' ?>
+	</div>
+	<div id="registroProgramas" class="card">
+		<?php include 'divRegistroProgramas.php' ?>
+	</div>
 	
 </section>
 </body>

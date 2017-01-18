@@ -106,7 +106,7 @@ var admin = function (){
 		})
 	}
 
-	var buscarTarjeta =function(tecla){
+	/*var buscarTarjeta =function(tecla){
 		if(tecla.which == TECLA_ENTER)
 		{
 			var ncontrol = $("#txtbuscaTarjeta").val();
@@ -128,7 +128,7 @@ var admin = function (){
 			});
 		}
 		
-	}
+	}*/
 
 	var muestraRegEmpresas= function(){
 		$('#opcVinculacion>div').hide();
@@ -235,9 +235,9 @@ var admin = function (){
 		});
 	}
 
-	$("#selprogdep").change(function() {
+	/*$("#selprogdep").change(function() {
  		$("#second-choice").load("getter.php?choice=" + $("#first-choice").val());
-	});
+	});*/
 	var cargadepartamentos= function(){
 		var parametros={selprogdep:$("#selprogdep").val(), opc:'llenaDptoProgramas'};
 		//var parametros = $("#selprogdep").val()+"&opc=llenaDptoProgramas"+"&id="+Math.random();
@@ -258,19 +258,105 @@ var admin = function (){
 				}
 		});
 	}
+	var muestralistaprogramas=function(){
+		console.log("muestraprogramas");
+		$('#opcVinculacion>div').hide();
+		$("#listadoProgramas").show("slow");
+		var parametros="opc=tablaprogramas";
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$("#tblprogramas").find('tr').remove();
+					$("#tblprogramas").append(data.renglones).html();
+				}
+			}
+		});
+
+	}
+
+    var disponibilidad=function(){
+    	var username = $("#txtdepusuario").val(); // Get username textbox using $(this)
+        var Result = $('#resultado'); // Get ID of the result DIV where we display the results
+        if(username.length > 2) { // if greater than 2 (minimum 3)
+            Result.html('Cargando...'); // you can use loading animation here
+            var parametros = 'action=disponible&username='+username;
+            $.ajax({ // Send the username val to available.php
+            type : 'POST',
+            data : parametros,
+            url  : '../datos/disponible.php',
+            success: function(responseText){ // Get the result
+                if(responseText == 0){
+                    Result.html('<span class="success"  style="color:green">Disponible</span>');
+                }
+                else if(responseText > 0){
+                    Result.html('<span class="error" style="color:red">No disponible</span>');
+                }
+                else{
+                    alert('Problem with sql query');
+                }
+            }
+            });
+        }else{
+            Result.html('Ingresa al menos 3 caracteres');
+        }
+        if(username.length == 0) {
+            Result.html('');
+        }
+    }
+
+    var buscarTarjeta =function(){
+		console.log("buscarTarjeta");
+			var ncontrol = $("#txtbuscaTarjeta").val();
+			var parametros ="opc=obtenerTarjetaAlm"+
+												"&ncontrol="+ncontrol;
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						$("#datosAlm:text").val("");
+						$("#datosAlm").show("slow");
+
+						alert("SI hay exp");
+						alert(data.alumno.nombre);
+						$("#tnombre").val(data.alumno.nombre);
+						$("#tedad").val(data.alumno.edad);
+						$("#tsexo").val(data.alumno.sexo).material_select();
+
+						$("#tdomicilio").val(data.alumno.domicilio);
+						$("#ttelefono").val(data.alumno.telefono);
+						$("#tncontrol").val(data.alumno.nocontrol);
+						$("#tcreditos").val(data.alumno.creditos);
+					}else{
+						alert("No se encontro el expediente");
+					}
+
+				}
+			});		
+	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
-	$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
+	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
 
 	$("#menuregistroProgramas").on("click",muestraRegProgramas);
 	$("#selprogdep").on("change", cargadepartamentos);
 	$("#frmRegistroProgramas").on("submit",registroProgramas);
+	$("#muestraProgramas").on("click",muestralistaprogramas);
 
+	$("#txtdepusuario").on('keyup',disponibilidad);
+	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
 }
 $(document).on("ready",admin);

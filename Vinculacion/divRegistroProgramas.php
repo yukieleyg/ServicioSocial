@@ -84,5 +84,8 @@
 		<input type="submit" class="btn btn-lg btn-block btn-success" value="Registrar">
 	</form>
 	<br>
+	<br>
 </div>
+
+
 
