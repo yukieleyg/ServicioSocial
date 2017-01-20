@@ -1,7 +1,9 @@
 var admin = function (){
 	var parametros="";
 	const TECLA_ENTER = 13;
+
 	var alumnosSolicitudes = function(){
+		$('#opcVinculacion>div').hide();
 		var parametros ="opc=muestraSolicitudes";
 		$.ajax({
 			type: "POST",
@@ -11,8 +13,7 @@ var admin = function (){
 
 			success: function(data){
 				if(data.respuesta){
-
-					$("#tablaSolicitudes").html(" ");
+					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
 					$("#divSolicitudes").show();
 				}

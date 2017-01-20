@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 	<link rel="stylesheet" href="../css/vinculacion.css">
 	<script src="../js/vinculacion.js"></script>	
 </head>
@@ -33,7 +32,7 @@
 </nav>
 <section id="opcVinculacion" class="display">
 	<br><br>	
-	<div id="listadoAlumnos">
+	<div id="listadoAlumnos" class="card">
 		<?php include'adminAlumnosVista.php'; ?>
 	</div>
 	<div id="listadoProgramas" class="card">
@@ -49,7 +48,6 @@
 	<div id="registroProgramas" class="card">
 		<?php include 'divRegistroProgramas.php' ?>
 	</div>
-	
 </section>
 </body>
 </html>
