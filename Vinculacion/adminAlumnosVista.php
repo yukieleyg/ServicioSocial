@@ -2,13 +2,14 @@
 	<table id="tablaSolicitudes">
 	</table>
 </div>
-<form id="frmDetallesAlumno" name="frmDetallesAlumno" action="">
+<form id="frmDetallesAlumno" name="frmDetallesAlumno">
+<input type="hidden" value= name="idSolicitud" id="idSolicitud" value="">
 <div class="card-panel" id="divDetalles" align="center">
 	<label class="label label-default etiqueta">Detalles del Alumno</label><br><br><br>
 	<div  class="row" style="margin-left:170px;" name="divDatos1">
 		<div class="col s10" style="text-align:left">
-			<label class="lInputs">Nombre:   </label> <br><input class="cInputs"type="text" id="inputNombre" disabled><br>	
-			<label class="lInputs">Carrera:  </label> <br><input class="cInputs"type="text" id="inputCarrera" disabled="true"><br>
+			<label class="lInputs">Nombre:   </label> <br><input class="cInputs" type="text" id="inputNombre" name="inputNombre" disabled><br>	
+			<label class="lInputs">Carrera:  </label> <br><input class="cInputs" type="text" id="inputCarrera" name="inputCarrera" disabled="true"><br>
 		</div>
 	</div>
 	<div class="row" style="margin-left:170px;"  name="divDatos1">
@@ -29,14 +30,11 @@
 	</div>
 	<div class="row" style="margin-left:170px;"  name="divDatos3">
 		<div class="col s5" style="text-align:left">
-			<label class="lInputs">Dependencia:   </label><br>
-			<select name="" id=""></select><br>
+			<label class="lInputs">Dependencia:   </label><br><input class="cInputs"type="text" id="inputDependencia" disabled="true"><br>
 			<label class="lInputs">Telefono:   </label> <br><input class="cInputs"type="text" id="inputTelefono" disabled="true"><br>			
 		</div>
 		<div class="col s5" style="text-align:left">
-			<label class="lInputs">Programa: </label>
-			<br>
-			<select name="" id=""></select><br>
+			<label class="lInputs">Programa: </label><br><input class="cInputs"type="text" id="inputPrograma" disabled="true"><br>
 			<label class="lInputs">Email:   </label> <br><input class="cInputs"type="text" id="inputEmail" disabled="true"><br>
 		</div>
 	</div>

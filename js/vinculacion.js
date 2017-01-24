@@ -98,10 +98,13 @@ var admin = function (){
 					$("#inputSemestre").val(data.semestre);
 					$("#inputDireccion").val(data.direccion);
 					$("#inputPeriodo").val(data.periodoAct);
+					$("#inputDependencia").val(data.dependencia);
+					$("#inputPrograma").val(data.programa);
 					$("#selectEstado").val(data.estado+"");
 					$("#selectEstado").material_select();
 					$("#divSolicitudes").hide();
 					$("#divDetalles").show();
+					//$("#idSolicitud").val()
 				}
 			}
 		})
@@ -342,7 +345,11 @@ var admin = function (){
 				}
 			});		
 	}
-
+	var modificarSolicitud = function(){
+		var frm = $("#frmDetallesAlumno").serialize()
+		console.log(frm);
+		
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -359,5 +366,7 @@ var admin = function (){
 
 	$("#txtdepusuario").on('keyup',disponibilidad);
 	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
+
+	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
 }
 $(document).on("ready",admin);
