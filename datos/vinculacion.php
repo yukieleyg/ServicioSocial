@@ -3,7 +3,7 @@ require_once('entrar.php');
 function muestraSolicitudes(){
 	$respuesta	= false;
 	$cn0		= conexionLocal();
-	$qryvalida0	= sprintf("select cveusuario_1,estado,cveprograma_1 from solicitudes");
+	$qryvalida0	= sprintf("select * from solicitudes");
 	$res0		= mysql_query($qryvalida0);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -17,6 +17,7 @@ function muestraSolicitudes(){
 	while($row0 = mysql_fetch_array($res0)){
 		$cveusuario  = $row0["cveusuario_1"];
 		$cveprograma = $row0["cveprograma_1"];
+		$cvesolicitud = $row0["cvesolicitud"];
 		$cn1		= conexionLocal();
 		$qryvalida1	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
 		$res1		= mysql_query($qryvalida1);
@@ -41,17 +42,17 @@ function muestraSolicitudes(){
 
 		if($row0["estado"]!=0){
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
-			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' disabled><i class= 'material-icons'>done_all</i></button></td>";
-			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' disabled><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."'><a href='../datos/descargarArchivos.php?usuario=".$cveusuario."'><i class = 'material-icons'>file_download</i></a></button></td>";
-			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
+			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."'><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 			
 		}else{
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
-			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveusuario."' ><i class= 'material-icons'>done_all</i></button></td>";
-			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveusuario."' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cveusuario."' ><a href='../datos/descargarArchivos.php?usuario=".$cveusuario."'><i class = 'material-icons'>file_download</i></a></button></td>";
-			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveusuario."' ><i class = 'material-icons'>list</i></button></td>";
+			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."'><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 
 		}
 
@@ -64,11 +65,12 @@ function muestraSolicitudes(){
 }
 function aceptarSolicitudes (){
 	$respuesta	= false;
-	$usuario	= "'".$_POST["solicitud"]."'";
+	$solicitud	= "'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
+	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
+	$usuario	= $row["cveusuario_1"];
 	$cnU 		= conexionLocal();
 	$aceptado 	= 1;
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$aceptado,$usuario);	
@@ -83,11 +85,12 @@ function aceptarSolicitudes (){
 }
 function rechazarSolicitudes (){
 	$respuesta	= false;
-	$usuario	= "'".$_POST["solicitud"]."'";
+	$solicitud	= "'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
+	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
+	$usuario	= $row["cveusuario_1"];
 	$cnU 		= conexionLocal();
 	$rechazado 	= 2;
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$rechazado,$usuario);	
@@ -156,18 +159,25 @@ function getCreditos($nocontrol){
 
 function detallesAlumno(){
  	$respuesta	= false;
-	$usuario	="'".$_POST["solicitud"]."'";
+	$solicitud	="'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("SELECT * from solicitudes where cveusuario_1 =%s",$usuario);
+	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$estado     = $row["estado"];
-	/*//	HACER SELECT DEL PROGRAMA Y DEPENDENCIA
-	$qryvalida	= sprintf("select * from programas where cveprograma = %s",$programa);
+	$usuario	= $row["cveusuario_1"];
+	//$cvesolicitud= $row[""]
+	$cveprograma = $row["cveprograma_1"];
+	$qryvalida	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
+	$programa	= $row["nombre"];
+	$cvedependencia = $row["cvedependencia"];
+	$qryvalida = sprintf("select * from dependencias where cvedependencia = %s", $cvedependencia);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$dependencia = $row["nomdependencia"];
 
-	$nombreprog	= $row["nombre"];*/
 	$cn2		= conexionBD();
 	$qryvalida1 = sprintf("SELECT * from DALUMN where ALUCTR =%s",$usuario);
 	$res1		= mysql_query($qryvalida1);
@@ -205,7 +215,7 @@ function detallesAlumno(){
 	}
 	$respuesta	= true;
 	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre, 'direccion' => $direccion, 'email' => $email, 'numcontrol' => $numcontrol, 'tel' => $tel, 
-	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel);
+	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel, 'dependencia' => $dependencia, 'programa' => $programa);
 	print json_encode($arrayJSON);
 }
 
@@ -404,8 +414,8 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	
-	function modificarSolicitud(){
-	}
+	/*function modificarSolicitud(){
+	}*/
 
 	$opc= $_POST["opc"];
 	switch ($opc){
@@ -444,9 +454,9 @@ function llenaDptoProgramas(){
 		llenaActProg();
 			# code...
 			break;
-		case 'modificarSolicitud':
+		/*case 'modificarSolicitud':
 		modificarSolicitud();
-		break;
+		break*/;
 		case 'tablaprogramas':
 		tablaprogramas();
 			break;

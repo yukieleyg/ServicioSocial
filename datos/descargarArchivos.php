@@ -11,8 +11,13 @@ require('fpdf.php');
 	mysql_select_db("serviciosocial");
 	return $cn;
 	}
+	$solicitud  = "'".$_GET["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$cveusuario	= $row["cveusuario_1"];
 	$cn		= conexionBD();
-	$cveusuario	= "'".$_GET["usuario"]."'";
 	$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
