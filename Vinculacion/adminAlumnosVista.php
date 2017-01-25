@@ -3,9 +3,9 @@
 	</table>
 </div>
 <form id="frmDetallesAlumno" name="frmDetallesAlumno">
-<input type="hidden" value= name="idSolicitud" id="idSolicitud" value="">
 <div class="card-panel" id="divDetalles" align="center">
 	<label class="label label-default etiqueta">Detalles del Alumno</label><br><br><br>
+	<input type="hidden" name="idSolicitud" id="idSolicitud">
 	<div  class="row" style="margin-left:170px;" name="divDatos1">
 		<div class="col s10" style="text-align:left">
 			<label class="lInputs">Nombre:   </label> <br><input class="cInputs" type="text" id="inputNombre" name="inputNombre" disabled><br>	
@@ -25,7 +25,7 @@
 			</div>
 			<div class="col s5" style="text-align:left">
 				<label class="lInputs">Semestre:   </label> <br><input class="cInputs"type="text" id="inputSemestre" disabled="true"><br>	
-				<label class="lInputs">Motivo:   </label><br><textarea class="cInputs" type="textarea" id="inputMotivo" rows="4" cols="50"></textarea><br>
+				<label class="lInputs">Motivo:   </label><br><input type="text" class="cInputs" id="inputMotivo" rows="4" cols="50"></input><br>
 			</div>
 	</div>
 	<div class="row" style="margin-left:170px;"  name="divDatos3">
@@ -41,11 +41,10 @@
 	<div  class="row" style="margin-left:170px;" name="divDatos2">
 		<div class="col s10" style="text-align:left">
 			<label class="lInputs">Dirección:   </label> <br><input class="cInputs" type="text" id="inputDireccion" disabled><br>	
-			<label class="lInputs">Observaciones:   </label><br><textarea class="cInputs" type="textarea" id="inputMotivo" rows="4" cols="50"></textarea><br>
+			<label class="lInputs">Observaciones:   </label><br><input type="text" class="cInputs" id="inputObservaciones" rows="4" cols="50"></input><br>
 		</div>
 	</div><br>
 	<div style="margin-left:550px;">
 		<input type="submit" class="btn btn-success">
 	</div>
 </form>
-</div>

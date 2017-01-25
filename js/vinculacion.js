@@ -3,30 +3,31 @@ var admin = function (){
 	const TECLA_ENTER = 13;
 
 	var alumnosSolicitudes = function(){
-		$('#opcVinculacion>div').hide();
+		
 		var parametros ="opc=muestraSolicitudes";
 		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url:"../datos/vinculacion.php",
 			data: parametros,
-
 			success: function(data){
 				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
 					$("#divSolicitudes").show();
+					$("#listadoAlumnos").show();
 				}
 				
 			}
 		});
 
-		$("#listadoAlumnos").show();
+		
 	}
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Estas seguro de que quieres aceptar la solicitud del usuario "+solicitud+"?");
+		var r = confirm("¿Esta seguro que desea aceptar la solicitud ");
 		if(r){
 			$.ajax({
 				type: "POST",
@@ -52,7 +53,7 @@ var admin = function (){
 	var rechazarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=rechazarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Estas seguro de que quieres rechazar la solicitud del usuario "+solicitud+"?");
+		var r = confirm("¿Esta seguro que desea rechazar la solicitud ?");
 		if(r){
 			$.ajax({
 				type: "POST",
@@ -100,11 +101,11 @@ var admin = function (){
 					$("#inputPeriodo").val(data.periodoAct);
 					$("#inputDependencia").val(data.dependencia);
 					$("#inputPrograma").val(data.programa);
+					$("#idSolicitud").val(data.solicitud);
 					$("#selectEstado").val(data.estado+"");
 					$("#selectEstado").material_select();
 					$("#divSolicitudes").hide();
 					$("#divDetalles").show();
-					//$("#idSolicitud").val()
 				}
 			}
 		})
@@ -345,9 +346,55 @@ var admin = function (){
 				}
 			});		
 	}
-	var modificarSolicitud = function(){
-		var frm = $("#frmDetallesAlumno").serialize()
-		console.log(frm);
+	var detallesSolicitud = function(){
+		event.preventDefault();
+		var solicitud 		= $("#idSolicitud").val();
+		var estado 			= $("#selectEstado").val();
+		var motivo 			= $("#inputMotivo").val();
+		var observaciones	= $("#inputObservaciones").val();
+		var parametros		= "opc=detallesSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+						if(r){	
+							var parametros = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+							$.ajax({
+								type: "POST",
+								dataType: "json",
+								url:"../datos/vinculacion.php",
+								data: parametros,
+								success: function(dataM){
+									if(dataM.respuestaM){
+										alert("Modificación Exitosa");
+										$('#divDetalles').hide();
+										alumnosSolicitudes();
+									}else{
+										alert("No se puede modificar esta solicitud");
+										$('#divDetalles').hide();
+										alumnosSolicitudes();									}
+								}
+								
+
+							});
+
+						}
+
+					}else{
+						$('#divDetalles').hide();
+						alumnosSolicitudes();
+
+					}
+
+				}
+			});	
+		
+				
 		
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
@@ -355,6 +402,8 @@ var admin = function (){
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
+	$("#frmDetallesAlumno").on("submit",detallesSolicitud);
+	
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
@@ -366,7 +415,5 @@ var admin = function (){
 
 	$("#txtdepusuario").on('keyup',disponibilidad);
 	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
-
-	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
 }
 $(document).on("ready",admin);

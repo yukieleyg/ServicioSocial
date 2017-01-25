@@ -166,7 +166,6 @@ function detallesAlumno(){
 	$row 		= mysql_fetch_array($res);
 	$estado     = $row["estado"];
 	$usuario	= $row["cveusuario_1"];
-	//$cvesolicitud= $row[""]
 	$cveprograma = $row["cveprograma_1"];
 	$qryvalida	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
 	$res		= mysql_query($qryvalida);
@@ -215,7 +214,7 @@ function detallesAlumno(){
 	}
 	$respuesta	= true;
 	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre, 'direccion' => $direccion, 'email' => $email, 'numcontrol' => $numcontrol, 'tel' => $tel, 
-	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel, 'dependencia' => $dependencia, 'programa' => $programa);
+	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel, 'dependencia' => $dependencia, 'programa' => $programa, 'solicitud' => $solicitud);
 	print json_encode($arrayJSON);
 }
 
@@ -414,9 +413,50 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	
-	/*function modificarSolicitud(){
-	}*/
+	function detallesSolicitud(){
+		$solicitud		= $_POST["solicitud"]; 
+		$motivo			= "'".$_POST["motivo"]."'"; 
+		$observaciones	= "'".$_POST["observaciones"]."'";
+		$estado 		= "'".$_POST["estado"]."'";
+		$conexion 		= conexionLocal();
+		$qryvalida 		= sprintf("select * from solicitudes where cvesolicitud=%s", $solicitud);
+		$res 			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$motivoAnt		= $row["motivo"];
+		$estadoAnt		= $row["estado"];
+		$respuesta 	    = false;
+		$observacionesAnt = $row["observaciones"];
+		if(($motivo <> "'".$motivoAnt."'") or ($observaciones <> "'".$observacionesAnt."'") or ($estado <> "'".$estadoAnt."'")){
+			$respuesta = true;
+			/*$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
+			//$resU 		= mysql_query($qryvalidaU);
+			if(mysql_affected_rows()>0){
+				$respuesta = true;
+			}else{
+				$respuesta = false;
+			}*/
+		}
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
+	function modificarSolicitud(){
+		$respuesta		= false;
+		$solicitud		= $_POST["solicitud"]; 
+		$motivo			= "'".$_POST["motivo"]."'"; 
+		$observaciones	= "'".$_POST["observaciones"]."'";
+		$estado 		= "'".$_POST["estado"]."'";
+		$conexion 		= conexionLocal();
+		$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
+		$resU 		= mysql_query($qryvalidaU);
+		if(mysql_affected_rows()>0){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+		$arrayJSON = array('respuestaM' => $respuesta);
+		print json_encode($arrayJSON);
 
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -454,12 +494,14 @@ function llenaDptoProgramas(){
 		llenaActProg();
 			# code...
 			break;
-		/*case 'modificarSolicitud':
-		modificarSolicitud();
-		break*/;
+		case 'detallesSolicitud':
+		detallesSolicitud();
+			break;
 		case 'tablaprogramas':
 		tablaprogramas();
 			break;
+		case 'modificarSolicitud':
+		modificarSolicitud();
 		default:
 		# code...
 		break;
