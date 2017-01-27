@@ -32,8 +32,11 @@
 </nav>
 <section id="opcVinculacion" class="display">
 	<br><br>	
-	<div id="listadoAlumnos" class="card">
-		<?php include'adminAlumnosVista.php'; ?>
+	<div id="listadoSolicitudes" class="card">
+		<?php include'divSolicitudes.php'; ?>
+	</div>
+	<div id="detallesSolicitudA" class="card">
+		<?php include'detallesSolicitud.php'; ?>
 	</div>
 	<div id="listadoProgramas" class="card">
 		<?php include'divListadoProgramas.php'; ?>

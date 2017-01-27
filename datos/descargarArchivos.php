@@ -93,7 +93,6 @@ require('fpdf.php');
 	$pdf->Text(98,103.5,$nombre);
 	$pdf->Text(95,111,$periodo);
 	$pdf->Text(120,111,$email);
-	//$pdf->Image('solicitudSS.jpg',20,20,0);
 	$cn			= conexionLocal();
 	$qryvalida	= sprintf("select * from solicitudes where cveusuario_1 = %s",$cveusuario);
 	$res		= mysql_query($qryvalida);
@@ -161,18 +160,19 @@ require('fpdf.php');
 	$pdf->Text(75,144,$titular);
 	$pdf->Text(70,129,$nomdependencia);
 	$pdf->Text(53,166.5,$modalidad);
-	/*$inicio = 0;
-	$cordenadaY= 152;
+	$inicio = 0;
+	$cordenadaY= 173;
 	if(strlen($desact)>90){
 		while ($inicio<strlen($desact)) {
 			$renglon= substr($desact, $inicio,90);
-			$pdf->Text(38,$cordenadaY,$renglon);
+			$pdf->Text(53,$cordenadaY,$renglon);
 			$inicio=$inicio+90;
 			$cordenadaY=$cordenadaY+6;
 		}
 
-	}*/
-	//$pdf->Text(38,152,$desact);
+	}else{
+		$pdf->Text(53,173,$desact);
+	}
 	$pdf->Output();
 
 ?>

@@ -3,8 +3,9 @@ var admin = function (){
 	const TECLA_ENTER = 13;
 
 	var alumnosSolicitudes = function(){
-		
+
 		var parametros ="opc=muestraSolicitudes";
+		
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -15,8 +16,7 @@ var admin = function (){
 					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
-					$("#divSolicitudes").show();
-					$("#listadoAlumnos").show();
+					$("#listadoSolicitudes").show();
 				}
 				
 			}
@@ -92,6 +92,7 @@ var admin = function (){
 			
 			success: function(data){
 				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
 					$("#inputTelefono").val(data.tel);
 					$("#inputNombre").val(data.nombre);
 					$("#inputEmail").val(data.email);
@@ -101,11 +102,12 @@ var admin = function (){
 					$("#inputPeriodo").val(data.periodoAct);
 					$("#inputDependencia").val(data.dependencia);
 					$("#inputPrograma").val(data.programa);
+					$("#inputObservaciones").val(data.observaciones);
+					$("#inputMotivo").val(data.motivo);
 					$("#idSolicitud").val(data.solicitud);
 					$("#selectEstado").val(data.estado+"");
 					$("#selectEstado").material_select();
-					$("#divSolicitudes").hide();
-					$("#divDetalles").show();
+					$("#detallesSolicitudA").show();
 				}
 			}
 		})
@@ -264,7 +266,6 @@ var admin = function (){
 		});
 	}
 	var muestralistaprogramas=function(){
-		console.log("muestraprogramas");
 		$('#opcVinculacion>div').hide();
 		$("#listadoProgramas").show("slow");
 		var parametros="opc=tablaprogramas";
@@ -386,7 +387,6 @@ var admin = function (){
 						}
 
 					}else{
-						$('#divDetalles').hide();
 						alumnosSolicitudes();
 
 					}
@@ -402,7 +402,7 @@ var admin = function (){
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
 	$("#menuTarjeta").on("click",muestraTarjeta);
-	$("#frmDetallesAlumno").on("submit",detallesSolicitud);
+	$("#frmDetallesSolicitud").on("submit",detallesSolicitud);
 	
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);

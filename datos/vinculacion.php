@@ -44,14 +44,14 @@ function muestraSolicitudes(){
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."'><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 			
 		}else{
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."'><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 
 		}
@@ -167,6 +167,8 @@ function detallesAlumno(){
 	$estado     = $row["estado"];
 	$usuario	= $row["cveusuario_1"];
 	$cveprograma = $row["cveprograma_1"];
+	$motivo 	 	= $row["motivo"];
+	$observaciones 	= $row["observaciones"];
 	$qryvalida	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
@@ -214,7 +216,7 @@ function detallesAlumno(){
 	}
 	$respuesta	= true;
 	$arrayJSON = array('respuesta' => $respuesta, 'nombre' => $nombre, 'direccion' => $direccion, 'email' => $email, 'numcontrol' => $numcontrol, 'tel' => $tel, 
-	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel, 'dependencia' => $dependencia, 'programa' => $programa, 'solicitud' => $solicitud);
+	'carrera' => $nomcarrera, 'semestre' => $semestre, 'periodoAct' => $meses, 'estado' => $estado, 'tel' => $tel, 'dependencia' => $dependencia, 'programa' => $programa, 'solicitud' => $solicitud, 'motivo' => $motivo, 'observaciones' => $observaciones);
 	print json_encode($arrayJSON);
 }
 
@@ -267,14 +269,11 @@ function registrarEmpresa(){
 		mysql_query($consUsuario);
 
 		if(mysql_affected_rows()>0){
-			//print("usuario insertado");
-			//agregar la empresa a la BD
 			$consulta = sprintf("insert into dependencias values(NULL,%s,%s,%s,%s,%s,%s,%s)",$depnom,$depusuario,$deprfc,$deptitular,$depdir,$deptel,$seldepest);
 			$resconsulta= mysql_query($consulta);
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
-				//print("respuesta true");
 			}
 
 		}
@@ -284,7 +283,6 @@ function registrarEmpresa(){
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
-				//print("respuesta true");
 			}
 
 	}else{
@@ -394,18 +392,22 @@ function llenaDptoProgramas(){
 	function tablaprogramas(){
 		$respuesta	= false;
 		$cn=conexionLocal();
-		$qry= sprintf("select nombre,cvedependencia,vacantes,carrerapref from programas");
+		$qry= sprintf("select * from programas");
 		$res= mysql_query($qry);
 
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Vacantes</th><th>Carrera</th></tr></thead><tbody>";
-
+		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Vacantes</th><th>Carrera</th><th>Estado</th><th>Vigencia</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
 			$nombre 	= $renglon["nombre"];
 			$dependencia= $renglon["cvedependencia"];
 			$vacantes 	= $renglon["vacantes"];
 			$carrera 	= $renglon["carrerapref"];
+			$cveprograma 	= $renglon["cveprograma"];
+			$estado 		= $renglon["estado"];
+			$vigencia 		= $renglon["vigencia"]; 
+			$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
 
-			$tabla.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td></tr>";	
+
 		}
 		$tabla.="</tbody>";
 		$respuesta=true;
@@ -428,13 +430,6 @@ function llenaDptoProgramas(){
 		$observacionesAnt = $row["observaciones"];
 		if(($motivo <> "'".$motivoAnt."'") or ($observaciones <> "'".$observacionesAnt."'") or ($estado <> "'".$estadoAnt."'")){
 			$respuesta = true;
-			/*$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
-			//$resU 		= mysql_query($qryvalidaU);
-			if(mysql_affected_rows()>0){
-				$respuesta = true;
-			}else{
-				$respuesta = false;
-			}*/
 		}
 		$arrayJSON = array('respuesta' => $respuesta);
 		print json_encode($arrayJSON);
