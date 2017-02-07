@@ -50,7 +50,6 @@ function validaentrada()
 	$arrayJSON = array('respuesta' => $respuesta, 'creditos'=> $creditos,'nombre' => $nombre, 'tipo' => $tipo);
 	print json_encode($arrayJSON);
 }
-
 $opc= $_POST["opc"];
 switch ($opc) {
 	case 'validaentrada':

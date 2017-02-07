@@ -39,7 +39,7 @@ var admin = function (){
 					if(data.respuesta){
 						alumnosSolicitudes();
 					}else{
-						alert("Esta solicitud no puede ser aceptada");
+						alert("Esta solicitud no ha podido ser aceptada");
 					}
 				}
 
@@ -65,7 +65,7 @@ var admin = function (){
 					if(data.respuesta){
 						alumnosSolicitudes();
 					}else{
-						alert("Esta solicitud no puede ser rechazada");
+						alert("Esta solicitud no ha podido ser rechazada");
 					}
 				}
 
@@ -81,9 +81,9 @@ var admin = function (){
 		$('#opcVinculacion>div').hide();
 		$("#tarjetaControl").show("slow");
 	}
-	var detallesAlumno = function() {
+	var verDetallesSolicitud = function() {
 		var solicitud 	= $(this).val();
-		var parametros 	= "opc=detallesAlumno"+"&solicitud="+solicitud;
+		var parametros 	= "opc=verDetallesSolicitud"+"&solicitud="+solicitud;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -266,8 +266,6 @@ var admin = function (){
 		});
 	}
 	var muestralistaprogramas=function(){
-		$('#opcVinculacion>div').hide();
-		$("#listadoProgramas").show("slow");
 		var parametros="opc=tablaprogramas";
 		$.ajax({
 			type:"POST",
@@ -276,8 +274,10 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
-					$("#tblprogramas").find('tr').remove();
-					$("#tblprogramas").append(data.renglones).html();
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#listadoProgramas").show();
 				}
 			}
 		});
@@ -348,7 +348,6 @@ var admin = function (){
 			});		
 	}
 	var detallesSolicitud = function(){
-		event.preventDefault();
 		var solicitud 		= $("#idSolicitud").val();
 		var estado 			= $("#selectEstado").val();
 		var motivo 			= $("#inputMotivo").val();
@@ -397,23 +396,118 @@ var admin = function (){
 				
 		
 	}
+	var detallesProgramas = function () {
+		var programa 	= $(this).val();
+		var estado 		= $("#estadoPrograma").val();
+		var vigencia	= $("#vigenciaPrograma").val();
+		var parametros 	= "opc=detallesPrograma"+"&programa="+programa+"&vigencia="+vigencia+"&estado="+estado;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta){
+					$('#nombre').val(data.nombreP);
+					$('#tipodeactividades').val(data.tipoAct);
+					$('#desAct').val(data.desAct);
+					$('#tipoprograma').val(data.tipoP);
+					$('#empresa').val(data.empresa);
+					$('#responsable').val(data.resposable);
+					//$('#estadoPrograma').val(data.estado);
+					$('#modalidad').val(data.modalidad);
+					$('#departamento').val(data.departamento);
+					$('#puesto').val(data.puesto);
+					//$('#vigenciaPrograma').val(data.vigencia);
+					$('#objetivo').val(data.objetivo);
+
+					$("#estadoPrograma").val(data.estado+"");
+					$("#estadoPrograma").material_select();
+
+					$("#vigenciaPrograma").val(data.vigencia+"");
+					$("#vigenciaPrograma").material_select();
+					//$('#').val(data.);
+
+					$('#opcVinculacion>div').hide();
+					$("#detallesPrograma").show("slow");
+				}else{
+					alert("No se ha podido mostrar los detalles de este programa");
+				}
+			}
+
+		});
+
+	}
+	var aceptarProgramas = function (){
+		var programa 	= $(this).val();
+		var parametros	= "opc=aceptarPrograma"+"&programa="+programa;
+		var r = confirm("¿Esta seguro que desea aceptar este programa ?");
+		if(r){
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+					if(data.respuesta){
+						muestralistaprogramas();
+					}else{
+						alert("Este programa no ha podido ser aceptado");
+					}
+				}
+
+
+			});
+
+
+		}		
+	}
+	var rechazarProgramas = function(){
+		var programa 	= $(this).val();
+		var parametros	= "opc=rechazarPrograma"+"&programa="+programa;
+				var r = confirm("¿Esta seguro que desea rechazar este programa ?");
+				if(r){
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						url: "../datos/vinculacion.php",
+						data: parametros,
+						success: function(data){
+							if(data.respuesta){
+								muestralistaprogramas();
+							}else{
+								alert("Este programa no ha podido ser rechazado");
+							}
+						}
+
+
+					});
+
+
+				}		
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
-	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
-	$("#menuTarjeta").on("click",muestraTarjeta);
+	$("#tablaSolicitudes").on("click", "#detalles",verDetallesSolicitud);
 	$("#frmDetallesSolicitud").on("submit",detallesSolicitud);
 	
+	$("#muestraProgramas").on("click",muestralistaprogramas);
+	$("#tblprogramas").on("click","#detallesProgramas",detallesProgramas);
+	$("#tblprogramas").on("click","#aceptar",aceptarProgramas);
+	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
+
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
-
 	$("#menuregistroProgramas").on("click",muestraRegProgramas);
-	$("#selprogdep").on("change", cargadepartamentos);
 	$("#frmRegistroProgramas").on("submit",registroProgramas);
-	$("#muestraProgramas").on("click",muestralistaprogramas);
 
+	$("#selprogdep").on("change", cargadepartamentos);
 	$("#txtdepusuario").on('keyup',disponibilidad);
 	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
+	$("#menuTarjeta").on("click",muestraTarjeta);
+
 }
 $(document).on("ready",admin);

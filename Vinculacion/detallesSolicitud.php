@@ -2,7 +2,7 @@
 	<div class="card-panel" id="divDetallesA" align="center">
 		<label class="label label-default etiqueta">Detalles del Alumno</label><br><br><br>
 		<input type="hidden" name="idSolicitud" id="idSolicitud">
-		<div  class="row" style="margin-left:170px;" name="divDatos1">
+		<div  class="row" style="margin-left:170px;" name="divDatos">
 			<div class="col s10" style="text-align:left">
 				<label class="lInputs">Nombre:   </label> <br><input class="cInputs" type="text" id="inputNombre" name="inputNombre" disabled><br>	
 				<label class="lInputs">Carrera:  </label> <br><input class="cInputs" type="text" id="inputCarrera" name="inputCarrera" disabled="true"><br>

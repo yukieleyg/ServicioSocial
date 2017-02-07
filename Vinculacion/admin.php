@@ -51,6 +51,9 @@
 	<div id="registroProgramas" class="card">
 		<?php include 'divRegistroProgramas.php' ?>
 	</div>
+	<div id="detallesPrograma" class="card">
+		<?php include 'divDetallesPrograma.php' ?>
+	</div>
 </section>
 </body>
 </html>

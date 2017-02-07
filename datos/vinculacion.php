@@ -73,7 +73,7 @@ function aceptarSolicitudes (){
 	$usuario	= $row["cveusuario_1"];
 	$cnU 		= conexionLocal();
 	$aceptado 	= 1;
-	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$aceptado,$usuario);	
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
@@ -93,7 +93,7 @@ function rechazarSolicitudes (){
 	$usuario	= $row["cveusuario_1"];
 	$cnU 		= conexionLocal();
 	$rechazado 	= 2;
-	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cveusuario_1 = %s",$rechazado,$usuario);	
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$rechazado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
@@ -157,7 +157,7 @@ function getCreditos($nocontrol){
 }
 
 
-function detallesAlumno(){
+function verDetallesSolicitud(){
  	$respuesta	= false;
 	$solicitud	="'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
@@ -403,9 +403,35 @@ function llenaDptoProgramas(){
 			$carrera 	= $renglon["carrerapref"];
 			$cveprograma 	= $renglon["cveprograma"];
 			$estado 		= $renglon["estado"];
+			if($estado = "0"){
+				$estado="Pendiente";
+			}elseif($estado = "1"){
+				$estado="Aceptado";
+			}elseif($estado="2"){
+				$estado="Rechazado";
+			}
 			$vigencia 		= $renglon["vigencia"]; 
-			$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
-			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+			if($vigencia=="1"){
+				$vigencia= "Vigente";
+			}else{
+				$vigencia = "Expirado";
+			}
+			if($estado =="0"){
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+
+
+			}else{
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+
+
+			}
+
 
 
 		}
@@ -452,6 +478,81 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 
 	}
+	function aceptarPrograma(){
+		$respuesta 		= false;
+		$programa 		= $_POST["programa"];
+		$cn 			= conexionLocal();
+		$qryvalida		= sprintf("SELECT * from programas where cveprograma =%s",$programa);
+		$res			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$aceptado 		= 1;
+		$qryvalidaU		= sprintf("UPDATE programas SET estado = %s WHERE  cveprograma = %s",$aceptado,$programa);	
+		$resU 			= mysql_query($qryvalidaU);
+		if($resU){
+			$respuesta = true;
+		}
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+
+	}
+	function rechazarPrograma(){
+		$respuesta 		= false;
+		$programa 		= $_POST["programa"];
+		$cn 			= conexionLocal();
+		$qryvalida		= sprintf("SELECT * from programas where cveprograma =%s",$programa);
+		$res			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$rechazado 		= 2;
+		$qryvalidaU		= sprintf("UPDATE programas SET estado = %s WHERE  cveprograma = %s",$rechazado,$programa);	
+		$resU 			= mysql_query($qryvalidaU);
+		if($resU){
+			$respuesta = true;
+		}
+
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+
+	}
+	function detallesPrograma(){
+		$respuesta 		= false;
+		$programa 		= $_POST["programa"];
+		$vigenciaAnt 	= $_POST["vigencia"];
+		$estadoAnt 		= $_POST["estado"];
+		$cn 			= conexionLocal();
+		$qryvalida 		= sprintf("SELECT * from programas where cveprograma =%s", $programa);
+		$res 			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		if($res){
+			$respuesta 	= true;
+		}
+		$nombreP		= $row["nombre"];
+		$tipoAct		= $row["tipoact"];
+		$desAct			= $row["tipoactdes"];
+		$tipoP			= $row["tipoprog"];
+		$modalidad 		= $row["modalidad"];
+		$responsable 	= $row["nomresp"];
+		$puesto			= $row["puestoresp"];
+		$objetivo 		= $row["objetivo"];
+		$vacantes 		= $row["vacantes"];
+		//$carrerapref 	= $row["carrerapref"];
+		$vigencia 		= $row["vigencia"];
+		$estado 		= $row["estado"];
+		$cvedependencia = $row["cvedependencia"];
+		$cvedepartamento = $row["cveprograma"];
+		$qryvalida 		= sprintf("SELECT * from dependencias where cvedependencia =%s", $cvedependencia);
+		$res 			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$empresa		= $row["nomdependencia"];
+		$qryvalida 		= sprintf("SELECT * from departamentos where cvedependencia =%s and cvedepartamento =%s", $cvedependencia, $cvedepartamento);
+		$res 			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$departamento	= $row["nomdepartamento"];
+
+		$arrayJSON 		= array('respuesta' => $respuesta, 'nombreP' => $nombreP, 'tipoAct' => $tipoAct, 'desAct' => $desAct, 'tipoP' => $tipoP, 'modalidad' => $modalidad, 'resposable' => $responsable, 'puesto' => $puesto, 
+		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento);
+		print json_encode($arrayJSON);
+	}
+
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -463,8 +564,8 @@ function llenaDptoProgramas(){
 		case 'rechazarSolicitudes':
 		rechazarSolicitudes();
 		break;
-		case 'detallesAlumno':
-		detallesAlumno();
+		case 'verDetallesSolicitud':
+		verDetallesSolicitud();
 		break;
 		case 'obtenerTarjetaAlm':
 		obtenerTarjetaAlm();
@@ -497,6 +598,20 @@ function llenaDptoProgramas(){
 			break;
 		case 'modificarSolicitud':
 		modificarSolicitud();
+		break;
+		
+		case 'aceptarPrograma':
+		aceptarPrograma();
+		break;
+
+		case 'rechazarPrograma':
+		rechazarPrograma();
+		break;
+
+		case 'detallesPrograma':
+		detallesPrograma();
+		break;
+
 		default:
 		# code...
 		break;
