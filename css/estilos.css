@@ -44,9 +44,7 @@ table tr th{
 	float:left;
 
 }
-#divDetalles{
-	display: none;
-}
+
 #entradaUsuario{
 	font-family: "Helvetica";
 }
@@ -54,11 +52,11 @@ table tr th{
 	bottom: 60px; 
 	left: 160px;
 }
-#divSolicitudes{
-	display: none;
-}
-#tablaSolicitudes tr{
+#tablaSolicitudes,#tblprogramas tr{
 	text-align: right;
+}
+#tblprogramas th{
+	text-align: left;
 }
 #titulo-entrar{
 	color:white;
@@ -97,9 +95,9 @@ table tr th{
 	margin-top: 120px;
 	width:900px;
 }
-#divDatos1{
+/*.divDatos5, #divDatos1, #divDatos{
 	display:inline;
-}
+}*/
 .lInputs{
 	margin-right: 400px;
 }

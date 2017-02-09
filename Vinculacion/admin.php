@@ -34,8 +34,11 @@
 </nav>
 <section id="opcVinculacion" class="display col s12 m6">
 	<br><br>	
-	<div id="listadoAlumnos" class="card">
-		<?php include'adminAlumnosVista.php'; ?>
+	<div id="listadoSolicitudes" class="card">
+		<?php include'divSolicitudes.php'; ?>
+	</div>
+	<div id="detallesSolicitudA" class="card">
+		<?php include'detallesSolicitud.php'; ?>
 	</div>
 	<div id="listadoProgramas" class="card">
 		<?php include'divListadoProgramas.php'; ?>
@@ -49,6 +52,9 @@
 	</div>
 	<div id="registroProgramas" class="card">
 		<?php include 'divRegistroProgramas.php' ?>
+	</div>
+	<div id="detallesPrograma" class="card">
+		<?php include 'divDetallesPrograma.php' ?>
 	</div>
 </section>
 </body>

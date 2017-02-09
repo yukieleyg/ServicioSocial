@@ -3,30 +3,32 @@ var admin = function (){
 	const TECLA_ENTER = 13;
 
 	var alumnosSolicitudes = function(){
-		$('#opcVinculacion>div').hide();
+
 		var parametros ="opc=muestraSolicitudes";
+		
 		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url:"../datos/vinculacion.php",
 			data: parametros,
-
 			success: function(data){
 				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
-					$("#divSolicitudes").show();
+					$("#listadoSolicitudes").show();
 				}
 				
 			}
 		});
 
-		$("#listadoAlumnos").show();
+		
 	}
+
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Estas seguro de que quieres aceptar la solicitud del usuario "+solicitud+"?");
+		var r = confirm("¿Esta seguro que desea aceptar la solicitud ");
 		if(r){
 			$.ajax({
 				type: "POST",
@@ -38,7 +40,7 @@ var admin = function (){
 					if(data.respuesta){
 						alumnosSolicitudes();
 					}else{
-						alert("Esta solicitud no puede ser aceptada");
+						alert("Esta solicitud no ha podido ser aceptada");
 					}
 				}
 
@@ -52,7 +54,7 @@ var admin = function (){
 	var rechazarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=rechazarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Estas seguro de que quieres rechazar la solicitud del usuario "+solicitud+"?");
+		var r = confirm("¿Esta seguro que desea rechazar la solicitud ?");
 		if(r){
 			$.ajax({
 				type: "POST",
@@ -64,7 +66,7 @@ var admin = function (){
 					if(data.respuesta){
 						alumnosSolicitudes();
 					}else{
-						alert("Esta solicitud no puede ser rechazada");
+						alert("Esta solicitud no ha podido ser rechazada");
 					}
 				}
 
@@ -80,9 +82,9 @@ var admin = function (){
 		$('#opcVinculacion>div').hide();
 		$("#tarjetaControl").show("slow");
 	}
-	var detallesAlumno = function() {
+	var verDetallesSolicitud = function() {
 		var solicitud 	= $(this).val();
-		var parametros 	= "opc=detallesAlumno"+"&solicitud="+solicitud;
+		var parametros 	= "opc=verDetallesSolicitud"+"&solicitud="+solicitud;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -91,6 +93,7 @@ var admin = function (){
 			
 			success: function(data){
 				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
 					$("#inputTelefono").val(data.tel);
 					$("#inputNombre").val(data.nombre);
 					$("#inputEmail").val(data.email);
@@ -100,11 +103,12 @@ var admin = function (){
 					$("#inputPeriodo").val(data.periodoAct);
 					$("#inputDependencia").val(data.dependencia);
 					$("#inputPrograma").val(data.programa);
+					$("#inputObservaciones").val(data.observaciones);
+					$("#inputMotivo").val(data.motivo);
+					$("#idSolicitud").val(data.solicitud);
 					$("#selectEstado").val(data.estado+"");
 					$("#selectEstado").material_select();
-					$("#divSolicitudes").hide();
-					$("#divDetalles").show();
-					//$("#idSolicitud").val()
+					$("#detallesSolicitudA").show();
 				}
 			}
 		})
@@ -263,9 +267,6 @@ var admin = function (){
 		});
 	}
 	var muestralistaprogramas=function(){
-		console.log("muestraprogramas");
-		$('#opcVinculacion>div').hide();
-		$("#listadoProgramas").show("slow");
 		var parametros="opc=tablaprogramas";
 		$.ajax({
 			type:"POST",
@@ -274,8 +275,10 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
-					$("#tblprogramas").find('tr').remove();
-					$("#tblprogramas").append(data.renglones).html();
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#listadoProgramas").show();
 				}
 			}
 		});
@@ -359,7 +362,6 @@ var admin = function (){
 				}
 			});		
 	}
-
 	var documentosExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
 
@@ -380,7 +382,9 @@ var admin = function (){
 				data: parametros,
 
 				success: function(data){
-					if(data.respuesta){
+					if(data.respuesta==false){
+						Materialize.toast('No se encontró el expediente', 4000);
+					}else{
 						/*
 						determinar si ya realizo o no el curso de induccion
 						if(data.solicitud ==1){
@@ -409,44 +413,210 @@ var admin = function (){
 						}
 
 						$("#controlexpediente1").show("slow");
+					}
+				}
+			});
+	}
+	var detallesSolicitud = function(){
+		var solicitud 		= $("#idSolicitud").val();
+		var estado 			= $("#selectEstado").val();
+		var motivo 			= $("#inputMotivo").val();
+		var observaciones	= $("#inputObservaciones").val();
+		var parametros		= "opc=detallesSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta){
+						var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+						if(r){	
+							var parametros = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+							$.ajax({
+								type: "POST",
+								dataType: "json",
+								url:"../datos/vinculacion.php",
+								data: parametros,
+								success: function(dataM){
+									if(dataM.respuestaM){
+										alert("Modificación Exitosa");
+										$('#divDetalles').hide();
+										alumnosSolicitudes();
+									}else{
+										alert("No se puede modificar esta solicitud");
+										$('#divDetalles').hide();
+										alumnosSolicitudes();									}
+								}
+								
+
+							});
+
+						}
+
 					}else{
-						Materialize.toast('No se encontró el expediente', 4000);
+						alumnosSolicitudes();
 					}
 
 				}
 			});	
-		
 	}
 	var llenarTarjeta=function(){
 		//fn para llenar los badges de la tarjeta
 		documentosExpediente();
 		buscarTarjeta();
 	}
+	var detallesProgramas = function () {
+		var programa 	= $(this).val();
+		var estado 		= $("#estadoPrograma").val();
+		var vigencia	= $("#vigenciaPrograma").val();
+		var parametros 	= "opc=detallesPrograma"+"&programa="+programa+"&vigencia="+vigencia+"&estado="+estado;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta){
+					$("#idPrograma").val(programa);
+					$('#nombre').val(data.nombreP);
+					$('#tipodeactividades').val(data.tipoAct);
+					$('#desAct').val(data.desAct);
+					$('#tipoprograma').val(data.tipoP);
+					$('#empresa').val(data.empresa);
+					$('#responsable').val(data.resposable);
+					$('#modalidad').val(data.modalidad);
+					$('#departamento').val(data.departamento);
+					$('#puesto').val(data.puesto);
+					$('#objetivo').val(data.objetivo);
 
-	var modificarSolicitud = function(){
-		var frm = $("#frmDetallesAlumno").serialize()
-		console.log(frm);
-		
+					$("#estadoPrograma").val(data.estado+"");
+					$("#estadoPrograma").material_select();
+
+					$("#vigenciaPrograma").val(data.vigencia+"");
+					$("#vigenciaPrograma").material_select();
+					//$('#').val(data.);
+
+					$('#opcVinculacion>div').hide();
+					$("#detallesPrograma").show("slow");
+				}else{
+					alert("No se ha podido mostrar los detalles de este programa");
+				}
+			}
+
+		});
 	}
+	var aceptarProgramas = function (){
+		var programa 	= $(this).val();
+		var parametros	= "opc=aceptarPrograma"+"&programa="+programa;
+		var r = confirm("¿Esta seguro que desea aceptar este programa ?");
+		if(r){
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+					if(data.respuesta){
+						muestralistaprogramas();
+					}else{
+						alert("Este programa no ha podido ser aceptado");
+					}
+				}
+
+
+			});
+
+
+		}		
+	}
+	var rechazarProgramas = function(){
+		var programa 	= $(this).val();
+		var parametros	= "opc=rechazarPrograma"+"&programa="+programa;
+				var r = confirm("¿Esta seguro que desea rechazar este programa ?");
+				if(r){
+					$.ajax({
+						type: "POST",
+						dataType: "json",
+						url: "../datos/vinculacion.php",
+						data: parametros,
+						success: function(data){
+							if(data.respuesta){
+								muestralistaprogramas();
+							}else{
+								alert("Este programa no ha podido ser rechazado");
+							}
+						}
+
+
+					});
+
+
+				}		
+	}
+	var modificarPrograma = function(){
+		event.preventDefault();
+		var programa 	= $("#idPrograma").val();
+		var estado 		= $("#estadoPrograma").val();
+		var vigencia	= $("#vigenciaPrograma").val();
+		var parametros  = "opc=modificarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.modificar){
+					var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+					if(r){
+						var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url:"../datos/vinculacion.php",
+							data: parametros2,
+							success:function(data){
+								alert("Programa Modificado");
+								muestralistaprogramas();
+							}
+						});
+					}
+				}else{
+					muestralistaprogramas();
+				}
+			}
+		});
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
-	$("#tablaSolicitudes").on("click", "#detalles",detallesAlumno);
-	$("#menuTarjeta").on("click",muestraTarjeta);
+	$("#tablaSolicitudes").on("click", "#detalles",verDetallesSolicitud);
+	$("#frmDetallesSolicitud").on("submit",detallesSolicitud);
+	
+	$("#muestraProgramas").on("click",muestralistaprogramas);
+	$("#tblprogramas").on("click","#detallesProgramas",detallesProgramas);
+	$("#tblprogramas").on("click","#aceptar",aceptarProgramas);
+	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
+	$("#frmDetallesPrograma").on("submit",modificarPrograma);
+
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
-
 	$("#menuregistroProgramas").on("click",muestraRegProgramas);
-	$("#selprogdep").on("change", cargadepartamentos);
 	$("#frmRegistroProgramas").on("submit",registroProgramas);
-	$("#muestraProgramas").on("click",muestralistaprogramas);
 
+	$("#selprogdep").on("change", cargadepartamentos);
 	$("#txtdepusuario").on('keyup',disponibilidad);
 	$("#btnbuscaTarjeta").on("click",llenarTarjeta);
 
-	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
+//	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
 	$("#badgeexpediente").on("click",documentosExpediente);
 	$("#badgedatos").on("click",buscarTarjeta);
+	$("#menuTarjeta").on("click",muestraTarjeta);
+
 }
 $(document).on("ready",admin);
