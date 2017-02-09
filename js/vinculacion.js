@@ -408,17 +408,16 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
+					$("#idPrograma").val(programa);
 					$('#nombre').val(data.nombreP);
 					$('#tipodeactividades').val(data.tipoAct);
 					$('#desAct').val(data.desAct);
 					$('#tipoprograma').val(data.tipoP);
 					$('#empresa').val(data.empresa);
 					$('#responsable').val(data.resposable);
-					//$('#estadoPrograma').val(data.estado);
 					$('#modalidad').val(data.modalidad);
 					$('#departamento').val(data.departamento);
 					$('#puesto').val(data.puesto);
-					//$('#vigenciaPrograma').val(data.vigencia);
 					$('#objetivo').val(data.objetivo);
 
 					$("#estadoPrograma").val(data.estado+"");
@@ -486,6 +485,42 @@ var admin = function (){
 
 				}		
 	}
+	var modificarPrograma = function(){
+		event.preventDefault();
+		var programa 	= $("#idPrograma").val();
+		var estado 		= $("#estadoPrograma").val();
+		var vigencia	= $("#vigenciaPrograma").val();
+		var parametros  = "opc=modificarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
+
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.modificar){
+					var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+					if(r){
+						var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url:"../datos/vinculacion.php",
+							data: parametros2,
+							success:function(data){
+								alert("Programa Modificado");
+								muestralistaprogramas();
+							}
+						});
+					}
+				}else{
+					muestralistaprogramas();
+				}
+			}
+		});
+		
+
+	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -497,6 +532,7 @@ var admin = function (){
 	$("#tblprogramas").on("click","#detallesProgramas",detallesProgramas);
 	$("#tblprogramas").on("click","#aceptar",aceptarProgramas);
 	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
+	$("#frmDetallesPrograma").on("submit",modificarPrograma);
 
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);

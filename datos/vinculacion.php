@@ -222,6 +222,7 @@ function verDetallesSolicitud(){
 
 function existeusuario($usuario){
 	$conexion 		= conexionLocal();
+	mysql_query("set NAMES utf8");
 	$consultaruser	= sprintf("select * from usuarios where cveusuario=%s and tipousuario=2 limit 1",$usuario);
 	$res 			= mysql_query($consultaruser);
 	if($row = mysql_fetch_array($res))
@@ -235,6 +236,7 @@ function existeusuario($usuario){
 }
 function existeusuarioDep($usuario){
 	$conexion 		= conexionLocal();
+	mysql_query("set NAMES utf8");
 	$consultaruser	= sprintf("select cveusuario_1 from dependencias where cveusuario_1=%s limit 1",$usuario);
 	$res 			= mysql_query($consultaruser);
 	if($row = mysql_fetch_array($res))
@@ -265,6 +267,7 @@ function registrarEmpresa(){
 	if(!existeusuario($depusuario)){
 		//print("puede insertar");
 		//agregar usuario a la base de datos
+		mysql_query("set NAMES utf8");
 		$consUsuario=sprintf("insert into usuarios values(%s,'password',2)",$depusuario);
 		mysql_query($consUsuario);
 
@@ -315,6 +318,7 @@ function registrarPrograma(){
 	$selprogest	= "'".$_POST["selprogest"]."'";
 
 	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
 	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$progcar,$selprogact,$progact,$progresp,$progpues,$selprogest);
 	$resconsulta= mysql_query($consulta);
 
@@ -329,6 +333,7 @@ function registrarPrograma(){
 function llenaDepProgramas(){
 	$respuesta=false;
 	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
 	$cons=sprintf("select cvedependencia, nomdependencia from dependencias");
 	$opciones="";
 	$res=mysql_query($cons);
@@ -351,7 +356,7 @@ function llenaDptoProgramas(){
 	$respuesta=false;
 	$conexion 	= conexionLocal();
 	$cvedep="'".$_POST["selprogdep"]."'";
-	
+	mysql_query("set NAMES utf8");
 	$cons=sprintf("select nomdepartamento, cvedepartamento from departamentos where cvedependencia=%s", $cvedep);
 	$opciones="";
 	$res=mysql_query($cons);
@@ -372,6 +377,7 @@ function llenaDptoProgramas(){
 	function llenaActProg(){
 		$respuesta=false;
 		$conexion 	= conexionLocal();
+		mysql_query("set NAMES utf8");
 		$cons=sprintf("select cvedependencia, nomdependencia from dependencias");
 		$opciones="";
 		$res=mysql_query($cons);
@@ -392,6 +398,7 @@ function llenaDptoProgramas(){
 	function tablaprogramas(){
 		$respuesta	= false;
 		$cn=conexionLocal();
+		mysql_query("set NAMES utf8");
 		$qry= sprintf("select * from programas");
 		$res= mysql_query($qry);
 
@@ -447,6 +454,7 @@ function llenaDptoProgramas(){
 		$observaciones	= "'".$_POST["observaciones"]."'";
 		$estado 		= "'".$_POST["estado"]."'";
 		$conexion 		= conexionLocal();
+		mysql_query("set NAMES utf8");
 		$qryvalida 		= sprintf("select * from solicitudes where cvesolicitud=%s", $solicitud);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
@@ -467,6 +475,7 @@ function llenaDptoProgramas(){
 		$observaciones	= "'".$_POST["observaciones"]."'";
 		$estado 		= "'".$_POST["estado"]."'";
 		$conexion 		= conexionLocal();
+		mysql_query("set NAMES utf8");
 		$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
 		$resU 		= mysql_query($qryvalidaU);
 		if(mysql_affected_rows()>0){
@@ -519,6 +528,7 @@ function llenaDptoProgramas(){
 		$vigenciaAnt 	= $_POST["vigencia"];
 		$estadoAnt 		= $_POST["estado"];
 		$cn 			= conexionLocal();
+		mysql_query("set NAMES utf8");
 		$qryvalida 		= sprintf("SELECT * from programas where cveprograma =%s", $programa);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
@@ -552,7 +562,38 @@ function llenaDptoProgramas(){
 		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento);
 		print json_encode($arrayJSON);
 	}
-
+	function modificarPrograma(){
+		$modificar 		= false;
+		$programa 		= $_POST["programa"];
+		$vigencia 	 	= $_POST["vigencia"];
+		$estado			= $_POST["estado"];
+		$cn 			= conexionLocal();
+		$qryvalida 		= sprintf("SELECT * from programas where cveprograma =%s", $programa);
+		$res 			= mysql_query($qryvalida);
+		$row			= mysql_fetch_array($res);
+		$vigenciaAnt 	= $row["vigencia"];
+		$estadoAnt 		= $row["estado"];
+		if(($vigenciaAnt <> $vigencia)or($estadoAnt<>$estado)){
+			$modificar=true;
+		}
+		$arrayJSON 		= array('modificar' => $modificar);
+		print json_encode($arrayJSON);
+	}
+	function guardarPrograma(){
+		$respuesta 		= true;
+		$programa 		= $_POST["programa"];
+		$vigencia 	 	= $_POST["vigencia"];
+		$estado			= $_POST["estado"];
+		$cn 			= conexionLocal();
+		mysql_query("set NAMES utf8");
+		$qryvalida 		= sprintf("UPDATE programas SET estado = %s, vigencia = %s  where cveprograma =%s", $estado, $vigencia, $programa);
+		$res 			= mysql_query($qryvalida);
+		if($res){
+			$respuesta = true;
+		}
+		$arrayJSON 		= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -610,6 +651,14 @@ function llenaDptoProgramas(){
 
 		case 'detallesPrograma':
 		detallesPrograma();
+		break;
+
+		case 'modificarPrograma':
+		modificarPrograma();
+		break;
+
+		case 'guardarPrograma':
+		guardarPrograma();
 		break;
 
 		default:
