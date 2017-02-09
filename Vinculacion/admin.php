@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="../css/vinculacion.css">
-	<script src="../js/vinculacion.js"></script>	
+	<script src="../js/vinculacion.js"></script>
+	<script src="../js/materialInit.js"></script>	
 </head>
 <body>
 <nav class="navbar navbar-default left grey lighten-4" id="barra">	

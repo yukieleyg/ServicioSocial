@@ -1,87 +1,145 @@
 <div class="container" id="tarjetacontrol">
 	<h5>Tarjeta de control</h5>
 	<br>
-	<div class="search-wrapper card">
-            <input id="txtbuscaTarjeta" type="search">
-            <button class="btn" id="btnbuscaTarjeta"><i class="material-icons">search</i></button>
-    </div>
-	
+	<div class="row">
+		<div class="search-wrapper card" id="divbuscar" style="float:right;">
+			<input id="txtbuscaTarjeta" type="search" style="width: 60%;">
+			<button class="btn" id="btnbuscaTarjeta"><i class="material-icons">search</i></button>
+		</div>
+	</div>
+    <!--<div class="nav-wrapper">
+      <form name="">
+        <div class="input-field">
+          <input id="search" type="search" required>
+          <label for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
+        </div>
+      </form>
+  </div>-->
+  <ul class="collapsible" data-collapsible="accordion">
+  	<li>
+  		<div class="collapsible-header" id="badgedatos"><i class="material-icons">perm_identity</i><span class="left">Datos Alumno</span></div>
+  		<div class="collapsible-body">
+  		<br>
+  			<div class="container">
+  				<form action="" id="frmdatosExpediente">
+  					<div class="input-field">
+  						<label for="nombre" class="col-sm-2">Nombre</label>
+  						<input type="text" class="" name="tnombre" id="tnombre" readonly placeholder="Nombre">
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">Edad</label>
+  						<input type="text" class="" name="tedad" id="tedad" readonly placeholder="Edad">
+  					</div>
+  					<div class="input-field">
 
-	</div>
-	<div id="datosAlm" class="container">
-		<form action="">
-			<div class="col-sm-6">
-				<label for="nombre" class="col-sm-2">Nombre</label>
-				<input type="text" class="" name="tnombre" id="tnombre" readonly>
-			</div>
-			<div class="col-sm-3">
-				<label for="" class="col-sm-2">Edad</label>
-				<input type="text" class="" name="tedad" id="tedad" readonly>
-			</div>
-			<div class="col-sm-3">
-				<label for="" class="col-sm-2">Sexo</label>
-				<select name="tsexo" id="tsexo" id="" disabled>
-					<option value="F">Femenino</option>
-					<option value="M">Masculino</option>
-				</select>
-			</div>
-			<div class="col-sm-8">
-				<label for="" class="col-sm-2">Domicilio</label>
-				<input type="text" name="tdomicilio" id="tdomicilio" readonly placeholder="Calle y número    Colonia     Ciudad y estado">
-			</div>
-			<div class="col-sm-4">
-				<label for="" class="col-sm-2">Tel</label>
-				<input type="text" class="" name="ttelefono" id="ttelefono"readonly>
-			</div>
-			<div class="col-sm-6">
-				<label for="" class="col-sm-2">No. Control</label>
-				<input type="text" class="" name="tncontrol" id="tncontrol" readonly>
-			</div>
-			<div class="col-sm-6">
-				<label for="" class="col-sm-2">Créditos aprobados</label>
-				<input type="text" class="" name="tcreditos" id="tcreditos" readonly>
-			</div>
-			<div class="col-sm-12">
-				<label for="" class="col-sm-2">Periodo</label><br>
-				<p >
-					<input type="checkbox" id="test5" />
-					<label for="test5">ENERO-JUNIO</label>
-					&nbsp;&nbsp;&nbsp;
-					<input type="checkbox" id="test6" />
-					<label for="test6">AGOSTO-DICIEMBRE</label>
-				</p>
-			</div>
-<br>
-		</form>
-		<hr>
-	</div>
-	
-	<div id="info_programa_horas">
+  						<select name="tsexo" id="tsexo" id="" placeholder="Sexo" disabled>
+  							<option>Seleccione..</option>
+  							<option value="F">Femenino</option>
+  							<option value="M">Masculino</option>
+  						</select>
+  						<label for="" class="">Sexo</label>
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">Domicilio</label>
+  						<input type="text" name="tdomicilio" id="tdomicilio" readonly placeholder="Calle y número    Colonia     Ciudad y estado">
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">Tel</label>
+  						<input type="text" class="" name="ttelefono" id="ttelefono"readonly placeholder="Teléfono">
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">No. Control</label>
+  						<input type="text" class="" name="tncontrol" id="tncontrol" readonly placeholder="No. Control">
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">Créditos aprobados</label>
+  						<input type="text" class="" name="tcreditos" id="tcreditos" readonly placeholder="Créditos aprobados">
+  					</div>
+  					<div class="input-field">
+  						<label for="" class="col-sm-2">Periodo</label><br>
+  						<p >
+  							<input type="radio" id="pdotarjeta1" name="pdotarjeta" disabled="disabled">
+  							<label for="pdotarjeta1">ENERO-JUNIO</label>
+  							&nbsp;&nbsp;&nbsp;
+  							<input type="radio" id="pdotarjeta3" name="pdotarjeta" disabled="disabled"/>
+  							<label for="pdotarjeta3">AGOSTO-DICIEMBRE</label>
+  						</p>
+  					</div>
+  					<br>
+  				</form>
+  			</div>
+  		</div>
+  	</li>
+  	<li>
+  		<div class="collapsible-header" id="badgehoras"><i class="material-icons">query_builder</i><span class="left">Horas Acreditadas</span></div>
+  		<div class="collapsible-body">
+		<div id="info_programa_horas">
 		<table id="horasacreditadastabla">
 
 		</table>
-		<hr>
-	</div>
-	
-	<div id="controlexpediente1" class="col-sm-6" style="text-align:left;">
-		<input type="checkbox" id="solicitud" class="filled-in"/>
-		<label for="solicitud">Solicitud</label><br>
-		<input type="checkbox" id="cursoin" class="filled-in"/>
-		<label for="cursoin">Curso Inducción</label><br>
-		<input type="checkbox" id="cartaap" class="filled-in"/>
-		<label for="cartaap">Carta Aprobación</label><br>
-		<input type="checkbox" id="plantra" class="filled-in"/>
-		<label for="plantra">Plan de trabajo</label><br>
+	<hr>
+</div>
 
-	</div>
-	<div id="controlexpediente2" class="col-sm-6" style="text-align:left;">
-		<input type="checkbox" id="repbim" class="filled-in"/>
-		<label for="repbim">Reporte bimestral</label><br>
-		<input type="checkbox" id="repfin" class="filled-in"/>
-		<label for="repfin">Reporte final</label><br>
-		<input type="checkbox" id="constanciaterm" class="filled-in"/>
-		<label for="constanciaterm">constancia terminación</label><br>
-		<input type="checkbox" id="constanciaof" class="filled-in"/>
-		<label for="constanciaof">constancia oficial</label><br>
-	</div>
+  		</div>
+  	</li>
+  	<li>
+  		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">description</i><span class="left">Control de Expediente</span></div>
+  		<div class="collapsible-body">
+  		<br>
+				<div id="controlexpediente1" class="col-sm-6 container" style="text-align:left;">
+					<input type="checkbox" id="solicitud" class="filled-in"/>
+					<label for="solicitud">Solicitud</label>
+					<br>
+					<input type="checkbox" id="cursoin" class="filled-in"/>
+					<label for="cursoin">Curso Inducción</label>
+					<!--se trata de la carta de ap´rpbacion o de aceptacion¿?-->
+					<br>
+					<input type="checkbox" id="cartaap" class="filled-in"/>
+					<label for="cartaap">Carta Aprobación</label>
+					<br>
+					<input type="checkbox" id="plantra" class="filled-in"/>
+					<label for="plantra">Plan de trabajo</label>
+					<br>
+					<label for="repbim">Reportes bimestrales</label><br>
+					<input type="checkbox" id="repouno" class="filled-in"/>
+					<label for="repouno">1</label>
+
+					<input type="checkbox" id="repodos" class="filled-in"/>
+					<label for="repodos">2</label>
+
+					<input type="checkbox" id="repotres" class="filled-in"/>
+					<label for="repotres">3</label><br>
+					<br>
+					<input type="checkbox" id="repfin" class="filled-in"/>
+					<label for="repfin">Reporte final</label>
+					<br>
+					
+						<div class="input-field col s6" style="margin-left: -2.3%;">
+							<input type="checkbox" id="cartaterm" class="filled-in"/>
+							<label for="cartaterm">Carta de terminación</label>
+						</div>
+						<div class="input-field inline col s6">
+							<label for="cartatermfecha">Fecha</label>
+							<input type="date" id="cartatermfecha" class="datepicker" disabled  />
+						</div>
+					
+						<div class="input-field col s6" style="margin-left: -2.3%;">
+							<input type="checkbox" id="constanciaof" class="filled-in"/>
+							<label for="constanciaof">Constancia oficial</label>
+						</div>
+						<div class="input-field inline col s6">
+							<label for="constanciaoffecha">Fecha</label>
+							<input type="date" id="constanciaoffech" class="datepicker" disabled  />
+						</div>
+					
+				<br>
+				</div>
+		
+		</div>
+	</li>
+	</ul>
+<br>
+
+<!--<button class="btn waves-effect waves-light" id="btnverExpediente">Ver Control de Expediente</button>-->
 </div>

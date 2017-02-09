@@ -1,4 +1,4 @@
-#listadoAlumnos, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas, #controlexpediente1,#controlexpediente2, #registroEmpresas, #registroProgramas{
+#listadoAlumnos, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas, #frmdatosExpediente, #controlexpediente1,#registroEmpresas, #registroProgramas{
 	display: none;
 }
 #barra{
@@ -8,4 +8,7 @@
 }
 .display{
 	margin-top: 10%;
+}
+#txtbuscaTarjeta:focus{
+	width: 20%;
 }
