@@ -110,6 +110,7 @@ function rechazarSolicitudes (){
 function obtenerTarjetaAlm(){
 	$respuesta=false;
 	$alumno="";
+	$mesesPDO="";
 	$nocontrol	= "'".$_POST["ncontrol"]."'";
 	$mensaje	="No se encuentra expediente";
 	$cn 		= conexionLocal();
@@ -120,10 +121,27 @@ function obtenerTarjetaAlm(){
 		$nocontrol 	= $row["cveusuario_1"];
 		$mensaje	="";
 		$alumno=getAlumno($nocontrol);
+		$mesesPDO	=getPeriodoAct();
 	}
-	$arrayJSON = array('respuesta' => $respuesta, 'alumno' => json_decode($alumno));
+	$arrayJSON = array('respuesta' => $respuesta, 'alumno' => json_decode($alumno), 'periodo'=> $mesesPDO);
 	print json_encode($arrayJSON);
 
+}
+function getPeriodoAct(){
+	$respuesta=false;
+	$qryvalida	= sprintf("select PARFOL1 from DPARAM where PARCVE= 'PRDO'");
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$periodoAct	= $row["PARFOL1"];
+	$meses		= substr($periodoAct, 3,1);
+	if($meses==1){
+		$meses = " ENERO - JUNIO";
+	} else {
+		if($meses==3){
+		$meses = "AGOSTO-DICIEMBRE";
+		}
+	}
+	return $meses;
 }
 function getAlumno($nocontrol){
 	$cn=conexionBD();
@@ -450,6 +468,52 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	
+	/*function modificarSolicitud(){
+	}*/
+	function documentosExpediente(){
+		$respuesta=false;
+		//$alumno="";
+
+		$repUno="";
+		$repDos="";
+		$repTres="";
+		$planT="";
+		$cartaA="";
+		$cartaT="";
+		$nocontrol	= "'".$_POST["ncontrol"]."'";
+		$mensaje	="No se encuentra expediente";
+		$cn 		= conexionLocal();
+		$qryvalida	= sprintf("select cveusuario_1, reporteuno, reportedos, reportetres, plantrabajo, cartaacep, cartatermina from expedientes where cveusuario_1=%s limit 1", $nocontrol);
+		$res		= mysql_query($qryvalida);
+
+		if($row= mysql_fetch_array($res)){
+			$respuesta	=true;
+			$nocontrol 	= $row["cveusuario_1"];
+			$mensaje	="";
+			//0-NULL
+			$repUno 	=(is_null($row["reporteuno"])) 	? 0:1;
+			$repDos		=(is_null($row["reportedos"])) 	? 0:1;
+			$repTres	=(is_null($row["reportetres"])) ? 0:1;
+			$planT		=(is_null($row["plantrabajo"])) ? 0:1;
+			$cartaA		=(is_null($row["cartaacep"])) 	? 0:1;
+			$cartaT		=(is_null($row["cartatermina"]))? 0:1;
+			
+
+
+
+			//$alumno=getAlumno($nocontrol);
+		}
+		$arrayJSON = array('respuesta' 	=> $respuesta, 
+							'cartaacep'	=> $cartaA, 
+							'plantrabajo'	=> $planT, 
+							'cartatermina'	=> $cartaT,
+							'reporteuno'	=> $repUno,
+							'reportedos'	=> $repDos,
+							'reportetres'	=> $repTres);
+
+		print json_encode($arrayJSON);
+	}
+
 	function detallesSolicitud(){
 		$respuesta 	    = false;
 		$solicitud		= $_POST["solicitud"]; 
@@ -656,6 +720,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'tablaprogramas':
 		tablaprogramas();
+			break;
+		case 'documentosExpediente':
+		documentosExpediente();
 			break;
 		case 'modificarSolicitud':
 		modificarSolicitud();

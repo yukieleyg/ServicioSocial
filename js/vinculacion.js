@@ -24,6 +24,7 @@ var admin = function (){
 
 		
 	}
+
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
@@ -315,9 +316,20 @@ var admin = function (){
     }
 
     var buscarTarjeta =function(){
-		console.log("buscarTarjeta");
-			var ncontrol = $("#txtbuscaTarjeta").val();
-			var parametros ="opc=obtenerTarjetaAlm"+"&ncontrol="+ncontrol;
+		var ncontrol = $("#txtbuscaTarjeta").val();
+
+		$(':input','#frmdatosExpediente')
+ 					.not(':button, :submit, :reset, :hidden')
+ 					.val('')
+ 					.removeAttr('checked')
+ 					.removeAttr('selected');
+		if(ncontrol==""){
+			Materialize.toast('Ingresa el No. de Control', 4000);
+			return;
+		}
+
+			var parametros ="opc=obtenerTarjetaAlm"+
+												"&ncontrol="+ncontrol;
 			$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -325,12 +337,11 @@ var admin = function (){
 				data: parametros,
 
 				success: function(data){
-					if(data.respuesta){
+					if(data.respuesta==false){
+						Materialize.toast('No se encontró el expediente', 4000);
+					}else{
 						$("#datosAlm:text").val("");
 						$("#datosAlm").show("slow");
-
-						alert("SI hay exp");
-						alert(data.alumno.nombre);
 						$("#tnombre").val(data.alumno.nombre);
 						$("#tedad").val(data.alumno.edad);
 						$("#tsexo").val(data.alumno.sexo).material_select();
@@ -339,12 +350,72 @@ var admin = function (){
 						$("#ttelefono").val(data.alumno.telefono);
 						$("#tncontrol").val(data.alumno.nocontrol);
 						$("#tcreditos").val(data.alumno.creditos);
-					}else{
-						alert("No se encontro el expediente");
+						if(data.periodo==1){
+							$("#pdotarjeta1").prop('checked', true);
+						}else{
+							$("#pdotarjeta3").prop('checked', true);
+						}
+						$("#datosAlm").show("slow");
+						$("#frmdatosExpediente").show("slow");
 					}
 
 				}
 			});		
+	}
+	var documentosExpediente=function(nocontrol){
+		var ncontrol = $("#txtbuscaTarjeta").val();
+
+		$(':input','#controlexpediente1')
+ 					.not(':button, :submit, :reset, :hidden')
+ 					.val('')
+ 					.removeAttr('checked')
+ 					.removeAttr('selected');
+		if(ncontrol==""){
+			Materialize.toast('Ingresa el No. de Control', 4000);
+			return;
+		}
+		var parametros ="opc=documentosExpediente"+"&ncontrol="+ncontrol;
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta==false){
+						Materialize.toast('No se encontró el expediente', 4000);
+					}else{
+						/*
+						determinar si ya realizo o no el curso de induccion
+						if(data.solicitud ==1){
+							$("#solicitud").prop("checked", true);
+						}
+						if(data.cursoin ==1){
+							$("#cursoin").prop("checked", true);
+						}*/
+						if(data.cartaacep ==1){
+							$("#cartaap").prop("checked", true);
+						}
+						if(data.plantrabajo==1){
+							$("#plantra").prop("checked",true);
+						}
+						if(data.cartatermina==1){
+							$("#cartaterm").prop("checked",true);
+						}
+						if(data.reporteuno==1){
+							$("#repouno").prop("checked",true);
+						}
+						if(data.reportedos==1){
+							$("#repodos").prop("checked",true);
+						}
+						if(data.reportetres==1){
+							$("#repotres").prop("checked",true);
+						}
+
+						$("#controlexpediente1").show("slow");
+					}
+				}
+			});
 	}
 	var detallesSolicitud = function(){
 		event.preventDefault();
@@ -353,6 +424,7 @@ var admin = function (){
 		var motivo 			= $("#inputMotivo").val();
 		var observaciones	= $("#inputObservaciones").val();
 		var parametros		= "opc=detallesSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+
 		$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -388,13 +460,14 @@ var admin = function (){
 
 					}else{
 						alumnosSolicitudes();
-
 					}
 				}
 			});	
-		
-				
-		
+	}
+	var llenarTarjeta=function(){
+		//fn para llenar los badges de la tarjeta
+		documentosExpediente();
+		buscarTarjeta();
 	}
 	var detallesProgramas = function () {
 		var programa 	= $(this).val();
@@ -431,7 +504,6 @@ var admin = function (){
 			}
 
 		});
-
 	}
 	var aceptarProgramas = function (){
 		var programa 	= $(this).val();
@@ -514,8 +586,6 @@ var admin = function (){
 				}
 			}
 		});
-		
-
 	}
 	var muestraAlumnos = function(){
 
@@ -560,7 +630,11 @@ var admin = function (){
 
 	$("#selprogdep").on("change", cargadepartamentos);
 	$("#txtdepusuario").on('keyup',disponibilidad);
-	$("#btnbuscaTarjeta").on("click",buscarTarjeta);
+	$("#btnbuscaTarjeta").on("click",llenarTarjeta);
+
+//	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
+	$("#badgeexpediente").on("click",documentosExpediente);
+	$("#badgedatos").on("click",buscarTarjeta);
 	$("#menuTarjeta").on("click",muestraTarjeta);
 
 }

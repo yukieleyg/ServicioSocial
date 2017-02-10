@@ -44,7 +44,7 @@
 								
 						}
 					}else{
-						alert("Datos Incorrectos");
+						Materialize.toast('Usuario y/o contraseña incorrectos', 4000);
 					}
 				}
 			});

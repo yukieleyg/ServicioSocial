@@ -4,6 +4,7 @@ body
 	font-family: "Times New Roman";
 	margin: 0 auto;
 	max-width: 1024px;
+	min-width: 400px;
 }
 body header img
 {
@@ -11,9 +12,11 @@ body header img
 	margin: -100px 30px;
 	width: 100px;
 }
+
 body header h1
 {
 	margin: 10px 0px 0px 30px;
+	
 }
 h1{
 	text-align: center;
@@ -37,7 +40,7 @@ table tr th{
 }
 #sep{
 	position:absolute;
-	width: 315px;
+	width: 18%;
 	float:left;
 
 }
@@ -102,3 +105,11 @@ table tr th{
 	display: inline-block;
 }
 
+@media only screen and (max-width: 767px) {
+    #sep{
+    	width: 30%;
+    }
+	#logo{
+		width: 10%;
+	}
+}
