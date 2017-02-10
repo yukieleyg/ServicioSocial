@@ -2,7 +2,7 @@
 	<h5>Registro de empresas</h5>
 	<form action="javascript:void(0);" method= "POST" id="frmRegistroEmpresa">
 		<input type="text" class="form-control" placeholder="Nombre de la empresa" id="txtdepnom" name="txtdepnom" required>
-		<input type="text" class="form-control" placeholder="Nombre de usuario (email)" id="txtdepusuario" name="txtdepusuario" required><div id="resultado"></div>
+		<input type="text" class="form-control validate" placeholder="Nombre de usuario (email)" id="txtdepusuario" name="txtdepusuario" required><div id="resultado"></div>
 		<input type="text" class="form-control" placeholder="RFC" id="txtdeprfc" name="txtdeprfc" maxlength="12" required>
 		<input type="text" class="form-control" placeholder="Titular" id="txtdeptitular" name="txtdeptitular" required>
 		<input type="text" class="form-control" placeholder="Direccion" id="txtdepdir" name="txtdepdir" required>

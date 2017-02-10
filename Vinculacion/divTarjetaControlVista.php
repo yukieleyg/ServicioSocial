@@ -16,7 +16,7 @@
         </div>
       </form>
   </div>-->
-  <ul class="collapsible" data-collapsible="accordion">
+  <ul class="collapsible popout" data-collapsible="explandable">
   	<li>
   		<div class="collapsible-header" id="badgedatos"><i class="material-icons">perm_identity</i><span class="left">Datos Alumno</span></div>
   		<div class="collapsible-body">
@@ -84,7 +84,7 @@
   		</div>
   	</li>
   	<li>
-  		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">description</i><span class="left">Control de Expediente</span></div>
+  		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">folder</i><span class="left">Control de Expediente</span></div>
   		<div class="collapsible-body">
   		<br>
 				<div id="controlexpediente1" class="col-sm-6 container" style="text-align:left;">

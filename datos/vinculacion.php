@@ -269,7 +269,7 @@ function existeusuarioDep($usuario){
 
 function registrarEmpresa(){
 	$respuesta 	=false;
-	$msj="Se ha registrado la dependencia";
+	$msj="";
 
 	$depnom 	= "'".$_POST["txtdepnom"]."'";
 	$depusuario = "'".$_POST["txtdepusuario"]."'";
@@ -277,8 +277,8 @@ function registrarEmpresa(){
 	$deptitular = "'".$_POST["txtdeptitular"]."'";
 	$depdir = "'".$_POST["txtdepdir"]."'";
 	$deptel 	= "'".$_POST["txtdeptel"]."'";
-	$depest 	= "'".$_POST["txtdepest"]."'";
-	$seldepest	="'".$_POST["txtdepest"]."'";
+	//$depest 	= "'".$_POST["depest"]."'";
+	$seldepest	="'".$_POST["seldepest"]."'";
 	
 	$conexion 	= conexionLocal();
 	//$consultaruser	=sprintf("select * from usuarios where cveusuario=%s limit 1",$usuario,$clave);
@@ -295,6 +295,7 @@ function registrarEmpresa(){
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
+				$msj="Se ha registrado la dependencia";
 			}
 
 		}
@@ -304,6 +305,7 @@ function registrarEmpresa(){
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
+				$msj="Se ha registrado la dependencia";
 			}
 
 	}else{

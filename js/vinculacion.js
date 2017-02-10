@@ -182,6 +182,8 @@ var admin = function (){
 				data: parametros,
 				success: function(data){
 				 if(data.respuesta==true){
+				 	$("#selprogdep").find('option').remove();
+				 	$("#selprogdep").append('<option>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -325,6 +327,7 @@ var admin = function (){
  					.removeAttr('selected');
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
+			collapseAll();
 			return;
 		}
 
@@ -338,6 +341,7 @@ var admin = function (){
 
 				success: function(data){
 					if(data.respuesta==false){
+						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
 						$("#datosAlm:text").val("");
@@ -372,6 +376,7 @@ var admin = function (){
  					.removeAttr('selected');
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
+			collapseAll();
 			return;
 		}
 		var parametros ="opc=documentosExpediente"+"&ncontrol="+ncontrol;
@@ -383,6 +388,7 @@ var admin = function (){
 
 				success: function(data){
 					if(data.respuesta==false){
+						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
 						/*
@@ -467,6 +473,8 @@ var admin = function (){
 		//fn para llenar los badges de la tarjeta
 		documentosExpediente();
 		buscarTarjeta();
+		$(".collapsible-header").addClass("active");
+  		$(".collapsible").collapsible({accordion: false});
 	}
 	var detallesProgramas = function () {
 		var programa 	= $(this).val();
@@ -589,6 +597,13 @@ var admin = function (){
 				}
 			}
 		});
+	}
+
+	var collapseAll=function(){
+		$(".collapsible-header").removeClass(function(){
+		    return "active";
+		  });
+		  $(".collapsible").collapsible({accordion: true});
 	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
