@@ -317,8 +317,7 @@ var admin = function (){
     var buscarTarjeta =function(){
 		console.log("buscarTarjeta");
 			var ncontrol = $("#txtbuscaTarjeta").val();
-			var parametros ="opc=obtenerTarjetaAlm"+
-												"&ncontrol="+ncontrol;
+			var parametros ="opc=obtenerTarjetaAlm"+"&ncontrol="+ncontrol;
 			$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -348,6 +347,7 @@ var admin = function (){
 			});		
 	}
 	var detallesSolicitud = function(){
+		event.preventDefault();
 		var solicitud 		= $("#idSolicitud").val();
 		var estado 			= $("#selectEstado").val();
 		var motivo 			= $("#inputMotivo").val();
@@ -359,16 +359,16 @@ var admin = function (){
 				url:"../datos/vinculacion.php",
 				data: parametros,
 
-				success: function(data){
+				success: function(data){ 
 					if(data.respuesta){
-						var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+						var r = confirm("¿Esta seguro que desea modificar la solicitud?");
 						if(r){	
-							var parametros = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+							var parametros2 = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
 							$.ajax({
 								type: "POST",
 								dataType: "json",
 								url:"../datos/vinculacion.php",
-								data: parametros,
+								data: parametros2,
 								success: function(dataM){
 									if(dataM.respuestaM){
 										alert("Modificación Exitosa");
@@ -377,7 +377,8 @@ var admin = function (){
 									}else{
 										alert("No se puede modificar esta solicitud");
 										$('#divDetalles').hide();
-										alumnosSolicitudes();									}
+										alumnosSolicitudes();									
+									}
 								}
 								
 
@@ -389,7 +390,6 @@ var admin = function (){
 						alumnosSolicitudes();
 
 					}
-
 				}
 			});	
 		
@@ -419,14 +419,10 @@ var admin = function (){
 					$('#departamento').val(data.departamento);
 					$('#puesto').val(data.puesto);
 					$('#objetivo').val(data.objetivo);
-
 					$("#estadoPrograma").val(data.estado+"");
 					$("#estadoPrograma").material_select();
-
 					$("#vigenciaPrograma").val(data.vigencia+"");
 					$("#vigenciaPrograma").material_select();
-					//$('#').val(data.);
-
 					$('#opcVinculacion>div').hide();
 					$("#detallesPrograma").show("slow");
 				}else{
@@ -499,7 +495,7 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.modificar){
-					var r = confirm("¿Esta seguro que desea modificar la solicitud ?");
+					var r = confirm("¿Esta seguro que desea modificar el programa ?");
 					if(r){
 						var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
 						$.ajax({
@@ -521,6 +517,27 @@ var admin = function (){
 		
 
 	}
+	var muestraAlumnos = function(){
+
+		var parametros ="opc=muestraAlumnos";
+		
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
+					$("#tablaAlumnos").html("");
+					$("#tablaAlumnos").append(data.tabla);
+					$("#listadoAlumnos").show();
+				}
+				
+			}
+		});
+		
+	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -534,6 +551,7 @@ var admin = function (){
 	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
 	$("#frmDetallesPrograma").on("submit",modificarPrograma);
 
+	$("#muestraAlumnos").on("click", muestraAlumnos);
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);

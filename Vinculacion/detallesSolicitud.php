@@ -41,7 +41,7 @@
 			</div>
 		</div><br>
 		<div style="margin-left:550px;">
-			<input type="submit" class="btn btn-success" value="ACEPTAR">
+			<input type="submit" class="btn btn-success">
 		</div>
 	</div>
 </form>

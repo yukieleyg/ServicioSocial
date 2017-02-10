@@ -24,7 +24,7 @@
 					<select name="" id="estadoPrograma">
 						<option value="0">Pendiente</option>
 						<option value="1">Aceptado</option>
-						<option value="3">Rechazado</option>
+						<option value="2">Rechazado</option>
 					</select>
 			</div>
 			<div class="col s5" style="text-align:left">

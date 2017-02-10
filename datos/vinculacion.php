@@ -71,14 +71,17 @@ function aceptarSolicitudes (){
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$usuario	= $row["cveusuario_1"];
-	$cnU 		= conexionLocal();
+	$programa 	= $row["cveprograma_1"];
+	$fechaIni 	= getdate();
 	$aceptado 	= 1;
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
 	}
-
+	/*$consulta = sprintf("insert into expedientes values(NULL,%s,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",$solicitud,$usuario,$programa, $fechaIni);
+	$resconsulta= mysql_query($consulta);*/
+	var_dump($fechaIni);
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 
@@ -410,12 +413,13 @@ function llenaDptoProgramas(){
 			$carrera 	= $renglon["carrerapref"];
 			$cveprograma 	= $renglon["cveprograma"];
 			$estado 		= $renglon["estado"];
-			if($estado = "0"){
-				$estado="Pendiente";
-			}elseif($estado = "1"){
-				$estado="Aceptado";
-			}elseif($estado="2"){
-				$estado="Rechazado";
+			$estadoN 		= "";
+			if($estado == "0"){
+				$estadoN="Pendiente";
+			}elseif($estado == "1"){
+				$estadoN="Aceptado";
+			}elseif($estado == "2"){
+				$estadoN="Rechazado";
 			}
 			$vigencia 		= $renglon["vigencia"]; 
 			if($vigencia=="1"){
@@ -423,15 +427,13 @@ function llenaDptoProgramas(){
 			}else{
 				$vigencia = "Expirado";
 			}
-			if($estado =="0"){
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+			if($estado == "0"){
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
-
-
 			}else{
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
@@ -449,6 +451,7 @@ function llenaDptoProgramas(){
 	}
 	
 	function detallesSolicitud(){
+		$respuesta 	    = false;
 		$solicitud		= $_POST["solicitud"]; 
 		$motivo			= "'".$_POST["motivo"]."'"; 
 		$observaciones	= "'".$_POST["observaciones"]."'";
@@ -460,7 +463,6 @@ function llenaDptoProgramas(){
 		$row 			= mysql_fetch_array($res);
 		$motivoAnt		= $row["motivo"];
 		$estadoAnt		= $row["estado"];
-		$respuesta 	    = false;
 		$observacionesAnt = $row["observaciones"];
 		if(($motivo <> "'".$motivoAnt."'") or ($observaciones <> "'".$observacionesAnt."'") or ($estado <> "'".$estadoAnt."'")){
 			$respuesta = true;
@@ -580,7 +582,7 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	function guardarPrograma(){
-		$respuesta 		= true;
+		$respuesta 		= false;
 		$programa 		= $_POST["programa"];
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
@@ -592,6 +594,24 @@ function llenaDptoProgramas(){
 			$respuesta = true;
 		}
 		$arrayJSON 		= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
+	function muestraAlumnos(){
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$qryvalida	= sprintf("select * from expedientes");
+		$res0		= mysql_query($qryvalida);
+		$tabla		= "";
+		$tabla		.= "<thead><tr>";
+		$tabla		.= "<th>No. de Control</th>";
+		$tabla		.=	"<th>Nombre</th>";
+		$tabla		.=	"<th>Carrera</th>";
+		$tabla		.=	"<th>Empresa</th>";
+		$tabla		.=	"<th>Estado</th>";
+		$tabla 		.=  "<th></th>";
+		$tabla		.=	"</thead></tr>";
+
+		$arrayJSON 	= array('respuesta' => $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
 	$opc= $_POST["opc"];
@@ -659,6 +679,10 @@ function llenaDptoProgramas(){
 
 		case 'guardarPrograma':
 		guardarPrograma();
+		break;
+
+		case 'muestraAlumnos':
+		muestraAlumnos();
 		break;
 
 		default:

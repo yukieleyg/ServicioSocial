@@ -9,15 +9,15 @@
 				<ul>
 					 <a class='dropdown-button btn grey lighten-4 btn-flat' href='#' data-beloworigin="true" data-activates='dropdownListSem' data-hover="true" id="menuAlumnos" style="color:black;"><i class="material-icons right">supervisor_account</i>Listado Sem.<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownListSem">
-							<li><a id="muestraSolicitudes"  style="color:black;">Solicitudes</a></li>
-							<li><a id="muestraAlumnos"  style="color:black;">Alumnos&nbsp;&nbsp;</a></li>
+							<li><a id="muestraAlumnos"  style="color:black;">Alumnos</a></li>
 							<li><a id="muestraProgramas"  style="color:black;">Programas</a></li>
+							<li><a id="muestraSolicitudes"  style="color:black;">Solicitudes</a></li>
 						</ul>
 						<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownRegistro' data-hover="true" id="menuRegistro" style="color:black;"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownRegistro">
+							<li><a id="menuregistroAlumnos" style="color:black;" >Alumnos</a></li>
 							<li><a id="menuregistroEmpresas"  style="color:black;">Empresas</a></li>
 							<li><a id="menuregistroProgramas"  style="color:black;">Programas</a></li>
-							<li><a id="menuregistroAlumnos" style="color:black;" >Alumnos</a></li>
 						</ul>
 					
 						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">class</i>Tarjeta de Control</a>
@@ -53,6 +53,9 @@
 	</div>
 	<div id="detallesPrograma" class="card">
 		<?php include 'divDetallesPrograma.php' ?>
+	</div>
+	<div id="listadoAlumnos" class="card">
+		<?php include 'divListadoAlumnos.php' ?>
 	</div>
 </section>
 </body>
