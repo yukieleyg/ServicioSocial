@@ -424,7 +424,6 @@ var admin = function (){
 		var motivo 			= $("#inputMotivo").val();
 		var observaciones	= $("#inputObservaciones").val();
 		var parametros		= "opc=detallesSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
-
 		$.ajax({
 				type: "POST",
 				dataType: "json",

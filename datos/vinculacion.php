@@ -72,16 +72,14 @@ function aceptarSolicitudes (){
 	$row 		= mysql_fetch_array($res);
 	$usuario	= $row["cveusuario_1"];
 	$programa 	= $row["cveprograma_1"];
-	$fechaIni 	= getdate();
 	$aceptado 	= 1;
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
+		$consulta = sprintf("insert into expedientes values(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+		$resconsulta= mysql_query($consulta);	
 	}
-	/*$consulta = sprintf("insert into expedientes values(NULL,%s,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL)",$solicitud,$usuario,$programa, $fechaIni);
-	$resconsulta= mysql_query($consulta);*/
-	var_dump($fechaIni);
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 
@@ -365,6 +363,7 @@ function llenaDepProgramas(){
                   $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
        
 
+
 		}
 		$respuesta=true;
 	
@@ -468,8 +467,6 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	
-	/*function modificarSolicitud(){
-	}*/
 	function documentosExpediente(){
 		$respuesta=false;
 		//$alumno="";
@@ -517,9 +514,9 @@ function llenaDptoProgramas(){
 	function detallesSolicitud(){
 		$respuesta 	    = false;
 		$solicitud		= $_POST["solicitud"]; 
-		$motivo			= "'".$_POST["motivo"]."'"; 
-		$observaciones	= "'".$_POST["observaciones"]."'";
-		$estado 		= "'".$_POST["estado"]."'";
+		$motivo			= $_POST["motivo"]; 
+		$observaciones	= $_POST["observaciones"];
+		$estado 		= $_POST["estado"];
 		$conexion 		= conexionLocal();
 		mysql_query("set NAMES utf8");
 		$qryvalida 		= sprintf("select * from solicitudes where cvesolicitud=%s", $solicitud);
@@ -528,7 +525,7 @@ function llenaDptoProgramas(){
 		$motivoAnt		= $row["motivo"];
 		$estadoAnt		= $row["estado"];
 		$observacionesAnt = $row["observaciones"];
-		if(($motivo <> "'".$motivoAnt."'") or ($observaciones <> "'".$observacionesAnt."'") or ($estado <> "'".$estadoAnt."'")){
+		if(($motivo <> $motivoAnt) or ($observaciones <> $observacionesAnt) or ($estado <> $estadoAnt)){
 			$respuesta = true;
 		}
 		$arrayJSON = array('respuesta' => $respuesta);
@@ -539,10 +536,22 @@ function llenaDptoProgramas(){
 		$solicitud		= $_POST["solicitud"]; 
 		$motivo			= "'".$_POST["motivo"]."'"; 
 		$observaciones	= "'".$_POST["observaciones"]."'";
-		$estado 		= "'".$_POST["estado"]."'";
+		$estado 		= $_POST["estado"];
 		$conexion 		= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
+		if($estado == "2" or $estado == "0"){
+			$qryvalida	= sprintf("DELETE FROM expedientes WHERE cvesolicitud =%s",$solicitud);
+			$res 		= mysql_query($qryvalida);
+		}elseif($estado =="1"){
+			$qryvalida 		= sprintf("SELECT * FROM solicitudes WHERE cvesolicitud =%s", $solicitud);
+			$res 			= mysql_query($qryvalida);
+			$row 			= mysql_fetch_array($res);
+			$usuario		= $row["cveusuario_1"];
+			$programa 		= $row["cveprograma_1"];
+			$qryvalida 		= sprintf("INSERT INTO expedientes VALUES(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+			$res= mysql_query($qryvalida);	
+		}
+		$qryvalidaU	= sprintf("UPDATE solicitudes SET  estado = %s, observaciones=%s, motivo=%s WHERE cvesolicitud = %s",$estado, $observaciones, $motivo, $solicitud);	
 		$resU 		= mysql_query($qryvalidaU);
 		if(mysql_affected_rows()>0){
 			$respuesta = true;
