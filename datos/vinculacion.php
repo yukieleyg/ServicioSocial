@@ -71,14 +71,15 @@ function aceptarSolicitudes (){
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$usuario	= $row["cveusuario_1"];
-	$cnU 		= conexionLocal();
+	$programa 	= $row["cveprograma_1"];
 	$aceptado 	= 1;
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
+		$consulta = sprintf("insert into expedientes values(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+		$resconsulta= mysql_query($consulta);	
 	}
-
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 
@@ -364,6 +365,7 @@ function llenaDepProgramas(){
                   $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
        
 
+
 		}
 		$respuesta=true;
 	
@@ -430,12 +432,13 @@ function llenaDptoProgramas(){
 			$carrera 	= $renglon["carrerapref"];
 			$cveprograma 	= $renglon["cveprograma"];
 			$estado 		= $renglon["estado"];
-			if($estado = "0"){
-				$estado="Pendiente";
-			}elseif($estado = "1"){
-				$estado="Aceptado";
-			}elseif($estado="2"){
-				$estado="Rechazado";
+			$estadoN 		= "";
+			if($estado == "0"){
+				$estadoN="Pendiente";
+			}elseif($estado == "1"){
+				$estadoN="Aceptado";
+			}elseif($estado == "2"){
+				$estadoN="Rechazado";
 			}
 			$vigencia 		= $renglon["vigencia"]; 
 			if($vigencia=="1"){
@@ -443,15 +446,13 @@ function llenaDptoProgramas(){
 			}else{
 				$vigencia = "Expirado";
 			}
-			if($estado =="0"){
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+			if($estado == "0"){
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
-
-
 			}else{
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estado."</td><td>".$vigencia."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
@@ -468,8 +469,6 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	
-	/*function modificarSolicitud(){
-	}*/
 	function documentosExpediente(){
 		$respuesta=false;
 		//$alumno="";
@@ -515,10 +514,11 @@ function llenaDptoProgramas(){
 	}
 
 	function detallesSolicitud(){
+		$respuesta 	    = false;
 		$solicitud		= $_POST["solicitud"]; 
-		$motivo			= "'".$_POST["motivo"]."'"; 
-		$observaciones	= "'".$_POST["observaciones"]."'";
-		$estado 		= "'".$_POST["estado"]."'";
+		$motivo			= $_POST["motivo"]; 
+		$observaciones	= $_POST["observaciones"];
+		$estado 		= $_POST["estado"];
 		$conexion 		= conexionLocal();
 		mysql_query("set NAMES utf8");
 		$qryvalida 		= sprintf("select * from solicitudes where cvesolicitud=%s", $solicitud);
@@ -526,9 +526,8 @@ function llenaDptoProgramas(){
 		$row 			= mysql_fetch_array($res);
 		$motivoAnt		= $row["motivo"];
 		$estadoAnt		= $row["estado"];
-		$respuesta 	    = false;
 		$observacionesAnt = $row["observaciones"];
-		if(($motivo <> "'".$motivoAnt."'") or ($observaciones <> "'".$observacionesAnt."'") or ($estado <> "'".$estadoAnt."'")){
+		if(($motivo <> $motivoAnt) or ($observaciones <> $observacionesAnt) or ($estado <> $estadoAnt)){
 			$respuesta = true;
 		}
 		$arrayJSON = array('respuesta' => $respuesta);
@@ -539,10 +538,22 @@ function llenaDptoProgramas(){
 		$solicitud		= $_POST["solicitud"]; 
 		$motivo			= "'".$_POST["motivo"]."'"; 
 		$observaciones	= "'".$_POST["observaciones"]."'";
-		$estado 		= "'".$_POST["estado"]."'";
+		$estado 		= $_POST["estado"];
 		$conexion 		= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s, motivo = %s, observaciones =%s WHERE cvesolicitud = %s",$estado,$motivo, $observaciones, $solicitud);	
+		if($estado == "2" or $estado == "0"){
+			$qryvalida	= sprintf("DELETE FROM expedientes WHERE cvesolicitud =%s",$solicitud);
+			$res 		= mysql_query($qryvalida);
+		}elseif($estado =="1"){
+			$qryvalida 		= sprintf("SELECT * FROM solicitudes WHERE cvesolicitud =%s", $solicitud);
+			$res 			= mysql_query($qryvalida);
+			$row 			= mysql_fetch_array($res);
+			$usuario		= $row["cveusuario_1"];
+			$programa 		= $row["cveprograma_1"];
+			$qryvalida 		= sprintf("INSERT INTO expedientes VALUES(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+			$res= mysql_query($qryvalida);	
+		}
+		$qryvalidaU	= sprintf("UPDATE solicitudes SET  estado = %s, observaciones=%s, motivo=%s WHERE cvesolicitud = %s",$estado, $observaciones, $motivo, $solicitud);	
 		$resU 		= mysql_query($qryvalidaU);
 		if(mysql_affected_rows()>0){
 			$respuesta = true;
@@ -646,7 +657,7 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 	function guardarPrograma(){
-		$respuesta 		= true;
+		$respuesta 		= false;
 		$programa 		= $_POST["programa"];
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
@@ -658,6 +669,24 @@ function llenaDptoProgramas(){
 			$respuesta = true;
 		}
 		$arrayJSON 		= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
+	function muestraAlumnos(){
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$qryvalida	= sprintf("select * from expedientes");
+		$res0		= mysql_query($qryvalida);
+		$tabla		= "";
+		$tabla		.= "<thead><tr>";
+		$tabla		.= "<th>No. de Control</th>";
+		$tabla		.=	"<th>Nombre</th>";
+		$tabla		.=	"<th>Carrera</th>";
+		$tabla		.=	"<th>Empresa</th>";
+		$tabla		.=	"<th>Estado</th>";
+		$tabla 		.=  "<th></th>";
+		$tabla		.=	"</thead></tr>";
+
+		$arrayJSON 	= array('respuesta' => $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
 	$opc= $_POST["opc"];
@@ -729,6 +758,11 @@ function llenaDptoProgramas(){
 		case 'guardarPrograma':
 		guardarPrograma();
 		break;
+
+		case 'muestraAlumnos':
+		muestraAlumnos();
+		break;
+
 		default:
 		# code...
 		break;

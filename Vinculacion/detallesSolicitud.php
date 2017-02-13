@@ -13,9 +13,9 @@
 				<label class="lInputs">Periodo:   </label><br><input class="cInputs"type="text" id="inputPeriodo" disabled="true"><br>
 				<label class="lInputs">Estado:   </label><br>
 				<select name="selectEstado" id="selectEstado">
-					<option value="0">Pendiente</option>
-					<option value="1">Aceptado</option>
-					<option value="2">Rechazado</option>	
+					<option value= "0">Pendiente</option>
+					<option value= "1">Aceptado</option>
+					<option value= "2">Rechazado</option>	
 				</select><br>
 				
 			</div>
@@ -41,7 +41,7 @@
 			</div>
 		</div><br>
 		<div style="margin-left:550px;">
-			<input type="submit" class="btn btn-success" value="ACEPTAR">
+			<input type="submit" class="btn btn-success">
 		</div>
 	</div>
 </form>
