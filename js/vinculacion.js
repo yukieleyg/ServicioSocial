@@ -368,6 +368,13 @@ var admin = function (){
 	}
 	var documentosExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
+		/*$("#icartaap").attr("href", "");
+		$("#iplantra").attr("href", "");
+		$("#irepouno").attr("href", "");
+		$("#irepodos").attr("href", "");
+		$("#irepotres").attr("href", "");
+		$("#icartaterm").attr("href", "");*/
+		$(".ligadoc").attr("href","").hide();
 
 		$(':input','#controlexpediente1')
  					.not(':button, :submit, :reset, :hidden')
@@ -391,32 +398,48 @@ var admin = function (){
 						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
-						/*
-						determinar si ya realizo o no el curso de induccion
-						if(data.solicitud ==1){
-							$("#solicitud").prop("checked", true);
-						}
-						if(data.cursoin ==1){
-							$("#cursoin").prop("checked", true);
-						}*/
-						if(data.cartaacep ==1){
-							$("#cartaap").prop("checked", true);
-						}
-						if(data.plantrabajo==1){
-							$("#plantra").prop("checked",true);
-						}
-						if(data.cartatermina==1){
-							$("#cartaterm").prop("checked",true);
-						}
-						if(data.reporteuno==1){
-							$("#repouno").prop("checked",true);
-						}
-						if(data.reportedos==1){
-							$("#repodos").prop("checked",true);
-						}
-						if(data.reportetres==1){
+						$.each(data.documentos, function( i, value ) {
+						  switch(i){
+						  	case '1': console.log("Esta es una solicitud");
+						  		break;
+						  	case '2': 
+						  	$("#cartaap").prop("checked", true);
+						  	$("#icartaap").show();
+						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es una cartaA");
+						  		break;
+						  	case '3': 
+						  	$("#plantra").prop("checked",true);
+						  	$("#iplantra").show();
+						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un plantrabajo");
+						  		break;
+						  	case '4': 
+						  	$("#repouno").prop("checked",true);
+						  	$("#irepouno").show();
+						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reporteuno");
+						  		break;
+						  	case '5': 
+						  	$("#repodos").prop("checked",true);
+						  	$("#irepodos").show();
+						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportedos");
+						  		break;
+						  	case '6': 
 							$("#repotres").prop("checked",true);
-						}
+						  	$("#irepotres").show();
+							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportetres");
+						  		break;
+						  	case '7': 
+						  	$("#cartaterm").prop("checked",true);
+						  	$("#icartaterm").show();
+						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es una cartaterminacion");
+						  		break;
+						  }
+						});
 
 						$("#controlexpediente1").show("slow");
 					}
