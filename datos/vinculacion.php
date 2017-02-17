@@ -1,5 +1,6 @@
 <?php
 require_once('entrar.php');
+require_once('documentos.php');
 function muestraSolicitudes(){
 	$respuesta	= false;
 	$cn0		= conexionLocal();
@@ -270,7 +271,7 @@ function existeusuarioDep($usuario){
 
 function registrarEmpresa(){
 	$respuesta 	=false;
-	$msj="Se ha registrado la dependencia";
+	$msj="";
 
 	$depnom 	= "'".$_POST["txtdepnom"]."'";
 	$depusuario = "'".$_POST["txtdepusuario"]."'";
@@ -278,8 +279,8 @@ function registrarEmpresa(){
 	$deptitular = "'".$_POST["txtdeptitular"]."'";
 	$depdir = "'".$_POST["txtdepdir"]."'";
 	$deptel 	= "'".$_POST["txtdeptel"]."'";
-	$depest 	= "'".$_POST["txtdepest"]."'";
-	$seldepest	="'".$_POST["txtdepest"]."'";
+	//$depest 	= "'".$_POST["depest"]."'";
+	$seldepest	="'".$_POST["seldepest"]."'";
 	
 	$conexion 	= conexionLocal();
 	//$consultaruser	=sprintf("select * from usuarios where cveusuario=%s limit 1",$usuario,$clave);
@@ -296,6 +297,7 @@ function registrarEmpresa(){
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
+				$msj="Se ha registrado la dependencia";
 			}
 
 		}
@@ -305,6 +307,7 @@ function registrarEmpresa(){
 
 			if(mysql_affected_rows()>0){
 				$respuesta=true;
+				$msj="Se ha registrado la dependencia";
 			}
 
 	}else{
@@ -469,45 +472,37 @@ function llenaDptoProgramas(){
 	
 	function documentosExpediente(){
 		$respuesta=false;
-		//$alumno="";
-
-		$repUno="";
-		$repDos="";
-		$repTres="";
-		$planT="";
-		$cartaA="";
-		$cartaT="";
 		$nocontrol	= "'".$_POST["ncontrol"]."'";
 		$mensaje	="No se encuentra expediente";
 		$cn 		= conexionLocal();
-		$qryvalida	= sprintf("select cveusuario_1, reporteuno, reportedos, reportetres, plantrabajo, cartaacep, cartatermina from expedientes where cveusuario_1=%s limit 1", $nocontrol);
+		$qryvalida	= sprintf("SELECT 	e.cveexpediente,
+									  	d.archivo AS 'ruta',
+									  	d.cvedocumento,
+									  	d.tipo,
+									  	d.revisado 
+							    FROM expedientes e 
+							    INNER JOIN documentos d 
+							    on d.cvedocumento in (e.cartaacep,
+							    					e.reporteuno,
+							    					e.reportedos,
+							    					e.reportetres,
+							    					e.plantrabajo,
+							    					e.cartatermina)
+							    WHERE cveusuario_1=%s",$nocontrol);
 		$res		= mysql_query($qryvalida);
-
-		if($row= mysql_fetch_array($res)){
-			$respuesta	=true;
-			$nocontrol 	= $row["cveusuario_1"];
-			$mensaje	="";
-			//0-NULL
-			$repUno 	=(is_null($row["reporteuno"])) 	? 0:1;
-			$repDos		=(is_null($row["reportedos"])) 	? 0:1;
-			$repTres	=(is_null($row["reportetres"])) ? 0:1;
-			$planT		=(is_null($row["plantrabajo"])) ? 0:1;
-			$cartaA		=(is_null($row["cartaacep"])) 	? 0:1;
-			$cartaT		=(is_null($row["cartatermina"]))? 0:1;
-			
-
-
-
-			//$alumno=getAlumno($nocontrol);
+		$arrayExp=array();
+		$arraytipodoc=Array();
+		/*TIPOS: 1-Solicitud	2-Carta Aceptacion 3-Plan de Trabajo 4-ReporteUno 5-ReporteDos 6-ReporteTres 7-Carta de Terminacion*/
+		while($row = mysql_fetch_array($res)){
+			$tipodoc=intval($row["tipo"]);
+			$ruta=$row["ruta"];
+			 	$arraytipodoc['tipo']=$tipodoc;
+				$arraytipodoc['ruta']=$ruta;
+			$arrayExp[$tipodoc]=$arraytipodoc;
+			$respuesta=true;
 		}
-		$arrayJSON = array('respuesta' 	=> $respuesta, 
-							'cartaacep'	=> $cartaA, 
-							'plantrabajo'	=> $planT, 
-							'cartatermina'	=> $cartaT,
-							'reporteuno'	=> $repUno,
-							'reportedos'	=> $repDos,
-							'reportetres'	=> $repTres);
-
+		$arrayJSON=Array('respuesta'=>$respuesta,
+						'documentos'=>$arrayExp);
 		print json_encode($arrayJSON);
 	}
 

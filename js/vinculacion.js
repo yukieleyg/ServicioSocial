@@ -200,6 +200,8 @@ var admin = function (){
 				data: parametros,
 				success: function(data){
 				 if(data.respuesta==true){
+				 	$("#selprogdep").find('option').remove();
+				 	$("#selprogdep").append('<option>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -361,6 +363,7 @@ var admin = function (){
  					.removeAttr('selected');
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
+			collapseAll();
 			return;
 		}
 
@@ -374,6 +377,7 @@ var admin = function (){
 
 				success: function(data){
 					if(data.respuesta==false){
+						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
 						$("#datosAlm:text").val("");
@@ -400,6 +404,13 @@ var admin = function (){
 	}
 	var documentosExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
+		/*$("#icartaap").attr("href", "");
+		$("#iplantra").attr("href", "");
+		$("#irepouno").attr("href", "");
+		$("#irepodos").attr("href", "");
+		$("#irepotres").attr("href", "");
+		$("#icartaterm").attr("href", "");*/
+		$(".ligadoc").attr("href","").hide();
 
 		$(':input','#controlexpediente1')
  					.not(':button, :submit, :reset, :hidden')
@@ -408,6 +419,7 @@ var admin = function (){
  					.removeAttr('selected');
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
+			collapseAll();
 			return;
 		}
 		var parametros ="opc=documentosExpediente"+"&ncontrol="+ncontrol;
@@ -419,34 +431,51 @@ var admin = function (){
 
 				success: function(data){
 					if(data.respuesta==false){
+						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
-						/*
-						determinar si ya realizo o no el curso de induccion
-						if(data.solicitud ==1){
-							$("#solicitud").prop("checked", true);
-						}
-						if(data.cursoin ==1){
-							$("#cursoin").prop("checked", true);
-						}*/
-						if(data.cartaacep ==1){
-							$("#cartaap").prop("checked", true);
-						}
-						if(data.plantrabajo==1){
-							$("#plantra").prop("checked",true);
-						}
-						if(data.cartatermina==1){
-							$("#cartaterm").prop("checked",true);
-						}
-						if(data.reporteuno==1){
-							$("#repouno").prop("checked",true);
-						}
-						if(data.reportedos==1){
-							$("#repodos").prop("checked",true);
-						}
-						if(data.reportetres==1){
+						$.each(data.documentos, function( i, value ) {
+						  switch(i){
+						  	case '1': console.log("Esta es una solicitud");
+						  		break;
+						  	case '2': 
+						  	$("#cartaap").prop("checked", true);
+						  	$("#icartaap").show();
+						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es una cartaA");
+						  		break;
+						  	case '3': 
+						  	$("#plantra").prop("checked",true);
+						  	$("#iplantra").show();
+						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un plantrabajo");
+						  		break;
+						  	case '4': 
+						  	$("#repouno").prop("checked",true);
+						  	$("#irepouno").show();
+						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reporteuno");
+						  		break;
+						  	case '5': 
+						  	$("#repodos").prop("checked",true);
+						  	$("#irepodos").show();
+						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportedos");
+						  		break;
+						  	case '6': 
 							$("#repotres").prop("checked",true);
-						}
+						  	$("#irepotres").show();
+							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportetres");
+						  		break;
+						  	case '7': 
+						  	$("#cartaterm").prop("checked",true);
+						  	$("#icartaterm").show();
+						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es una cartaterminacion");
+						  		break;
+						  }
+						});
 
 						$("#controlexpediente1").show("slow");
 					}
@@ -520,6 +549,8 @@ var admin = function (){
 		//fn para llenar los badges de la tarjeta
 		documentosExpediente();
 		buscarTarjeta();
+		$(".collapsible-header").addClass("active");
+  		$(".collapsible").collapsible({accordion: false});
 	}
 	var detallesProgramas = function () {
 		var programa 	= $(this).val();
@@ -717,6 +748,13 @@ var admin = function (){
 			}
 		});
 		
+	}
+
+	var collapseAll=function(){
+		$(".collapsible-header").removeClass(function(){
+		    return "active";
+		  });
+		  $(".collapsible").collapsible({accordion: true});
 	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);

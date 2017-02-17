@@ -16,7 +16,7 @@
         </div>
       </form>
   </div>-->
-  <ul class="collapsible" data-collapsible="accordion">
+  <ul class="collapsible popout" data-collapsible="explandable">
   	<li>
   		<div class="collapsible-header" id="badgedatos"><i class="material-icons">perm_identity</i><span class="left">Datos Alumno</span></div>
   		<div class="collapsible-body">
@@ -84,40 +84,49 @@
   		</div>
   	</li>
   	<li>
-  		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">description</i><span class="left">Control de Expediente</span></div>
+  		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">folder</i><span class="left">Control de Expediente</span></div>
   		<div class="collapsible-body">
   		<br>
 				<div id="controlexpediente1" class="col-sm-6 container" style="text-align:left;">
 					<input type="checkbox" id="solicitud" class="filled-in"/>
 					<label for="solicitud">Solicitud</label>
+					<a href="#" id="isolicitud" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					<input type="checkbox" id="cursoin" class="filled-in"/>
 					<label for="cursoin">Curso Inducción</label>
+					<a href="#" id="icursoin" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<!--se trata de la carta de ap´rpbacion o de aceptacion¿?-->
 					<br>
 					<input type="checkbox" id="cartaap" class="filled-in"/>
 					<label for="cartaap">Carta Aprobación</label>
+					<a href="#" id="icartaap" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					<input type="checkbox" id="plantra" class="filled-in"/>
 					<label for="plantra">Plan de trabajo</label>
+					<a href="#" id="iplantra" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					<label for="repbim">Reportes bimestrales</label><br>
 					<input type="checkbox" id="repouno" class="filled-in"/>
 					<label for="repouno">1</label>
+					<a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 
 					<input type="checkbox" id="repodos" class="filled-in"/>
 					<label for="repodos">2</label>
+					<a href="#" id="irepodos" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 
 					<input type="checkbox" id="repotres" class="filled-in"/>
 					<label for="repotres">3</label><br>
+					<a href="#" id="irepotres" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					<input type="checkbox" id="repfin" class="filled-in"/>
 					<label for="repfin">Reporte final</label>
+					<a href="#" id="irepfin" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					
 						<div class="input-field col s6" style="margin-left: -2.3%;">
 							<input type="checkbox" id="cartaterm" class="filled-in"/>
 							<label for="cartaterm">Carta de terminación</label>
+							<a href="#" id="icartaterm" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 						</div>
 						<div class="input-field inline col s6">
 							<label for="cartatermfecha">Fecha</label>
@@ -127,6 +136,7 @@
 						<div class="input-field col s6" style="margin-left: -2.3%;">
 							<input type="checkbox" id="constanciaof" class="filled-in"/>
 							<label for="constanciaof">Constancia oficial</label>
+							<a href="#" id="iconstanciaof" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 						</div>
 						<div class="input-field inline col s6">
 							<label for="constanciaoffecha">Fecha</label>
