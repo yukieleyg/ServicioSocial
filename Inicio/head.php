@@ -7,3 +7,5 @@
 	<link rel="stylesheet" href="../css/estilos.css">
 	<script src="../js/jquery-3.1.1.min.js"></script>	
 	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.0.3/jquery-confirm.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.0.3/jquery-confirm.min.js"></script>

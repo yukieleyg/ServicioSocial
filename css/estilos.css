@@ -113,3 +113,6 @@ table tr th{
 		width: 10%;
 	}
 }
+.jconfirm .jconfirm-box.jconfirm-type-animated {
+    width: 500px;
+}

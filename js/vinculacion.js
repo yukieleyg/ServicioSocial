@@ -1,7 +1,6 @@
 var admin = function (){
 	var parametros="";
 	const TECLA_ENTER = 13;
-
 	var alumnosSolicitudes = function(){
 
 		var parametros ="opc=muestraSolicitudes";
@@ -28,54 +27,73 @@ var admin = function (){
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Esta seguro que desea aceptar la solicitud ");
-		if(r){
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "../datos/vinculacion.php",
-				data: parametros,
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Esta seguro que desea aceptar la solicitud ?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url: "../datos/vinculacion.php",
+							data: parametros,
+							success: function(data){
+								if(data.respuesta){
+									alumnosSolicitudes();
+									Materialize.toast("Solicitud Aceptada",4000);
+								}else{
+									$.alert("Esta solicitud no ha podido ser aceptada");
+								}
+							}
 
-				success: function(data){
-					if(data.respuesta){
-						alumnosSolicitudes();
-					}else{
-						alert("Esta solicitud no ha podido ser aceptada");
+
+						});
 					}
+				},
+				cancel: function () {
+					$.alert("La solicitud no fue aceptada");
 				}
-
-
-			})
-
-
-		}		
-
+			}
+		});	
 	}
 	var rechazarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=rechazarSolicitudes"+"&solicitud="+solicitud;
-		var r = confirm("¿Esta seguro que desea rechazar la solicitud ?");
-		if(r){
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "../datos/vinculacion.php",
-				data: parametros,
+		$.confirm({
+				title: 'Confirmación',
+				content: "¿Esta seguro que desea rechazar la solicitud ?",
+				buttons: {
+					aceptar: {
+						text: 'Aceptar',
+						btnClass: 'waves-effect waves-light btn',
+						keys: ['enter', 'shift'],
+						action: function(){
+							$.ajax({
+								type: "POST",
+								dataType: "json",
+								url: "../datos/vinculacion.php",
+								data: parametros,
 
-				success: function(data){
-					if(data.respuesta){
-						alumnosSolicitudes();
-					}else{
-						alert("Esta solicitud no ha podido ser rechazada");
+								success: function(data){
+									if(data.respuesta){
+										Materialize.toast("Solicitud Rechazada",4000);
+										alumnosSolicitudes();
+									}else{
+										$alert("Esta solicitud no ha podido ser rechazada");
+									}
+								}
+							})
+						}
+					},
+					cancel: function () {
+						$.alert("La solicitud no fue rechazada");
 					}
 				}
-
-
-			})
-
-
-		}		
-
+			});	
 	}
 
 	var muestraTarjeta = function (){
@@ -246,6 +264,24 @@ var admin = function (){
 	/*$("#selprogdep").change(function() {
  		$("#second-choice").load("getter.php?choice=" + $("#first-choice").val());
 	});*/
+	var cargaVigencia = function(){
+		var value = $("#estadoPrograma").val();
+		if(value == '0'){//PENDIENTE
+			$("#vigenciaPrograma").val(0+"");
+			$("#vigenciaPrograma").attr('disabled','disabled');
+			$("#vigenciaPrograma").material_select();
+
+		}else if(value == '1'){//ACEPTADO
+			$("#vigenciaPrograma").attr('disabled',false);
+			$("#vigenciaPrograma").material_select();
+
+		}else if(value == '2'){//RECHAZADO
+			$("#vigenciaPrograma").val(0+"");
+			$("#vigenciaPrograma").attr('disabled','disabled');
+			$("#vigenciaPrograma").material_select();
+
+		}
+	}
 	var cargadepartamentos= function(){
 		var parametros={selprogdep:$("#selprogdep").val(), opc:'llenaDptoProgramas'};
 		//var parametros = $("#selprogdep").val()+"&opc=llenaDptoProgramas"+"&id="+Math.random();
@@ -303,7 +339,7 @@ var admin = function (){
                     Result.html('<span class="error" style="color:red">No disponible</span>');
                 }
                 else{
-                    alert('Problem with sql query');
+                    Materialize.toast('Problem with sql query');
                 }
             }
             });
@@ -432,31 +468,48 @@ var admin = function (){
 
 				success: function(data){ 
 					if(data.respuesta){
-						var r = confirm("¿Esta seguro que desea modificar la solicitud?");
-						if(r){	
-							var parametros2 = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
-							$.ajax({
-								type: "POST",
-								dataType: "json",
-								url:"../datos/vinculacion.php",
-								data: parametros2,
-								success: function(dataM){
-									if(dataM.respuestaM){
-										alert("Modificación Exitosa");
-										$('#divDetalles').hide();
-										alumnosSolicitudes();
-									}else{
-										alert("No se puede modificar esta solicitud");
-										$('#divDetalles').hide();
-										alumnosSolicitudes();									
+						$.confirm({
+							title: "Confirmación",
+							content: "¿Esta seguro que desea modificar la solicitud?",
+							buttons: {
+								aceptar: {
+									text: 'Aceptar',
+									btnClass: 'waves-effect waves-light btn',
+									keys: ['enter', 'shift'],
+									action: function(){
+										var parametros2 = "opc=modificarSolicitud"+"&solicitud="+solicitud+"&estado="+estado+"&motivo="+motivo+"&observaciones="+observaciones;	
+										$.ajax({
+											type: "POST",
+											dataType: "json",
+											url:"../datos/vinculacion.php",
+											data: parametros2,
+												success: function(dataM){
+													if(dataM.respuestaM){
+														Materialize.toast("Modificación Exitosa",4000);
+														$('#divDetalles').hide();
+														alumnosSolicitudes();
+													}else{
+														if(dataM.borrarExp){
+															$.alert("No se puede modificar la solicitud",4000);
+															$('#divDetalles').hide();
+															alumnosSolicitudes();	
+														}else{
+															$.alert("No se puede modificar el estado de la solicitud debido a que tiene un expediente existente",4000);
+															$('#divDetalles').hide();
+															alumnosSolicitudes();											
+														}								
+													}
+												}
+
+
+										});
 									}
+								},
+								cancel: function (){
+									$.alert("El programa no fue aceptado");
 								}
-								
-
-							});
-
-						}
-
+							}
+						});
 					}else{
 						alumnosSolicitudes();
 					}
@@ -491,14 +544,27 @@ var admin = function (){
 					$('#departamento').val(data.departamento);
 					$('#puesto').val(data.puesto);
 					$('#objetivo').val(data.objetivo);
-					$("#estadoPrograma").val(data.estado+"");
-					$("#estadoPrograma").material_select();
-					$("#vigenciaPrograma").val(data.vigencia+"");
-					$("#vigenciaPrograma").material_select();
 					$('#opcVinculacion>div').hide();
 					$("#detallesPrograma").show("slow");
+					if(data.estado == '1' && data.expedientes) {	
+						//	SE DESHABILITA EL ESTADO DEBIDO A QUE TIENE EXPEDIENTES EN PROCESO NO PUEDE SER MODIFICADO			
+						$("#estadoPrograma").val(data.estado+"");
+						$("#estadoPrograma").attr('disabled','disabled');
+						$("#estadoPrograma").material_select();
+						$("#vigenciaPrograma").val(data.vigencia+"");
+						$("#vigenciaPrograma").attr('disabled','disabled');
+						$("#vigenciaPrograma").material_select();
+					}else{
+						$("#estadoPrograma").attr('disabled',false);
+						$("#vigenciaPrograma").attr('disabled',false);
+						$("#estadoPrograma").val(data.estado+"");
+						$("#estadoPrograma").material_select();
+						$("#vigenciaPrograma").val(data.vigencia+"");
+						$("#vigenciaPrograma").material_select();
+						
+					}
 				}else{
-					alert("No se ha podido mostrar los detalles de este programa");
+					Materialize.toast("No se ha podido mostrar los detalles de el programa",4000);
 				}
 			}
 
@@ -507,50 +573,75 @@ var admin = function (){
 	var aceptarProgramas = function (){
 		var programa 	= $(this).val();
 		var parametros	= "opc=aceptarPrograma"+"&programa="+programa;
-		var r = confirm("¿Esta seguro que desea aceptar este programa ?");
-		if(r){
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url: "../datos/vinculacion.php",
-				data: parametros,
-				success: function(data){
-					if(data.respuesta){
-						muestralistaprogramas();
-					}else{
-						alert("Este programa no ha podido ser aceptado");
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Esta seguro que desea aceptar el programa ?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url: "../datos/vinculacion.php",
+							data: parametros,
+							success: function(data){
+								if(data.respuesta){
+									muestralistaprogramas();
+									Materialize.toast("Programa Aceptado",4000);
+								}else{
+									$.alert("El programa no ha podido ser aceptado",4000);
+								}
+							}
+
+
+						});
 					}
+				},
+				cancel: function () {
+					$.alert("El programa no fue aceptado");
 				}
-
-
-			});
-
-
-		}		
+			}
+		});
 	}
 	var rechazarProgramas = function(){
 		var programa 	= $(this).val();
 		var parametros	= "opc=rechazarPrograma"+"&programa="+programa;
-				var r = confirm("¿Esta seguro que desea rechazar este programa ?");
-				if(r){
-					$.ajax({
-						type: "POST",
-						dataType: "json",
-						url: "../datos/vinculacion.php",
-						data: parametros,
-						success: function(data){
-							if(data.respuesta){
-								muestralistaprogramas();
-							}else{
-								alert("Este programa no ha podido ser rechazado");
-							}
+			$.confirm({
+				title: 'Confirmación',
+				content: "¿Esta seguro que desea rechazar el programa ?",
+				buttons: {
+					aceptar: {
+						text: 'Aceptar',
+						btnClass: 'waves-effect waves-light btn',
+						keys: ['enter', 'shift'],
+						action: function(){
+							$.ajax({
+								type: "POST",
+								dataType: "json",
+								url: "../datos/vinculacion.php",
+								data: parametros,
+								success: function(data){
+									if(data.respuesta){
+										muestralistaprogramas();
+										Materialize.toast("Programa Rechazado",4000);
+									}else{
+										$.alert("El programa no ha podido ser rechazado");
+									}
+								}
+
+
+							});
 						}
-
-
-					});
-
-
-				}		
+					},
+					cancel: function () {
+						$.alert("El programa no fue rechazado");
+					}
+				}
+			});
+	
 	}
 	var modificarPrograma = function(){
 		event.preventDefault();
@@ -558,7 +649,6 @@ var admin = function (){
 		var estado 		= $("#estadoPrograma").val();
 		var vigencia	= $("#vigenciaPrograma").val();
 		var parametros  = "opc=modificarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
-
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -566,20 +656,41 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.modificar){
-					var r = confirm("¿Esta seguro que desea modificar el programa ?");
-					if(r){
-						var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
-						$.ajax({
-							type: "POST",
-							dataType: "json",
-							url:"../datos/vinculacion.php",
-							data: parametros2,
-							success:function(data){
-								alert("Programa Modificado");
-								muestralistaprogramas();
-							}
-						});
+					if(data.solicitudes){
+						var mensaje = "Este programa tiene solicitudes, estas se eliminaran ¿Esta seguro que desea modificar el programa ?"
+					}else{
+						var mensaje = "¿Esta seguro que desea modificar el programa ?";
 					}
+					var solicitudes = data.solicitudes;
+					$.confirm({
+						title: 'Confirmación',
+						content: mensaje,
+						buttons: {
+							aceptar: {
+								text: 'Aceptar',
+								btnClass: 'waves-effect waves-light btn',
+								keys: ['enter', 'shift'],
+								action: function(){
+									var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia+"&solicitudes="+solicitudes;
+									$.ajax({
+										type: "POST",
+										dataType: "json",
+										url:"../datos/vinculacion.php",
+										data: parametros2,
+										success:function(data){
+											if(data.respuesta){
+												Materialize.toast("Modificación Exitosa",4000);
+												muestralistaprogramas();
+											}
+										}
+									});
+								}
+							},
+							cancel: function () {
+								$.alert("El programa no fue modificado");
+							}
+						}
+					});
 				}else{
 					muestralistaprogramas();
 				}
@@ -619,6 +730,7 @@ var admin = function (){
 	$("#tblprogramas").on("click","#aceptar",aceptarProgramas);
 	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
 	$("#frmDetallesPrograma").on("submit",modificarPrograma);
+	$("#estadoPrograma").on("change", cargaVigencia);
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
@@ -631,7 +743,6 @@ var admin = function (){
 	$("#txtdepusuario").on('keyup',disponibilidad);
 	$("#btnbuscaTarjeta").on("click",llenarTarjeta);
 
-//	$("#frmDetallesAlumno").on("submit",modificarSolicitud);
 	$("#badgeexpediente").on("click",documentosExpediente);
 	$("#badgedatos").on("click",buscarTarjeta);
 	$("#menuTarjeta").on("click",muestraTarjeta);

@@ -44,7 +44,7 @@
 								
 						}
 					}else{
-						Materialize.toast('Usuario y/o contraseña incorrectos', 4000);
+						$.alert('Usuario y/o contraseña incorrectos');
 					}
 				}
 			});

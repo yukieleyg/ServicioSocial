@@ -538,10 +538,14 @@ function llenaDptoProgramas(){
 		$observaciones	= "'".$_POST["observaciones"]."'";
 		$estado 		= $_POST["estado"];
 		$conexion 		= conexionLocal();
+		$borrarExp 		= true;
 		mysql_query("set NAMES utf8");
 		if($estado == "2" or $estado == "0"){
 			$qryvalida	= sprintf("DELETE FROM expedientes WHERE cvesolicitud =%s",$solicitud);
 			$res 		= mysql_query($qryvalida);
+			if($res == false){
+				$borrarExp = false;
+			}
 		}elseif($estado =="1"){
 			$qryvalida 		= sprintf("SELECT * FROM solicitudes WHERE cvesolicitud =%s", $solicitud);
 			$res 			= mysql_query($qryvalida);
@@ -551,14 +555,16 @@ function llenaDptoProgramas(){
 			$qryvalida 		= sprintf("INSERT INTO expedientes VALUES(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
 			$res= mysql_query($qryvalida);	
 		}
-		$qryvalidaU	= sprintf("UPDATE solicitudes SET  estado = %s, observaciones=%s, motivo=%s WHERE cvesolicitud = %s",$estado, $observaciones, $motivo, $solicitud);	
-		$resU 		= mysql_query($qryvalidaU);
+		if($borrarExp == true){
+			$qryvalidaU	= sprintf("UPDATE solicitudes SET  estado = %s, observaciones=%s, motivo=%s WHERE cvesolicitud = %s",$estado, $observaciones, $motivo, $solicitud);	
+			$resU 		= mysql_query($qryvalidaU);
+		}
 		if(mysql_affected_rows()>0){
 			$respuesta = true;
 		}else{
 			$respuesta = false;
 		}
-		$arrayJSON = array('respuestaM' => $respuesta);
+		$arrayJSON = array('respuestaM' => $respuesta, 'borrarExp' => $borrarExp);
 		print json_encode($arrayJSON);
 
 	}
@@ -604,7 +610,7 @@ function llenaDptoProgramas(){
 		$estadoAnt 		= $_POST["estado"];
 		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalida 		= sprintf("SELECT * from programas where cveprograma =%s", $programa);
+		$qryvalida 		= sprintf("SELECT * FROM programas WHERE cveprograma =%s", $programa);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
 		if($res){
@@ -624,17 +630,24 @@ function llenaDptoProgramas(){
 		$estado 		= $row["estado"];
 		$cvedependencia = $row["cvedependencia"];
 		$cvedepartamento = $row["cveprograma"];
-		$qryvalida 		= sprintf("SELECT * from dependencias where cvedependencia =%s", $cvedependencia);
+		$qryvalida 		= sprintf("SELECT * FROM dependencias WHERE cvedependencia =%s", $cvedependencia);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
 		$empresa		= $row["nomdependencia"];
-		$qryvalida 		= sprintf("SELECT * from departamentos where cvedependencia =%s and cvedepartamento =%s", $cvedependencia, $cvedepartamento);
+		$qryvalida 		= sprintf("SELECT * FROM departamentos WHERE cvedependencia =%s AND cvedepartamento =%s", $cvedependencia, $cvedepartamento);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
 		$departamento	= $row["nomdepartamento"];
-
+		$qryvalida 		= sprintf("SELECT COUNT(*) as total FROM expedientes WHERE cveprograma_1 = %s AND estado = 1", $programa);
+		$res  			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		$total 			= $row['total'];
+		$expedientes 	= false;
+		if($total>0){
+			$expedientes = true;
+		}
 		$arrayJSON 		= array('respuesta' => $respuesta, 'nombreP' => $nombreP, 'tipoAct' => $tipoAct, 'desAct' => $desAct, 'tipoP' => $tipoP, 'modalidad' => $modalidad, 'resposable' => $responsable, 'puesto' => $puesto, 
-		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento);
+		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento, 'expedientes' => $expedientes);
 		print json_encode($arrayJSON);
 	}
 	function modificarPrograma(){
@@ -643,7 +656,7 @@ function llenaDptoProgramas(){
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
 		$cn 			= conexionLocal();
-		$qryvalida 		= sprintf("SELECT * from programas where cveprograma =%s", $programa);
+		$qryvalida 		= sprintf("SELECT * FROM programas WHERE cveprograma =%s", $programa);
 		$res 			= mysql_query($qryvalida);
 		$row			= mysql_fetch_array($res);
 		$vigenciaAnt 	= $row["vigencia"];
@@ -651,7 +664,15 @@ function llenaDptoProgramas(){
 		if(($vigenciaAnt <> $vigencia)or($estadoAnt<>$estado)){
 			$modificar=true;
 		}
-		$arrayJSON 		= array('modificar' => $modificar);
+		$qrySolicitudes = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes where cveprograma_1 = %s and estado != 2",$programa);
+		$res 			= mysql_query($qrySolicitudes);
+		$row 			= mysql_fetch_array($res);
+		$totalS 		= $row['TOTAL'];
+		$solicitudes 	= false;
+		if($totalS>0){
+			$solicitudes = true;
+		}
+		$arrayJSON 		= array('modificar' => $modificar, 'solicitudes' => $solicitudes);
 		print json_encode($arrayJSON);
 	}
 	function guardarPrograma(){
@@ -659,9 +680,19 @@ function llenaDptoProgramas(){
 		$programa 		= $_POST["programa"];
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
+		$solicitudes 	= $_POST["solicitudes"];
 		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalida 		= sprintf("UPDATE programas SET estado = %s, vigencia = %s  where cveprograma =%s", $estado, $vigencia, $programa);
+		if($solicitudes){
+			$borrarS  		= false;
+			$qryEliminaS 	= sprintf("DELETE FROM solicitudes WHERE cveprograma_1 = %s", $programa);
+			$res 			= mysql_query($qryEliminaS);
+			if(mysql_affected_rows()>0){
+				$borrarS = true;
+			}
+
+		}
+		$qryvalida 		= sprintf("UPDATE programas SET estado = %s, vigencia = %s  WHERE cveprograma =%s", $estado, $vigencia, $programa);
 		$res 			= mysql_query($qryvalida);
 		if($res){
 			$respuesta = true;
