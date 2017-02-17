@@ -20,6 +20,8 @@
 				<input id ="empresa" type="text" disabled>
 				<label>Responsable</label>
 				<input id ="responsable" type="text" disabled>
+				<label id = "vacantes">Vacantes</label>
+				<input type="text" id="vacantesInput">
 				<label>Estado</label>
 				<select name="estadoPrograma" id="estadoPrograma">
 					<option value="0">Pendiente</option>
@@ -34,6 +36,8 @@
 				<input id ="departamento" type="text" disabled>
 				<label>Puesto</label>
 				<input id ="puesto" type="text" disabled>
+				<label id="alumnosAceptados">Alumnos aceptados</label>
+				<input type="text" id="alumnosInput">
 				<label>Vigencia</label>
 				<select name="vigenciaPrograma" id="vigenciaPrograma">
 					<option value="0">Sin asignar</option>

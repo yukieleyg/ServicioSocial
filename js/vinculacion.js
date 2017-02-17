@@ -575,8 +575,9 @@ var admin = function (){
 					$('#departamento').val(data.departamento);
 					$('#puesto').val(data.puesto);
 					$('#objetivo').val(data.objetivo);
-					$('#opcVinculacion>div').hide();
-					$("#detallesPrograma").show("slow");
+					$("#vacantesInput").val(data.vacantes);
+					$("#alumnosInput").val(data.totalAlumnos);
+					$("#alumnosInput").attr('disabled', 'disabled');
 					if(data.estado == '1' && data.expedientes) {	
 						//	SE DESHABILITA EL ESTADO DEBIDO A QUE TIENE EXPEDIENTES EN PROCESO NO PUEDE SER MODIFICADO			
 						$("#estadoPrograma").val(data.estado+"");
@@ -585,6 +586,13 @@ var admin = function (){
 						$("#vigenciaPrograma").val(data.vigencia+"");
 						$("#vigenciaPrograma").attr('disabled','disabled');
 						$("#vigenciaPrograma").material_select();
+					}else if( data.estado == '0' || data.estado == '2'){
+						$("#estadoPrograma").val(data.estado+"");
+						$("#estadoPrograma").material_select();
+						$("#vigenciaPrograma").val(data.vigencia+"");
+						$("#vigenciaPrograma").attr('disabled','disabled');
+						$("#vigenciaPrograma").material_select();	
+
 					}else{
 						$("#estadoPrograma").attr('disabled',false);
 						$("#vigenciaPrograma").attr('disabled',false);
@@ -594,6 +602,8 @@ var admin = function (){
 						$("#vigenciaPrograma").material_select();
 						
 					}
+					$('#opcVinculacion>div').hide();
+					$("#detallesPrograma").show("slow");
 				}else{
 					Materialize.toast("No se ha podido mostrar los detalles de el programa",4000);
 				}

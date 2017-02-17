@@ -1,6 +1,6 @@
 <?php
 require_once('entrar.php');
-require_once('documentos.php');
+//require_once('documentos.php');
 function muestraSolicitudes(){
 	$respuesta	= false;
 	$cn0		= conexionLocal();
@@ -444,9 +444,12 @@ function llenaDptoProgramas(){
 			$vigencia 		= $renglon["vigencia"]; 
 			if($vigencia=="1"){
 				$vigencia= "Vigente";
-			}else{
+			}else if($vigencia == "2"){
 				$vigencia = "Expirado";
+			}else{
+				$vigencia ="Sin Asignar";
 			}
+
 			if($estado == "0"){
 				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
@@ -641,8 +644,12 @@ function llenaDptoProgramas(){
 		if($total>0){
 			$expedientes = true;
 		}
+		$qryAlumnos 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s", $programa);
+		$res 			= mysql_query($qryAlumnos);
+		$row 			= mysql_fetch_array($res);
+		$totalAlumnos 	= $row['TOTAL'];
 		$arrayJSON 		= array('respuesta' => $respuesta, 'nombreP' => $nombreP, 'tipoAct' => $tipoAct, 'desAct' => $desAct, 'tipoP' => $tipoP, 'modalidad' => $modalidad, 'resposable' => $responsable, 'puesto' => $puesto, 
-		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento, 'expedientes' => $expedientes);
+		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento, 'expedientes' => $expedientes, 'totalAlumnos' => $totalAlumnos);
 		print json_encode($arrayJSON);
 	}
 	function modificarPrograma(){
