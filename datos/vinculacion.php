@@ -425,13 +425,26 @@ function llenaDptoProgramas(){
 		$qry= sprintf("select * from programas");
 		$res= mysql_query($qry);
 
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Vacantes</th><th>Carrera</th><th>Estado</th><th>Vigencia</th><th></th></tr></thead><tbody>";
+		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Carrera</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
+			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
 			$dependencia= $renglon["cvedependencia"];
+			$qryNombreD = sprintf("SELECT * FROM dependencias WHERE cvedependencia =%s", $dependencia);
+			$resD 		= mysql_query($qryNombreD);	
+			$rowD 		= mysql_fetch_array($resD);
+			$nombreDependencia = $rowD['nomdependencia'];
 			$vacantes 	= $renglon["vacantes"];
 			$carrera 	= $renglon["carrerapref"];
 			$cveprograma 	= $renglon["cveprograma"];
+			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
+			$resV 			= mysql_query($qryVacantesO);
+		 	$rowV 			= mysql_fetch_array($resV);
+			$vacantesO 		= $rowV['TOTAL'];
+			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado != 1", $cveprograma);
+			$resVs 			= mysql_query($qryVacantesS);
+		 	$rowVs			= mysql_fetch_array($resVs);
+			$vacantesS 		= $rowVs['TOTAL'];
 			$estado 		= $renglon["estado"];
 			$estadoN 		= "";
 			if($estado == "0"){
@@ -451,12 +464,12 @@ function llenaDptoProgramas(){
 			}
 
 			if($estado == "0"){
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
 			}else{
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$dependencia."</td><td>".$vacantes."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
@@ -644,7 +657,7 @@ function llenaDptoProgramas(){
 		if($total>0){
 			$expedientes = true;
 		}
-		$qryAlumnos 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s", $programa);
+		$qryAlumnos 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s and estado = 1", $programa);
 		$res 			= mysql_query($qryAlumnos);
 		$row 			= mysql_fetch_array($res);
 		$totalAlumnos 	= $row['TOTAL'];
@@ -657,14 +670,19 @@ function llenaDptoProgramas(){
 		$programa 		= $_POST["programa"];
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
+		$vacantes 		= $_POST["vacantes"];
 		$cn 			= conexionLocal();
 		$qryvalida 		= sprintf("SELECT * FROM programas WHERE cveprograma =%s", $programa);
 		$res 			= mysql_query($qryvalida);
 		$row			= mysql_fetch_array($res);
 		$vigenciaAnt 	= $row["vigencia"];
 		$estadoAnt 		= $row["estado"];
-		if(($vigenciaAnt <> $vigencia)or($estadoAnt<>$estado)){
+		$vacantesAnt	= $row["vacantes"];
+		$modificarVacantes = false;
+		if(($vigenciaAnt <> $vigencia)or($estadoAnt<>$estado)) {
 			$modificar=true;
+		}else if($vacantes <> $vacantesAnt){
+			$modificarVacantes = true;
 		}
 		$qrySolicitudes = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes where cveprograma_1 = %s and estado != 2",$programa);
 		$res 			= mysql_query($qrySolicitudes);
@@ -674,7 +692,15 @@ function llenaDptoProgramas(){
 		if($totalS>0){
 			$solicitudes = true;
 		}
-		$arrayJSON 		= array('modificar' => $modificar, 'solicitudes' => $solicitudes);
+		/*$qrySolicitudes = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes where cveprograma_1 = %s and estado =1",$programa);
+		$res 			= mysql_query($qrySolicitudes);
+		$row 			= mysql_fetch_array($res);
+		$totalS 		= $row['TOTAL'];
+		$solicitudesAceptadas 	= false;
+		if($totalS>0){
+			$solicitudesAceptadas = true;
+		}*/
+		$arrayJSON 		= array('modificar' => $modificar, 'solicitudes' => $solicitudes, 'modificarVacantes' => $modificarVacantes);
 		print json_encode($arrayJSON);
 	}
 	function guardarPrograma(){
@@ -683,6 +709,7 @@ function llenaDptoProgramas(){
 		$vigencia 	 	= $_POST["vigencia"];
 		$estado			= $_POST["estado"];
 		$solicitudes 	= $_POST["solicitudes"];
+		$vacantes 		= $_POST["vacantes"];
 		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
 		if($solicitudes){
@@ -694,7 +721,7 @@ function llenaDptoProgramas(){
 			}
 
 		}
-		$qryvalida 		= sprintf("UPDATE programas SET estado = %s, vigencia = %s  WHERE cveprograma =%s", $estado, $vigencia, $programa);
+		$qryvalida 		= sprintf("UPDATE programas SET estado = %s, vigencia = %s, vacantes = %s WHERE cveprograma =%s", $estado, $vigencia, $vacantes,$programa);
 		$res 			= mysql_query($qryvalida);
 		if($res){
 			$respuesta = true;
