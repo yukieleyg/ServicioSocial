@@ -15,7 +15,10 @@
 			<option value="Interno">Interno</option>
 			<option value="Externo">Externo</option>
 		</select>
-		<input type="text" class="form-control" placeholder="Carrera preferente" id="txtprogcar" name="txtprogcar" required>
+		<!--<input type="text" class="form-control" placeholder="Carrera preferente" id="txtprogcar" name="txtprogcar" required>-->
+		<select name="selprogcar[]" id="selprogcar" multiple>
+			<option value="0">Seleccione carrera preferente..</option>
+		</select>
 		<p>Tipo de Actividades</p>
 		<p>
 			<input class="with-gap" name="selprogact" type="radio" id="tipoA" value="Administrativas"/>
@@ -54,7 +57,7 @@
 		<textarea placeholder="Descripcion actividad" class="materialize-textarea" name="txtprogact" id="txtprogact" cols="30" rows="3"></textarea>
 		
 		<p>Tipo de Programa</p>
-		<p>
+		<!--<p>
 			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value="Educacion-para-adultos"/>
 			<label for="tipoEd">Educacion para Adultos</label>
 		</p>
@@ -73,7 +76,43 @@
 		<p>
 			<input class="with-gap" name="selprogtipo" type="radio" id="tipoOt" value="Otros"/>
 			<label for="tipoOt">Otros</label>
+		</p>-->
+		<select name="selprogtipo" id="selprogtipo" required>
+			<option value="0" selected>Tipo de programa</option>
+		</select>
+		<!--<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value=1/>
+			<label for="tipoEd">Educacion para Adultos</label>
 		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoOt" value=8/>
+			<label for="tipoOt">Otros</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoCon" value=2/>
+			<label for="tipoCon">Contingencia</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoSalud" value=3/>
+			<label for="tipoSalud">Apoyo a la salud</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value=4/>
+			<label for="tipoEd">Establecido por el ITC</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoGub" value=5/>
+			<label for="tipoGub">Gubernamental</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoAdep" value=6/>
+			<label for="tipoAdep">Actividades Deportivas, culturales y civicas</label>
+		</p>
+		<p>
+			<input class="with-gap" name="selprogtipo" type="radio" id="tipoDs" value=7 />
+			<label for="tipoDs">Cuidado al medio ambiente y desarrollo sustentable</label>
+		</p>
+		</p>-->
 		<input type="text" class="form-control" placeholder="Nombre responsable" id="txtprogresp" name="txtprogresp" required>
 		<input type="text" class="form-control" placeholder="Puesto responsable" id="txtprogpues" name="txtprogpues" required>
 		<select id="selprogest" name="selprogest">
