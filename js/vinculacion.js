@@ -521,11 +521,11 @@ var admin = function (){
 														alumnosSolicitudes();
 													}else{
 														if(dataM.borrarExp){
-															$.alert("No se puede modificar la solicitud",4000);
+															$.alert("No se puede modificar la solicitud");
 															$('#divDetalles').hide();
 															alumnosSolicitudes();	
 														}else{
-															$.alert("No se puede modificar el estado de la solicitud debido a que tiene un expediente existente",4000);
+															$.alert("No se puede modificar el estado de la solicitud debido a que tiene un expediente existente");
 															$('#divDetalles').hide();
 															alumnosSolicitudes();											
 														}								
@@ -635,7 +635,7 @@ var admin = function (){
 									muestralistaprogramas();
 									Materialize.toast("Programa Aceptado",4000);
 								}else{
-									$.alert("El programa no ha podido ser aceptado",4000);
+									$.alert("El programa no ha podido ser aceptado");
 								}
 							}
 
@@ -691,7 +691,8 @@ var admin = function (){
 		var programa 	= $("#idPrograma").val();
 		var estado 		= $("#estadoPrograma").val();
 		var vigencia	= $("#vigenciaPrograma").val();
-		var parametros  = "opc=modificarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia;
+		var vacantes    = $("#vacantesInput").val();
+		var parametros  = "opc=modificarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia+"&vacantes="+vacantes;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -714,7 +715,7 @@ var admin = function (){
 								btnClass: 'waves-effect waves-light btn',
 								keys: ['enter', 'shift'],
 								action: function(){
-									var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia+"&solicitudes="+solicitudes;
+									var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia+"&solicitudes="+solicitudes+"&vacantes="+vacantes;
 									$.ajax({
 										type: "POST",
 										dataType: "json",
@@ -731,11 +732,47 @@ var admin = function (){
 							},
 							cancel: function () {
 								$.alert("El programa no fue modificado");
+								muestralistaprogramas();
+
 							}
 						}
 					});
 				}else{
-					muestralistaprogramas();
+					if(data.modificarVacantes){
+							$.confirm({
+								title: 'Confirmación',
+								content: "¿Esta seguro que desea modificar el numero de vacantes del programa?",
+								buttons: {
+									aceptar: {
+										text: 'Aceptar',
+										btnClass: 'waves-effect waves-light btn',
+										keys: ['enter', 'shift'],
+										action: function(){
+											var parametros2 = "opc=guardarPrograma"+"&programa="+programa+"&estado="+estado+"&vigencia="+vigencia+"&solicitudes="+false+"&vacantes="+vacantes;
+											$.ajax({
+												type: "POST",
+												dataType: "json",
+												url:"../datos/vinculacion.php",
+												data: parametros2,
+												success:function(data){
+													if(data.respuesta){
+														Materialize.toast("Modificación Exitosa",4000);
+														muestralistaprogramas();
+													}
+												}
+											});
+										}
+									},
+									cancel: function () {
+										$.alert("El programa no fue modificado");
+										muestralistaprogramas();
+
+									}
+								}
+							});
+					}else{
+						muestralistaprogramas();
+					}
 				}
 			}
 		});

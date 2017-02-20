@@ -58,6 +58,12 @@ table tr th{
 #tblprogramas th{
 	text-align: left;
 }
+#rowProgramas{
+	margin-left: -5%;
+}
+#rowFiltroProgramas{
+	margin-left: 15%
+}
 #titulo-entrar{
 	color:white;
 }
