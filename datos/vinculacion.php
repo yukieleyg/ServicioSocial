@@ -436,7 +436,7 @@ function llenaDptoProgramas(){
 		$qry= sprintf("select * from programas");
 		$res= mysql_query($qry);
 
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Carrera</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
 			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
@@ -446,7 +446,7 @@ function llenaDptoProgramas(){
 			$rowD 		= mysql_fetch_array($resD);
 			$nombreDependencia = $rowD['nomdependencia'];
 			$vacantes 	= $renglon["vacantes"];
-			$carrera 	= $renglon["carrerapref"];
+			/*$carrera 	= $renglon["carrerapref"];*/
 			$cveprograma 	= $renglon["cveprograma"];
 			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
 			$resV 			= mysql_query($qryVacantesO);
@@ -475,12 +475,12 @@ function llenaDptoProgramas(){
 			}
 
 			if($estado == "0"){
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
 			}else{
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
