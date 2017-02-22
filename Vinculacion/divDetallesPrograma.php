@@ -28,6 +28,8 @@
 					<option value="1">Aceptado</option>
 					<option value="2">Rechazado</option>
 				</select><br>	
+				<label>Objetivo</label>
+				<input id ="objetivo" type="text" disabled><br>	
 			</div>
 			<div class="col s5" style="text-align:left">
 				<label>Modalidad</label>
@@ -43,13 +45,14 @@
 					<option value="0">Sin asignar</option>
 					<option value="1">Vigente</option>
 					<option value="2">Expirado</option>
-				</select><br>	
+				</select><br>
+				<label>Carrera preferente</label>
+				<textarea id="carrerapref" class="materialize-textarea" disabled="disabled"></textarea>
 			</div>
 		</div>
 		<div class="row" style="margin-left:100px;"  name="divGrales">
 			<div class="col s10" style="text-align:left">
-				<label>Objetivo</label>
-				<input id ="objetivo" type="text" disabled><br>	
+				
 			</div>
 		</div>
 		<div style="margin-left:550px;">

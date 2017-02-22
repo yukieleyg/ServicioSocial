@@ -201,7 +201,7 @@ var admin = function (){
 				success: function(data){
 				 if(data.respuesta==true){
 				 	$("#selprogdep").find('option').remove();
-				 	$("#selprogdep").append('<option disabled>Seleccione dependencia..</option>');
+				 	$("#selprogdep").append('<option disabled selected>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -299,7 +299,7 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogdpto").find('option').remove();
-				 	$("#selprogdpto").append('<option disabled>Seleccione departamento..</option>');
+				 	$("#selprogdpto").append('<option disabled selected>Seleccione departamento..</option>');
 				 	$("#selprogdpto").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
@@ -580,6 +580,10 @@ var admin = function (){
 					$("#vacantesInput").val(data.vacantes);
 					$("#alumnosInput").val(data.totalAlumnos);
 					$("#alumnosInput").attr('disabled', 'disabled');
+					var listacar = $.map(data.carreras.split(','), function(name){
+					    return ''+name+'\n'
+					}).join('');
+					$("#carrerapref").val(listacar).trigger('autoresize');
 					if(data.estado == '1' && data.expedientes) {	
 						//	SE DESHABILITA EL ESTADO DEBIDO A QUE TIENE EXPEDIENTES EN PROCESO NO PUEDE SER MODIFICADO			
 						$("#estadoPrograma").val(data.estado+"");
