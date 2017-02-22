@@ -321,9 +321,7 @@ function registrarEmpresa(){
 	
 function registrarPrograma(){
 	$respuesta=false;
-	$msj="";
-
-	
+	$msj="No se registró el programa";	
 	$prognom	= "'".$_POST["txtprognom"]."'";
 	$selprogdep	= "'".$_POST["selprogdep"]."'";
 	$progdpto	= "'".$_POST["selprogdpto"]."'";
@@ -331,7 +329,7 @@ function registrarPrograma(){
 	$progvac	= "'".$_POST["txtprogvac"]."'";
 	$progmod	= "'".$_POST["selprogmod"]."'";
 	$progtipo	= "'".$_POST["selprogtipo"]."'";
-	$progcar	= "'".$_POST["txtprogcar"]."'";
+	$progcar	= $_POST["selprogcar"];
 	$selprogact	= "'".$_POST["selprogact"]."'";
 	$progact	= "'".$_POST["txtprogact"]."'";
 	$progresp	= "'".$_POST["txtprogresp"]."'";
@@ -340,12 +338,25 @@ function registrarPrograma(){
 
 	$conexion 	= conexionLocal();
 	mysql_query("set NAMES utf8");
-	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$progcar,$selprogact,$progact,$progresp,$progpues,$selprogest);
-	$resconsulta= mysql_query($consulta);
+	mysql_query("START TRANSACTION");
+	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progact,$progresp,$progpues,$selprogest);
+	$a1 = mysql_query($consulta);
+	$id=mysql_insert_id();
+	foreach($progcar as $selected) {
+	    $conscar=sprintf("INSERT into carrera_programa(cvecarpro,cveprograma,cvecarrera)
+					   VALUES (NULL,$id,$selected)");
+	    $a2 = mysql_query($conscar);
+	    if($selected==0){
+	    	break;
+	    }
+    }
 
-	if(mysql_affected_rows()>0){
+	if ($a1 and $a2) {
 		$respuesta=true;
-		//print("respuesta true");
+		$msj="Se ha registrado el programa ".$prognom.'';
+	    mysql_query("COMMIT");
+	} else {      
+	    mysql_query("ROLLBACK");
 	}
 	$salidaJSON = array ('respuesta' => $respuesta, 'mensaje'=>$msj);
 		print json_encode($salidaJSON);
@@ -365,9 +376,9 @@ function llenaDepProgramas(){
                   $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
        
 
-
-		}
 		$respuesta=true;
+		}
+		
 	
 	$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
 	print json_encode($arrayJSON);
@@ -387,10 +398,10 @@ function llenaDptoProgramas(){
                   $cve = $row['cvedepartamento'];
                   $nom = $row['nomdepartamento']; 
                   $opciones .='<option value="'.$cve.'">'.$nom.'</option>';   
-
+		$respuesta=true;
 		}
 
-		$respuesta=true;
+		
 	
 	$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
 	print json_encode($arrayJSON);
@@ -409,9 +420,9 @@ function llenaDptoProgramas(){
 	                  $nom = $row['nomdependencia']; 
 	                  $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
 	       
-
+		$respuesta=true;
 			}
-			$respuesta=true;
+			
 		
 		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
 		print json_encode($arrayJSON);
@@ -424,7 +435,7 @@ function llenaDptoProgramas(){
 		$qry= sprintf("select * from programas");
 		$res= mysql_query($qry);
 
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Carrera</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
 			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
@@ -434,7 +445,7 @@ function llenaDptoProgramas(){
 			$rowD 		= mysql_fetch_array($resD);
 			$nombreDependencia = $rowD['nomdependencia'];
 			$vacantes 	= $renglon["vacantes"];
-			$carrera 	= $renglon["carrerapref"];
+			/*$carrera 	= $renglon["carrerapref"];*/
 			$cveprograma 	= $renglon["cveprograma"];
 			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
 			$resV 			= mysql_query($qryVacantesO);
@@ -463,12 +474,12 @@ function llenaDptoProgramas(){
 			}
 
 			if($estado == "0"){
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
 			}else{
-				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$carrera."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
@@ -620,7 +631,23 @@ function llenaDptoProgramas(){
 		$estadoAnt 		= $_POST["estado"];
 		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalida 		= sprintf("SELECT * FROM programas WHERE cveprograma =%s", $programa);
+		$qryvalida 		= sprintf("SELECT p.nombre,
+										p.tipoact,
+										p.tipoactdes,
+										tp.tipoprograma,
+										p.modalidad,
+										p.nomresp,
+										p.puestoresp,
+										p.objetivo,
+										p.vacantes,
+										p.vigencia,
+										p.estado,
+										p.cvedependencia,
+										p.cveprograma
+		 							FROM programas p
+		 							INNER JOIN tipo_programa tp
+		 							ON p.tipoprog=tp.cvetipo
+		 							WHERE cveprograma =%s", $programa);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
 		if($res){
@@ -629,7 +656,7 @@ function llenaDptoProgramas(){
 		$nombreP		= $row["nombre"];
 		$tipoAct		= $row["tipoact"];
 		$desAct			= $row["tipoactdes"];
-		$tipoP			= $row["tipoprog"];
+		$tipoP			= $row["tipoprograma"];
 		$modalidad 		= $row["modalidad"];
 		$responsable 	= $row["nomresp"];
 		$puesto			= $row["puestoresp"];
@@ -746,6 +773,7 @@ function llenaDptoProgramas(){
 		$arrayJSON 	= array('respuesta' => $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
+
 	function consultaDependencia(){
 		$respuesta  	= false;
 		$cn 			= conexionLocal();
@@ -755,6 +783,47 @@ function llenaDptoProgramas(){
 		var_dump($row);
 		//$totalS 		= $row['TOTAL'];
 
+	}
+
+	function llenaTipoProg(){
+		$respuesta=false;
+		$conexion 	= conexionLocal();
+		mysql_query("set NAMES utf8");
+		$cons=	sprintf("SELECT cvetipo, 
+								tipoprograma 
+						FROM tipo_programa");
+		$opciones="";
+		$res=mysql_query($cons);
+		   while ($row = mysql_fetch_array($res)) {
+
+	                  $cve = intval($row['cvetipo']);
+	                  $nom = $row['tipoprograma']; 
+	                  $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
+	                  $respuesta=true;
+			}
+			
+		
+		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
+	}
+	function llenaCarreraPref(){
+		$respuesta=false;
+		$conexion 	= conexionLocal();
+		mysql_query("set NAMES utf8");
+		$cons=	sprintf("SELECT CARCVE, CARNCO 
+						FROM carreras");
+		$opciones="";
+		$res=mysql_query($cons);
+		   while ($row = mysql_fetch_array($res)) {
+	                  $cve = intval($row['CARCVE']);
+	                  $nom = $row['CARNCO']; 
+	                  $opciones .='<option value="'.$cve.'">'.$nom.'</option>';
+	                  $respuesta=true;
+			}
+			
+		
+		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
 	}
 
 	$opc= $_POST["opc"];
@@ -834,6 +903,15 @@ function llenaDptoProgramas(){
 		case 'consultaDependencia':
 		consultaDependencia();
 		break;
+
+		case 'llenaTipoProg':
+		llenaTipoProg();
+			# code...
+			break;
+		case 'llenaCarreraPref':
+		llenaCarreraPref();
+			# code...
+			break;
 
 		default:
 		# code...

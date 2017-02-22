@@ -201,7 +201,7 @@ var admin = function (){
 				success: function(data){
 				 if(data.respuesta==true){
 				 	$("#selprogdep").find('option').remove();
-				 	$("#selprogdep").append('<option>Seleccione dependencia..</option>');
+				 	$("#selprogdep").append('<option disabled>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -212,6 +212,8 @@ var admin = function (){
 
 	var muestraRegProgramas= function(){
 		llenaDepProgramas();
+		llenaTipoProg();
+		llenaCarreraPref();
 		$('#opcVinculacion>div').hide();
 		$("#registroProgramas").show("slow");
 	}
@@ -247,7 +249,7 @@ var admin = function (){
 				success: function(data){
 				 if(data.respuesta){
 				 	console.log("recibe");
-				 	Materialize.toast('Registro de programa exitoso', 4000);
+				 	Materialize.toast(data.mensaje, 4000);
 				 
  					$('input:not([type=radio],[type=submit])').val("");
  					$('textarea').val("");
@@ -334,7 +336,7 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogdpto").find('option').remove();
-				 	$("#selprogdpto").append('<option>Seleccione departamento..</option>');
+				 	$("#selprogdpto").append('<option disabled>Seleccione departamento..</option>');
 				 	$("#selprogdpto").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
@@ -839,6 +841,45 @@ var admin = function (){
 		    return "active";
 		  });
 		  $(".collapsible").collapsible({accordion: true});
+	}
+
+	var llenaTipoProg=	function(){
+		var parametros = $("#selprogtipo").val()+"&opc=llenaTipoProg"+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var opcs=data.opciones;
+				 	$("#selprogtipo").find('option').remove();
+				 	$("#selprogtipo").append('<option disabled>Seleccione un tipo de programa..</option>');
+				 	$("#selprogtipo").append(opcs).html();
+				 	$('#selprogtipo').material_select();
+				 }			 
+				}
+		});
+	}
+	var llenaCarreraPref=	function(){
+		console.log("ALGO");
+		var parametros = $("#selprogcar").val()+"&opc=llenaCarreraPref"+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	console.log(data.opciones);
+				 	var opcs=data.opciones;
+				 	$("#selprogcar").find('option').remove();
+				 	$("#selprogcar").append('<option disabled selected>Seleccione carrera preferente..</option>');
+				 	$("#selprogcar").append(opcs).html();
+				 	$("#selprogcar").material_select();
+				 }			 
+				}
+		});
 	}
 
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
