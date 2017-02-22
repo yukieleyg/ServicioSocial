@@ -10,7 +10,7 @@ function muestraSolicitudes(){
 	$tabla		.= "<thead><tr>";
 	$tabla		.= "<th>No. de Control</th>";
 	$tabla		.=	"<th>Nombre</th>";
-	$tabla		.=	"<th>Estatus</th>";
+	$tabla		.=	"<th>Estado</th>";
 	$tabla		.=	"<th>Programa</th>";
 	$tabla		.=	"<th></th>";
 	$tabla		.=	"</thead></tr>";
@@ -774,17 +774,49 @@ function llenaDptoProgramas(){
 		print json_encode($arrayJSON);
 	}
 
-	function consultaDependencia(){
+	function consultaFiltro(){
+		$value  		= $_POST['value'];
 		$respuesta  	= false;
 		$cn 			= conexionLocal();
-		$qryvalida 		= sprintf("SELECT nomdependencia FROM dependencias");
+		$opciones="";
+		if($value=='1'){
+			$qryvalida 		= sprintf("SELECT * FROM dependencias");
+		    $res 			= mysql_query($qryvalida);
+			while($row = mysql_fetch_array($res)){
+					$cve 		= $row['cvedependencia'];
+					$nom 		= $row['nomdependencia'];
+					$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
+					$respuesta = true;
+			}
+		}else{
+			$qryvalida 		= sprintf("SELECT * FROM carreras");
+			$res 			= mysql_query($qryvalida);
+			while($row = mysql_fetch_array($res)){
+			 	$cve 		= $row['CARCVE'];
+				$nom 		= $row['CARNOM'];
+				$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
+				$respuesta = true;
+			}
+		}
+
+		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
+	}
+	function consultaFiltroSolicitudes(){
+		$cn 			= conexionLocal();
+		$qryvalida 		= sprintf("SELECT * FROM programas");
 		$res 			= mysql_query($qryvalida);
-		$row 			= mysql_fetch_array($res);
-		var_dump($row);
-		//$totalS 		= $row['TOTAL'];
+		$opciones 		= "";
+		while($row = mysql_fetch_array($res)){
+				$cve 		= $row['cveprograma'];
+				$nom 		= $row['nombre'];
+				$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
+				$respuesta = true;
+		}
+		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
 
 	}
-
 	function llenaTipoProg(){
 		$respuesta=false;
 		$conexion 	= conexionLocal();
@@ -900,8 +932,8 @@ function llenaDptoProgramas(){
 		muestraAlumnos();
 		break;
 
-		case 'consultaDependencia':
-		consultaDependencia();
+		case 'consultaFiltro':
+		consultaFiltro();
 		break;
 
 		case 'llenaTipoProg':
@@ -912,6 +944,8 @@ function llenaDptoProgramas(){
 		llenaCarreraPref();
 			# code...
 			break;
+		case 'consultaFiltroSolicitudes':
+		consultaFiltroSolicitudes();
 
 		default:
 		# code...

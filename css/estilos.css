@@ -58,11 +58,14 @@ table tr th{
 #tblprogramas th{
 	text-align: left;
 }
-#rowProgramas{
+#rowProgramas, #rowSolicitudes, #rowAlumnos{
 	margin-left: -5%;
 }
-#rowFiltroProgramas{
+#rowFiltroProgramas, #rowFiltroSolicitudes, #rowFiltroAlumnos{
 	margin-left: 15%
+}
+#opcionSolicitudesNC,#opcionAlumnosNC{
+	display:none;
 }
 #titulo-entrar{
 	color:white;

@@ -3,9 +3,9 @@
 		<div class="col s3">
 			<select name="filtroProgramas" id="filtroProgramas">
 				<option value="" disabled selected>Seleccione...</option>
-				<option value="0">Vigencia</option>
-				<option value="1">Depedencia</option>
 				<option value="2">Carrera</option>
+				<option value="1">Depedencia</option>
+				<option value="0">Vigencia</option>
 			</select>	
 		</div>
 		<div class="col s5">
