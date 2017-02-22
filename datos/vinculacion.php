@@ -350,7 +350,7 @@ function registrarPrograma(){
 	    	break;
 	    }
     }
-
+//si hay comillas simples en alguno de los valores se altera la consulta
 	if ($a1 and $a2) {
 		$respuesta=true;
 		$msj="Se ha registrado el programa ".$prognom.'';
@@ -631,7 +631,7 @@ function llenaDptoProgramas(){
 		$estadoAnt 		= $_POST["estado"];
 		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qryvalida 		= sprintf("SELECT p.nombre,
+		$qryvalida1		= sprintf("SELECT p.nombre,
 										p.tipoact,
 										p.tipoactdes,
 										tp.tipoprograma,
@@ -643,12 +643,17 @@ function llenaDptoProgramas(){
 										p.vigencia,
 										p.estado,
 										p.cvedependencia,
-										p.cveprograma
-		 							FROM programas p
-		 							INNER JOIN tipo_programa tp
-		 							ON p.tipoprog=tp.cvetipo
-		 							WHERE cveprograma =%s", $programa);
-		$res 			= mysql_query($qryvalida);
+										p.cvedepartamento,
+										p.cveprograma,
+                                        cp.cveprograma, 
+                                        GROUP_CONCAT(c.CARNCO SEPARATOR ',') AS 'carreras'
+									FROM carrera_programa cp
+									INNER JOIN carreras c ON cp.cvecarrera=c.carcve
+									INNER JOIN programas p ON cp.cveprograma=p.cveprograma
+									INNER JOIN tipo_programa tp ON p.tipoprog=tp.cvetipo
+									WHERE p.cveprograma=%s
+									GROUP BY cp.cveprograma",$programa);
+		$res 			= mysql_query($qryvalida1);
 		$row 			= mysql_fetch_array($res);
 		if($res){
 			$respuesta 	= true;
@@ -662,11 +667,11 @@ function llenaDptoProgramas(){
 		$puesto			= $row["puestoresp"];
 		$objetivo 		= $row["objetivo"];
 		$vacantes 		= $row["vacantes"];
-		//$carrerapref 	= $row["carrerapref"];
+		$carrerapref 	= $row["carreras"];
 		$vigencia 		= $row["vigencia"];
 		$estado 		= $row["estado"];
 		$cvedependencia = $row["cvedependencia"];
-		$cvedepartamento = $row["cveprograma"];
+		$cvedepartamento = $row["cvedepartamento"];
 		$qryvalida 		= sprintf("SELECT * FROM dependencias WHERE cvedependencia =%s", $cvedependencia);
 		$res 			= mysql_query($qryvalida);
 		$row 			= mysql_fetch_array($res);
@@ -688,7 +693,7 @@ function llenaDptoProgramas(){
 		$row 			= mysql_fetch_array($res);
 		$totalAlumnos 	= $row['TOTAL'];
 		$arrayJSON 		= array('respuesta' => $respuesta, 'nombreP' => $nombreP, 'tipoAct' => $tipoAct, 'desAct' => $desAct, 'tipoP' => $tipoP, 'modalidad' => $modalidad, 'resposable' => $responsable, 'puesto' => $puesto, 
-		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento, 'expedientes' => $expedientes, 'totalAlumnos' => $totalAlumnos);
+		'objetivo' => $objetivo, 'vacantes' => $vacantes, 'carreras'=> $carrerapref, 'vigencia' => $vigencia, 'estado' => $estado, 'empresa' => $empresa, 'departamento' => $departamento, 'expedientes' => $expedientes, 'totalAlumnos' => $totalAlumnos);
 		print json_encode($arrayJSON);
 	}
 	function modificarPrograma(){
@@ -770,7 +775,7 @@ function llenaDptoProgramas(){
 		$tabla 		.=  "<th></th>";
 		$tabla		.=	"</thead></tr>";
 
-		$arrayJSON 	= array('respuesta' => $respuesta, 'tabla' => $tabla);
+		$arrayJSON 	= array('respuesta '=> $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
 

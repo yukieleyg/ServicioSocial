@@ -3,10 +3,10 @@
 	<form action="javascript:void(0);" method= "POST" id="frmRegistroProgramas">
 		<input type="text" class="form-control" placeholder="Nombre del programa" id="txtprognom" name="txtprognom" required>
 		<select name="selprogdep" id="selprogdep">
-			<option value="">Dependencia</option>
+			<option value="" selected disabled>Dependencia</option>
 		</select>
 		<select name="selprogdpto" id="selprogdpto">
-			<option value="">Departamento</option>
+			<option value="">Seleccione departamento</option>
 		</select>
 		<textarea placeholder="Objetivos" class="materialize-textarea" name="txtprogobj" id="txtprogobj" cols="30" rows="3"></textarea>
 		<input type="number" class="form-control" placeholder="Vacantes" id="txtprogvac" name="txtprogvac" min="1" required>
@@ -17,7 +17,7 @@
 		</select>
 		<!--<input type="text" class="form-control" placeholder="Carrera preferente" id="txtprogcar" name="txtprogcar" required>-->
 		<select name="selprogcar[]" id="selprogcar" multiple>
-			<option value="0">Seleccione carrera preferente..</option>
+			<option value="0" selected disabled>Seleccione carrera preferente..</option>
 		</select>
 		<p>Tipo de Actividades</p>
 		<p>
