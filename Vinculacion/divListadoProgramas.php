@@ -1,10 +1,18 @@
 <div class="container" style="">
-	<div class="row" id="rowFiltroProgramas">
+	<div class="row inline" id="rowFiltroProgramas"><br>
 		<div class="col s3">
-			<select name="filtroProgramas" id="filtroProgramas"></select>	
+			<select name="filtroProgramas" id="filtroProgramas">
+				<option value="" disabled selected>Seleccione...</option>
+				<option value="0">Vigencia</option>
+				<option value="1">Depedencia</option>
+				<option value="2">Carrera</option>
+			</select>	
 		</div>
 		<div class="col s5">
 			<select name="opcionProgramas" id="opcionProgramas"></select>	
+		</div>
+		<div class="col s2">	
+			<button class="btn" id="btnFiltroProgramas"><i class="material-icons">search</i></button>
 		</div>
 	</div>
 	<div class="row" id="rowProgramas">

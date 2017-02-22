@@ -58,9 +58,8 @@ function muestraSolicitudes(){
 		}
 
 		$tabla		.= "</tr>";
-		$respuesta = true;
 	}
-
+	$respuesta = true;
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta );
 	print json_encode($arrayJSON);
 }
@@ -747,6 +746,17 @@ function llenaDptoProgramas(){
 		$arrayJSON 	= array('respuesta' => $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
+	function consultaDependencia(){
+		$respuesta  	= false;
+		$cn 			= conexionLocal();
+		$qryvalida 		= sprintf("SELECT nomdependencia FROM dependencias");
+		$res 			= mysql_query($qryvalida);
+		$row 			= mysql_fetch_array($res);
+		var_dump($row);
+		//$totalS 		= $row['TOTAL'];
+
+	}
+
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -819,6 +829,10 @@ function llenaDptoProgramas(){
 
 		case 'muestraAlumnos':
 		muestraAlumnos();
+		break;
+
+		case 'consultaDependencia':
+		consultaDependencia();
 		break;
 
 		default:

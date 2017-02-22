@@ -266,6 +266,43 @@ var admin = function (){
 	/*$("#selprogdep").change(function() {
  		$("#second-choice").load("getter.php?choice=" + $("#first-choice").val());
 	});*/
+	var cargaFiltros = function(){
+		var value = $("#filtroProgramas").val();
+		switch(value){
+			case '0':
+				var opcs ='<option value= "0">Sin asignar</option><option value= "1">Vigente</option><option value= "2">Expirado</option>';
+				break;
+			case '1':
+				var parametros = "opc=consultaDependencia";
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "../datos/vinculacion.php",
+					data: parametros,
+					success: function(data){
+
+					}
+
+				});
+			break;
+			case '2':
+				var parametros = "opc=consultaCarrera";
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url: "../datos/vinculacion.php",
+					data: parametros,
+					success: function(data){
+						
+					}
+					
+				});
+			break;
+		}
+		$("#opcionProgramas").find('option').remove();
+		$("#opcionProgramas").append(opcs).html();
+		$("#opcionProgramas").material_select();
+	}
 	var cargaVigencia = function(){
 		var value = $("#estadoPrograma").val();
 		if(value == '0'){//PENDIENTE
@@ -280,7 +317,7 @@ var admin = function (){
 		}else if(value == '2'){//RECHAZADO
 			$("#vigenciaPrograma").val(0+"");
 			$("#vigenciaPrograma").attr('disabled','disabled');
-			$("#vigenciaPrograma").material_select();
+			
 
 		}
 	}
@@ -816,6 +853,7 @@ var admin = function (){
 	$("#tblprogramas").on("click","#rechazar",rechazarProgramas);
 	$("#frmDetallesPrograma").on("submit",modificarPrograma);
 	$("#estadoPrograma").on("change", cargaVigencia);
+	$("#filtroProgramas").on("change",cargaFiltros);
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
