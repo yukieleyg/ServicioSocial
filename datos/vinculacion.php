@@ -763,8 +763,6 @@ function llenaDptoProgramas(){
 	function muestraAlumnos(){
 		$respuesta	= true;
 		$cn 		= conexionLocal();
-		$qryvalida	= sprintf("select * from expedientes");
-		$res0		= mysql_query($qryvalida);
 		$tabla		= "";
 		$tabla		.= "<thead><tr>";
 		$tabla		.= "<th>No. de Control</th>";
@@ -774,8 +772,39 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Estado</th>";
 		$tabla 		.=  "<th></th>";
 		$tabla		.=	"</thead></tr>";
+		$qryExpediente  = sprintf("SELECT DISTINCT cveusuario_1,estado,cveprograma_1 FROM expedientes");
+		$res 			= mysql_query($qryExpediente);
+		while($rowE = mysql_fetch_array($res)){
+			$ncontrol 		= $rowE['cveusuario_1'];
+			$estado 		= $rowE['estado'];
+			$estadoN 		= "";
+			if($estado == 1){
+				$estadoN= "Captura";
+			}else if ($estado ==2 ){
+				$estadoN="Finalizado";
+			}
+			$cveprograma 	= $rowE['cveprograma_1'];
+			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
+			$resD 		= mysql_query($qryDependencia);
+			$rowD 		= mysql_fetch_array($resD);
+			$cvedependencia = $rowD['cvedependencia'];
+			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
+			$resND 		= mysql_query($qryNdepedencia);
+			$rowND 		= mysql_fetch_array($resND);
+			$nombreDependencia = $rowND['nomdependencia'];
+			$cn			= conexionBD();
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO
+				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
+			$resA		= mysql_query($qryAlumno);
+			$rowA 		= mysql_fetch_array($resA);
+			$nombre		=	$rowA["ALUNOM"];
+			$apellidopa	=	$rowA["ALUAPP"];
+			$apellidoma	=	$rowA["ALUAPM"];
+			$carrera 	=   $rowA["CARNCO"];
+			$tabla 		.="<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td></tr>";
 
-		$arrayJSON 	= array('respuesta '=> $respuesta, 'tabla' => $tabla);
+		}
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
 
@@ -812,13 +841,14 @@ function llenaDptoProgramas(){
 		$qryvalida 		= sprintf("SELECT * FROM programas");
 		$res 			= mysql_query($qryvalida);
 		$opciones 		= "";
+		$respuesta 		= false;
 		while($row = mysql_fetch_array($res)){
 				$cve 		= $row['cveprograma'];
 				$nom 		= $row['nombre'];
 				$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
-				$respuesta = true;
+				$respuesta   = true;
 		}
-		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta);
 		print json_encode($arrayJSON);
 
 	}
@@ -862,7 +892,22 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
 		print json_encode($arrayJSON);
 	}
-
+	function consultaPeriodos(){
+		$respuesta 	= false;
+		$cn 		= conexionLocal();
+		$qryPeriodos	= sprintf("SELECT DISTINCT pdocve_1 FROM solicitudes");
+		$res 			= mysql_query($qryPeriodos);
+		$opciones 		= "";
+		if($res){
+			$respuesta=true;
+		}
+	   while ($row = mysql_fetch_array($res)) {
+          $periodo = $row['pdocve_1']; 
+          $opciones .='<option value="'.$periodo.'">'.$periodo.'</option>';
+		}//var_dump($opciones);
+		$arrayJSON = array('periodos' => $opciones, 'respuesta' => $respuesta);
+		print json_encode($arrayJSON); 
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -951,7 +996,10 @@ function llenaDptoProgramas(){
 			break;
 		case 'consultaFiltroSolicitudes':
 		consultaFiltroSolicitudes();
-
+			break;
+		case 'consultaPeriodos':
+		consultaPeriodos();
+			break;
 		default:
 		# code...
 		break;
