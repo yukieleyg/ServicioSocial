@@ -335,11 +335,14 @@ function registrarPrograma(){
 	$progresp	= "'".$_POST["txtprogresp"]."'";
 	$progpues	= "'".$_POST["txtprogpues"]."'";
 	$selprogest	= "'".$_POST["selprogest"]."'";
-
+	$vigencia=1;
+	if($selprogest=="'0'" or $selprogest=="'2'"){
+		$vigencia=0;
+	}
 	$conexion 	= conexionLocal();
 	mysql_query("set NAMES utf8");
 	mysql_query("START TRANSACTION");
-	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,0)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progact,$progresp,$progpues,$selprogest);
+	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progact,$progresp,$progpues,$selprogest,$vigencia);
 	$a1 = mysql_query($consulta);
 	$id=mysql_insert_id();
 	foreach($progcar as $selected) {

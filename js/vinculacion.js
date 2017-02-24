@@ -201,7 +201,7 @@ var admin = function (){
 				success: function(data){
 				 if(data.respuesta==true){
 				 	$("#selprogdep").find('option').remove();
-				 	$("#selprogdep").append('<option disabled selected>Seleccione dependencia..</option>');
+				 	$("#selprogdep").append('<option value="" disabled selected>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -238,8 +238,19 @@ var admin = function (){
 
 	var registroProgramas=function(){
 		var parametros = $("#frmRegistroProgramas").serialize()+"&opc=registrarPrograma"+"&id="+Math.random();
-		console.log($("#selprogest").val());
-		console.log(parametros);
+		var anyInvalid=false;
+		if($("#selprogdep").val()	=== '' ||
+		$("#selprogdpto").val()	=== '' ||
+		$("#selprogtipo").val()	=== '' ||
+		$("#selprogest").val()	=== '' ||
+		$("#selprogmod").val()	=== '' ||
+		$("#selprogcar").val().length==0){
+			anyInvalid=true;
+		}
+		if (anyInvalid) {
+		    alert('Uno o más campos no tienen opcion seleccionada');
+		    return false;
+		}
 		$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -327,7 +338,7 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogdpto").find('option').remove();
-				 	$("#selprogdpto").append('<option disabled selected>Seleccione departamento..</option>');
+				 	$("#selprogdpto").append('<option value="" disabled selected>Seleccione departamento..</option>');
 				 	$("#selprogdpto").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
@@ -849,7 +860,7 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogtipo").find('option').remove();
-				 	$("#selprogtipo").append('<option disabled>Seleccione un tipo de programa..</option>');
+				 	$("#selprogtipo").append('<option value="" disabled selected>Seleccione un tipo de programa..</option>');
 				 	$("#selprogtipo").append(opcs).html();
 				 	$('#selprogtipo').material_select();
 				 }			 
@@ -869,7 +880,7 @@ var admin = function (){
 				 	console.log(data.opciones);
 				 	var opcs=data.opciones;
 				 	$("#selprogcar").find('option').remove();
-				 	$("#selprogcar").append('<option disabled selected>Seleccione carrera preferente..</option>');
+				 	$("#selprogcar").append('<option value="" disabled selected>Seleccione carrera preferente..</option>');
 				 	$("#selprogcar").append(opcs).html();
 				 	$("#selprogcar").material_select();
 				 }			 

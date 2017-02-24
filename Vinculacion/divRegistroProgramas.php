@@ -1,6 +1,6 @@
 <div class="container">
 	<h5>Registro de programas</h5>
-	<form action="javascript:void(0);" method= "POST" id="frmRegistroProgramas">
+	<form action="javascript:void(0);" method= "POST" id="frmRegistroProgramas" name="frmRegistroProgramas">
 		<input type="text" class="form-control" placeholder="Nombre del programa" id="txtprognom" name="txtprognom" required>
 		<select name="selprogdep" id="selprogdep">
 			<option value="" selected disabled>Dependencia</option>
@@ -10,14 +10,13 @@
 		</select>
 		<textarea placeholder="Objetivos" class="materialize-textarea" name="txtprogobj" id="txtprogobj" cols="30" rows="3"></textarea>
 		<input type="number" class="form-control" placeholder="Vacantes" id="txtprogvac" name="txtprogvac" min="1" required>
-		<select name="selprogmod" id="selprogmod" required>
-			<option value="0" selected>Modalidad</option>
+		<select name="selprogmod" id="selprogmod">
+			<option value="" selected>Modalidad</option>
 			<option value="Interno">Interno</option>
 			<option value="Externo">Externo</option>
 		</select>
-		<!--<input type="text" class="form-control" placeholder="Carrera preferente" id="txtprogcar" name="txtprogcar" required>-->
 		<select name="selprogcar[]" id="selprogcar" multiple>
-			<option value="0" selected disabled>Seleccione carrera preferente..</option>
+			<option value="" selected disabled>Seleccione carrera preferente..</option>
 		</select>
 		<p>Tipo de Actividades</p>
 		<p>
@@ -57,68 +56,17 @@
 		<textarea placeholder="Descripcion actividad" class="materialize-textarea" name="txtprogact" id="txtprogact" cols="30" rows="3"></textarea>
 		
 		<p>Tipo de Programa</p>
-		<!--<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value="Educacion-para-adultos"/>
-			<label for="tipoEd">Educacion para Adultos</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoAd" value="Actividades-deportivas"/>
-			<label for="tipoAd">Actividades Deportivas</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoDc" value="Desarrollo-de-comunidad" />
-			<label for="tipoDc">Desarrollo de comunidad</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="TipoAc" value="Actividades-culturales"/>
-			<label for="TipoAc">Actividades culturales</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoOt" value="Otros"/>
-			<label for="tipoOt">Otros</label>
-		</p>-->
-		<select name="selprogtipo" id="selprogtipo" required>
+
+		<select name="selprogtipo" id="selprogtipo">
 			<option value="0" selected>Tipo de programa</option>
 		</select>
-		<!--<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value=1/>
-			<label for="tipoEd">Educacion para Adultos</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoOt" value=8/>
-			<label for="tipoOt">Otros</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoCon" value=2/>
-			<label for="tipoCon">Contingencia</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoSalud" value=3/>
-			<label for="tipoSalud">Apoyo a la salud</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoEd" value=4/>
-			<label for="tipoEd">Establecido por el ITC</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoGub" value=5/>
-			<label for="tipoGub">Gubernamental</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoAdep" value=6/>
-			<label for="tipoAdep">Actividades Deportivas, culturales y civicas</label>
-		</p>
-		<p>
-			<input class="with-gap" name="selprogtipo" type="radio" id="tipoDs" value=7 />
-			<label for="tipoDs">Cuidado al medio ambiente y desarrollo sustentable</label>
-		</p>
-		</p>-->
 		<input type="text" class="form-control" placeholder="Nombre responsable" id="txtprogresp" name="txtprogresp" required>
 		<input type="text" class="form-control" placeholder="Puesto responsable" id="txtprogpues" name="txtprogpues" required>
+		<p><label>Estado</label></p>
 		<select id="selprogest" name="selprogest">
-			<option value="1" selected>Sin revisar</option>
-			<option value="2">Aceptado</option>
-			<option value="3">Rechazado</option>
+			<option value="0">Sin revisar</option>
+			<option value="1" selected>Aceptado</option>
+			<option value="2">Rechazado</option>
 		</select>
 		<input type="submit" class="btn btn-lg btn-block btn-success" value="Registrar">
 	</form>
