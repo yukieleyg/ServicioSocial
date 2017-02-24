@@ -288,6 +288,12 @@ var admin = function (){
 				$("#opcionProgramas").find('option').remove();
 				$("#opcionProgramas").append(opcs).html();
 				$("#opcionProgramas").material_select();
+		}else if(value =='3'){
+				opcs ='<option value= "0">Pendiente</option><option value= "1">Aceptado</option><option value= "2">Rechazado</option>';
+				$("#opcionProgramas").find('option').remove();
+				$("#opcionProgramas").append(opcs).html();
+				$("#opcionProgramas").material_select();
+
 		}else{
 			 	parametros = "opc=consultaFiltro"+"&value="+value;
 				$.ajax({
@@ -821,9 +827,7 @@ var admin = function (){
 		});
 	}
 	var muestraAlumnos = function(){
-
 		var parametros ="opc=muestraAlumnos";
-		
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -889,6 +893,21 @@ var admin = function (){
 	}
 	var filtroSolicitudes = function(){
 		var value = $("#filtroSolicitudes").val();
+		var parametros= "opc=consultaPeriodos";
+		$.ajax({
+			type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				if(data.respuesta==true){
+					var opcs = data.periodos;
+				 	$("#filtroPeriodo").find('option').remove();
+				 	$("#filtroPeriodo").append(opcs).html();
+				 	$("#filtroPeriodo").material_select();
+				 }			 
+				}
+		});
 		switch(value){
 			case '0':  
 					opcs="<option value='0'>Pendiente</option><option value='1'>Aceptado</option><option value='2'>Rechazado</option>"
@@ -896,18 +915,22 @@ var admin = function (){
 					$("#opcionSolicitudes").append(opcs).html();
 					$("#opcionSolicitudes").material_select();
 					$("#opcionSolicitudesNC").hide();
+					$("#opcionPeriodo").show();
 					$("#opcionSolicitudesDiv").show();
 			break;
 			case '1': 
 				var parametros = "opc=consultaFiltroSolicitudes";
+				var opcs= "";
 				$.ajax({
 					type: "POST",
 					dataType: "json",
 					url:"../datos/vinculacion.php",
 					data: parametros,
 					success: function(data){
+					// alert(data.opciones);
 					 if(data.respuesta==true){
-					 	var opcs=data.opciones;
+					  	opcs=data.opciones;
+					 	$("#opcionPeriodo").show();
 					 	$("#opcionSolicitudes").find('option').remove();
 					 	$("#opcionSolicitudes").append(opcs).html();
 					 	$("#opcionSolicitudes").material_select();
@@ -918,6 +941,7 @@ var admin = function (){
 				});
 			break;
 			case '2': 
+				$("#opcionPeriodo").hide();
 				$("#opcionSolicitudesDiv").hide();
 				$("#opcionSolicitudesNC").show();
 			break;
@@ -925,9 +949,33 @@ var admin = function (){
 	}
 	var filtroAlumnos = function(){
 		var value = $("#filtroAlumnos").val();
+		var parametros= "opc=consultaPeriodos";
+		$.ajax({
+			type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				if(data.respuesta==true){
+					var opcs = data.periodos;
+				 	$("#filtroPeriodoAlumnos").find('option').remove();
+				 	$("#filtroPeriodoAlumnos").append(opcs).html();
+				 	$("#filtroPeriodoAlumnos").material_select();
+				 }			 
+				}
+		});
 		if(value == '2'){
+			$("#opcionPeriodoAlumnos").hide();
 			$("#opcionAlumnosDiv").hide();
 			$("#opcionAlumnosNC").show();
+		}else if(value =='3'){
+			$("#opcionPeriodoAlumnos").show();
+			opcs ='<option value= "1">Captura</option><option value= "2">Finalizado</option>';
+			$("#opcionAlumnosNC").hide();
+			$("#opcionAlumnosDiv").show();
+			$("#opcionAlumnos").find('option').remove();
+			$("#opcionAlumnos").append(opcs).html();
+			$("#opcionAlumnos").material_select();
 		}else{
 				var parametros = "opc=consultaFiltro"+"&value="+value;
 				$.ajax({
@@ -938,6 +986,7 @@ var admin = function (){
 					success: function(data){
 					 if(data.respuesta==true){
 					 	var opcs=data.opciones;
+						$("#opcionPeriodoAlumnos").show();
 					 	$("#opcionAlumnosNC").hide();
 						$("#opcionAlumnosDiv").show();
 					 	$("#opcionAlumnos").find('option').remove();
@@ -965,6 +1014,7 @@ var admin = function (){
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	$("#filtroAlumnos").on("change",filtroAlumnos);
+	//$("#btnFiltroAlumnos").on("click", filtrarAlumnos);
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);

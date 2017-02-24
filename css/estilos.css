@@ -64,7 +64,7 @@ table tr th{
 #rowFiltroProgramas, #rowFiltroSolicitudes, #rowFiltroAlumnos{
 	margin-left: 15%
 }
-#opcionSolicitudesNC,#opcionAlumnosNC{
+#opcionSolicitudesNC,#opcionAlumnosNC,#opcionPeriodo{
 	display:none;
 }
 #titulo-entrar{

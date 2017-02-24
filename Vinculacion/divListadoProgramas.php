@@ -1,8 +1,9 @@
-<div class="container" style="">
+<div class="container">
 	<div class="row inline" id="rowFiltroProgramas"><br>
 		<div class="col s3">
 			<select name="filtroProgramas" id="filtroProgramas">
 				<option value="" disabled selected>Seleccione...</option>
+				<option value="3">Estado</option>
 				<option value="2">Carrera</option>
 				<option value="1">Depedencia</option>
 				<option value="0">Vigencia</option>

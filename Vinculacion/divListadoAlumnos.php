@@ -6,6 +6,7 @@
 					<option value="0">Carrera</option>
 					<option value="1">Empresa</option>
 					<option value="2">No.de Control</option>
+					<option value="3">Estado</option>
 				</select>	
 			</div>
 			<div class="col s5" id="opcionAlumnosNC">
@@ -13,6 +14,9 @@
 			</div>
 			<div class="col s5" id="opcionAlumnosDiv">
 				<select name="opcionAlumnos" id="opcionAlumnos"></select>	
+			</div>
+			<div class="col s2" id="opcionPeriodoAlumnos">	
+				<select name="filtroPeriodoAlumnos" id="filtroPeriodoAlumnos"></select>
 			</div>
 			<div class="col s2">	
 				<button class="btn" id="btnFiltroAlumnos"><i class="material-icons">search</i></button>
