@@ -5,8 +5,7 @@
 					<option value="" disabled selected>Seleccione...</option>
 					<option value="0">Carrera</option>
 					<option value="1">Empresa</option>
-					<option value="2">No.de Control</option>
-					<option value="3">Estado</option>
+					<option value="2">Estado</option>
 				</select>	
 			</div>
 			<div class="col s5" id="opcionAlumnosNC">

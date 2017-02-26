@@ -953,11 +953,7 @@ var admin = function (){
 				 }			 
 				}
 		});
-		if(value == '2'){
-			$("#opcionPeriodoAlumnos").hide();
-			$("#opcionAlumnosDiv").hide();
-			$("#opcionAlumnosNC").show();
-		}else if(value =='3'){
+		if(value =='2'){
 			$("#opcionPeriodoAlumnos").show();
 			opcs ='<option value= "1">Captura</option><option value= "2">Finalizado</option>';
 			$("#opcionAlumnosNC").hide();
@@ -986,6 +982,32 @@ var admin = function (){
 				});
 		}
 	}
+	var expedienteAlumno = function(){
+		var nocontrol = $("#expediente").val();
+		$("#txtbuscaTarjeta").val(nocontrol);
+		llenarTarjeta();
+		muestraTarjeta();		
+	}
+	var filtrarAlumnos = function(){
+		var opcion 		= $("#filtroAlumnos").val();
+		var filtro 		= $("#opcionAlumnos").val();
+		var periodo 	= $("#filtroPeriodoAlumnos").val();
+		var parametros = "opc=filtrarAlumnos"+"&opcion="+opcion+"&filtro="+filtro+"&periodo="+periodo;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	$("#tablaAlumnos").html("");
+				$("#tablaAlumnos").append(data.tabla);
+				$("#listadoAlumnos").show();
+			 }			 
+			}
+		});
+
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1003,7 +1025,9 @@ var admin = function (){
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	$("#filtroAlumnos").on("change",filtroAlumnos);
-	//$("#btnFiltroAlumnos").on("click", filtrarAlumnos);
+	$("#tablaAlumnos").on("click","#expediente",expedienteAlumno);
+	$("#btnFiltroAlumnos").on("click", filtrarAlumnos);
+
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
