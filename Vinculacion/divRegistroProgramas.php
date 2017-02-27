@@ -5,9 +5,13 @@
 		<select name="selprogdep" id="selprogdep">
 			<option value="" selected disabled>Dependencia</option>
 		</select>
-		<select name="selprogdpto" id="selprogdpto">
-			<option value="">Seleccione departamento</option>
-		</select>
+		
+		<div class="row">
+		    <select name="selprogdpto" id="selprogdpto" class="col s11">
+				<option value="">Seleccione departamento</option>
+			</select>
+			<button class="btn-floating waves-effect waves-light blue right tooltipped" id="btnagregardpto" data-position="left" data-delay="50" data-tooltip="Agregar departamento" disabled><i class="material-icons">add</i></button>
+	    </div>
 		<textarea placeholder="Objetivos" class="materialize-textarea" name="txtprogobj" id="txtprogobj" cols="30" rows="3"></textarea>
 		<input type="number" class="form-control" placeholder="Vacantes" id="txtprogvac" name="txtprogvac" min="1" required>
 		<select name="selprogmod" id="selprogmod">

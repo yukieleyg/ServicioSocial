@@ -272,7 +272,7 @@ function registrarEmpresa(){
 	$respuesta 	=false;
 	$msj="";
 
-	$depnom 	= "'".$_POST["txtdepnom"]."'";
+	$depnom 	= strtoupper("'".$_POST["txtdepnom"]."'");
 	$depusuario = "'".$_POST["txtdepusuario"]."'";
 	$deprfc 	= "'".$_POST["txtdeprfc"]."'";
 	$deptitular = "'".$_POST["txtdeptitular"]."'";
@@ -288,8 +288,7 @@ function registrarEmpresa(){
 		//agregar usuario a la base de datos
 		mysql_query("set NAMES utf8");
 		$consUsuario=sprintf("insert into usuarios values(%s,'password',2)",$depusuario);
-		mysql_query($consUsuario);
-
+		$resc= mysql_query($consUsuario);
 		if(mysql_affected_rows()>0){
 			$consulta = sprintf("insert into dependencias values(NULL,%s,%s,%s,%s,%s,%s,%s)",$depnom,$depusuario,$deprfc,$deptitular,$depdir,$deptel,$seldepest);
 			$resconsulta= mysql_query($consulta);
@@ -322,7 +321,7 @@ function registrarEmpresa(){
 function registrarPrograma(){
 	$respuesta=false;
 	$msj="No se registró el programa";	
-	$prognom	= "'".$_POST["txtprognom"]."'";
+	$prognom	= strtoupper("'".$_POST["txtprognom"]."'");
 	$selprogdep	= "'".$_POST["selprogdep"]."'";
 	$progdpto	= "'".$_POST["selprogdpto"]."'";
 	$progobj	= "'".$_POST["txtprogobj"]."'";
@@ -911,6 +910,32 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('periodos' => $opciones, 'respuesta' => $respuesta);
 		print json_encode($arrayJSON); 
 	}
+	function agregarDepartamento(){
+		$respuesta 	= false;
+		$cn 		= conexionLocal();
+		$dptonom	=	strtoupper("'".$_POST['nombre']."'");
+		$depcve		=	$_POST['dependencia'];
+		$qryexiste	=sprintf("SELECT dp.cvedepartamento, d.nomdependencia 
+							FROM departamentos dp 
+							INNER JOIN dependencias d ON dp.cvedependencia=d.cvedependencia
+                            WHERE dp.cvedependencia =%s AND dp.nomdepartamento=%s",$depcve,$dptonom);
+		$resaux		=mysql_query($qryexiste);
+		if($row= mysql_fetch_array($resaux)){
+			$nombreDep		= $row["nomdependencia"];
+			$mensaje="Ya existe un departamento con ese nombre en ".$nombreDep;
+
+		}else{
+			$qryDpto	= sprintf("INSERT INTO departamentos(cvedepartamento,cvedependencia,nomdepartamento)
+										VALUES(NULL,$depcve,$dptonom)");
+				$res 		= mysql_query($qryDpto);
+					if(mysql_affected_rows()>0){
+						$respuesta=true;
+						$mensaje="Se ha agregado el departamento ".$dptonom;
+					}
+		}
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
+		print json_encode($arrayJSON); 
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -1002,6 +1027,10 @@ function llenaDptoProgramas(){
 			break;
 		case 'consultaPeriodos':
 		consultaPeriodos();
+			break;
+		case 'agregarDepartamento':
+		agregarDepartamento();
+			# code...
 			break;
 		default:
 		# code...
