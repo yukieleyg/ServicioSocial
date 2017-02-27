@@ -1,0 +1,7 @@
+ALTER TABLE `departamentos` DROP FOREIGN KEY `FK_dependencia`;
+DELETE FROM `serviciosocial`.`dependencias` WHERE `dependencias`.`cvedependencia` = 0";
+UPDATE `serviciosocial`.`dependencias` SET `cvedependencia` = '0' WHERE `dependencias`.`cvedependencia` = 1;
+ALTER TABLE `dependencias` CHANGE `cvedependencia` `cvedependencia` INT(11) NOT NULL AUTO_INCREMENT;
+UPDATE `departamentos` SET `cvedependencia`=0 WHERE `cvedependencia`=1;
+UPDATE `serviciosocial`.`dependencias` SET `cvedependencia` = '0' WHERE `dependencias`.`cvedependencia` = 1;
+ALTER TABLE `departamentos` ADD CONSTRAINT `fk_dependencias` FOREIGN KEY (`cvedependencia`) REFERENCES `serviciosocial`.`dependencias`(`cvedependencia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
