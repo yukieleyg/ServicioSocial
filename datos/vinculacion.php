@@ -772,7 +772,7 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Empresa</th>";
 		$tabla		.=	"<th>Estado</th>";
-		$tabla 		.=  "<th></th>";
+		$tabla 		.=  "<th>Ver Expediente</th>";
 		$tabla		.=	"</thead></tr>";
 		$qryExpediente  = sprintf("SELECT DISTINCT cveusuario_1,estado,cveprograma_1 FROM expedientes");
 		$res 			= mysql_query($qryExpediente);
@@ -803,7 +803,7 @@ function llenaDptoProgramas(){
 			$apellidopa	=	$rowA["ALUAPP"];
 			$apellidoma	=	$rowA["ALUAPM"];
 			$carrera 	=   $rowA["CARNCO"];
-			$tabla 		.="<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td></tr>";
+			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
 
 		}
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
@@ -906,10 +906,11 @@ function llenaDptoProgramas(){
 	   while ($row = mysql_fetch_array($res)) {
           $periodo = $row['pdocve_1']; 
           $opciones .='<option value="'.$periodo.'">'.$periodo.'</option>';
-		}//var_dump($opciones);
+		}
 		$arrayJSON = array('periodos' => $opciones, 'respuesta' => $respuesta);
 		print json_encode($arrayJSON); 
 	}
+
 	function agregarDepartamento(){
 		$respuesta 	= false;
 		$cn 		= conexionLocal();
@@ -936,97 +937,149 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
 		print json_encode($arrayJSON); 
 	}
+	function filtrarAlumnos(){
+		$opcion  		= $_POST['opcion'];
+		$filtro  		= $_POST['filtro'];
+		$periodo  		= $_POST['periodo'];
+		//var_dump($periodo);
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$tabla		= "";
+		$tabla		.= "<thead><tr>";
+		$tabla		.= "<th>No. de Control</th>";
+		$tabla		.=	"<th>Nombre</th>";
+		$tabla		.=	"<th>Carrera</th>";
+		$tabla		.=	"<th>Empresa</th>";
+		$tabla		.=	"<th>Estado</th>";
+		$tabla 		.=  "<th>Ver Expediente</th>";
+		$tabla		.=	"</thead></tr>";
+		$opcionCve   = ""; 
+		if($opcion == '2'){
+			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+										FROM expedientes E 
+										INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
+										WHERE E.estado = %s AND S.pdocve_1 =%s", $filtro, $periodo);
+		}else {
+			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+							FROM expedientes E 
+							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
+							WHERE S.pdocve_1 =%s", $periodo);
+		}
+		$res 			= mysql_query($qryExpediente);
+		while($rowE = mysql_fetch_array($res)){
+			$ncontrol 		= $rowE['cveusuario_1'];
+			$estado 		= $rowE['estado'];
+			$estadoN 		= "";
+			if($estado == 1){
+				$estadoN= "Captura";
+			}else if ($estado ==2 ){
+				$estadoN="Finalizado";
+			}
+			$cveprograma 	= $rowE['cveprograma_1'];
+			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
+			$resD 		= mysql_query($qryDependencia);
+			$rowD 		= mysql_fetch_array($resD);
+			$cvedependencia = $rowD['cvedependencia'];
+			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
+			$resND 		= mysql_query($qryNdepedencia);
+			$rowND 		= mysql_fetch_array($resND);
+			$nombreDependencia = $rowND['nomdependencia'];
+			$cn			= conexionBD();
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO, DC.CARCVE
+				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
+			$resA		= mysql_query($qryAlumno);
+			$rowA 		= mysql_fetch_array($resA);
+			$nombre		=	$rowA["ALUNOM"];
+			$apellidopa	=	$rowA["ALUAPP"];
+			$apellidoma	=	$rowA["ALUAPM"];
+			$carrera 	=   $rowA["CARNCO"];
+			$cvecarrera =   $rowA["CARCVE"];
+			if(($opcion == '0' and $cvecarrera == $filtro)OR($opcion == '1' and $cvedependencia == $filtro)OR($opcion == '2')OR($opcion == '0' and $filtro == '0')){
+				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			}
+		}
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		print json_encode($arrayJSON);
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
-		muestraSolicitudes();
-		break;
+			muestraSolicitudes();
+			break;
 		case 'aceptarSolicitudes':
-		aceptarSolicitudes();
-		break;
+			aceptarSolicitudes();
+			break;
 		case 'rechazarSolicitudes':
-		rechazarSolicitudes();
-		break;
+			rechazarSolicitudes();
+			break;
 		case 'verDetallesSolicitud':
-		verDetallesSolicitud();
-		break;
+			verDetallesSolicitud();
+			break;
 		case 'obtenerTarjetaAlm':
-		obtenerTarjetaAlm();
-		break;
+			obtenerTarjetaAlm();
+			break;
 		case 'registrarEmpresa':
-		registrarEmpresa();
-		# code...
-		break;
+			registrarEmpresa();
+			break;
 		case 'registrarPrograma':
-		registrarPrograma();
-			# code...
+			registrarPrograma();
 			break;
 		case 'llenaDepProgramas':
-		llenaDepProgramas();
-			# code...
+			llenaDepProgramas();
 			break;
 		case 'llenaDptoProgramas':
-		llenaDptoProgramas();
-			# code...
+			llenaDptoProgramas();
 			break;
 		case 'llenaActProg':
-		llenaActProg();
-			# code...
+			llenaActProg();
 			break;
 		case 'detallesSolicitud':
-		detallesSolicitud();
+			detallesSolicitud();
 			break;
 		case 'tablaprogramas':
-		tablaprogramas();
+			tablaprogramas();
 			break;
 		case 'documentosExpediente':
-		documentosExpediente();
+			documentosExpediente();
 			break;
 		case 'modificarSolicitud':
-		modificarSolicitud();
-		break;
-		
+			modificarSolicitud();
+			break;
 		case 'aceptarPrograma':
-		aceptarPrograma();
-		break;
-
+			aceptarPrograma();
+			break;
 		case 'rechazarPrograma':
-		rechazarPrograma();
-		break;
-
+			rechazarPrograma();
+			break;
 		case 'detallesPrograma':
-		detallesPrograma();
-		break;
-
+			detallesPrograma();
+			break;
 		case 'modificarPrograma':
-		modificarPrograma();
-		break;
-
+			modificarPrograma();
+			break;
 		case 'guardarPrograma':
-		guardarPrograma();
-		break;
-
+			guardarPrograma();
+			break;
 		case 'muestraAlumnos':
-		muestraAlumnos();
-		break;
-
+			muestraAlumnos();
+			break;
 		case 'consultaFiltro':
-		consultaFiltro();
-		break;
-
+			consultaFiltro();
+			break;
 		case 'llenaTipoProg':
-		llenaTipoProg();
-			# code...
+			llenaTipoProg();
 			break;
 		case 'llenaCarreraPref':
-		llenaCarreraPref();
-			# code...
+			llenaCarreraPref();
 			break;
 		case 'consultaFiltroSolicitudes':
-		consultaFiltroSolicitudes();
+			consultaFiltroSolicitudes();
 			break;
 		case 'consultaPeriodos':
-		consultaPeriodos();
+			consultaPeriodos();
+			break;
+		case 'filtrarAlumnos':
+			filtrarAlumnos();
 			break;
 		case 'agregarDepartamento':
 		agregarDepartamento();
