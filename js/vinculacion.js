@@ -1090,11 +1090,11 @@ var admin = function (){
 		});
 	}
 	var filtrarSolicitudes = function(){
-		var filtro 	= $("#filtroSolicitudes");
-		var opcion 	= $("#opcionSolicitudes");
-		var periodo 	= $("#filtroPeriodo");
-		var nocontrol 	= $("#filtroNoControlSolicitudes");
-		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo"+periodo+"&nocontrol"+nocontrol;
+		var filtro 	= $("#filtroSolicitudes").val();
+		var opcion 	= $("#opcionSolicitudes").val();
+		var periodo 	= $("#filtroPeriodo").val();
+		var nocontrol 	= $("#filtroNoControlSolicitudes").val();
+		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol;
 		$.ajax({
 			type:"POST",
 			dataType: "json",

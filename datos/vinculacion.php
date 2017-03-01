@@ -1005,6 +1005,7 @@ function llenaDptoProgramas(){
 		$opcion  		= $_POST['opcion'];
 		$filtro  		= $_POST['filtro'];
 		$periodo  		= $_POST['periodo'];
+		$nocontrol 		= $_POST['nocontrol'];
 		$respuesta	= true;
 		$cn 		= conexionLocal();
 		$tabla		= "";
@@ -1015,6 +1016,57 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Programa</th>";
 		$tabla		.=	"<th></th>";
 		$tabla		.=	"</thead></tr>";
+		switch ($filtro) {
+			case '0':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.estado = %s ",$opcion);
+				break;
+			case '1':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.cveprograma_1 =%s ",$opcion);
+				break;
+			case '2':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.cveusuario_1 = %s ",$nocontrol);
+				break;
+		}
+		$res = mysql_query($qrySolicitud);
+		while($row0 = mysql_fetch_array($res)){
+			$cveusuario  	= $row0["cveusuario_1"];
+			$cvesolicitud 	= $row0["cvesolicitud"];
+			$nombrePro 		= $row0['nombre'];
+			$estado 		= $row0["estado"];
+			$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
+			$res		= mysql_query($qryvalida, conexionBD());
+			$row 		= mysql_fetch_array($res);
+			$tabla		.= "<tr>";
+			$tabla		.= "<td>".$row["ALUCTR"]."</td>";
+			$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+			if($row0["estado"]==0){
+				$tabla		.= "<td>"."PENDIENTE"."</td>";
+			}else if($row0["estado"]==1){
+				$tabla		.="<td>"."ACEPTADO"."</td>";
+			}else{
+				$tabla		.="<td>"."RECHAZADO"."</td>";
+			}
+
+			if($estado !=0){
+				$tabla		.= "<td>".$nombrePro."</td>";
+				$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+				
+			}else{
+				$tabla		.= "<td>".$nombrePro."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+
+			}
+
+			$tabla		.= "</tr>";
+		
+
+		}
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 
@@ -1182,7 +1234,6 @@ function llenaDptoProgramas(){
 		case 'filtrarAlumnos':
 			filtrarAlumnos();
 			break;
-
 		case 'filtrarSolicitudes':
 			filtrarSolicitudes();
 			break;
