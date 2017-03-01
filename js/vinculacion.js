@@ -989,8 +989,8 @@ var admin = function (){
 		muestraTarjeta();		
 	}
 	var filtrarAlumnos = function(){
-		var opcion 		= $("#filtroAlumnos").val();
-		var filtro 		= $("#opcionAlumnos").val();
+		var filtro 		= $("#filtroAlumnos").val();
+		var opcion		= $("#opcionAlumnos").val();
 		var periodo 	= $("#filtroPeriodoAlumnos").val();
 		var parametros = "opc=filtrarAlumnos"+"&opcion="+opcion+"&filtro="+filtro+"&periodo="+periodo;
 		$.ajax({
@@ -1008,12 +1008,53 @@ var admin = function (){
 		});
 
 	}
+	var filtrarSolicitudes = function(){
+		var filtro 	= $("#filtroSolicitudes");
+		var opcion 	= $("#opcionSolicitudes");
+		var periodo 	= $("#filtroPeriodo");
+		var nocontrol 	= $("#filtroNoControlSolicitudes");
+		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo"+periodo+"&nocontrol"+nocontrol;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tablaSolicitudes").html("");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#listadoSolicitudes").show();
+				}
+			}
+
+		});
+	}
+	var filtrarProgramas = function(){
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#listadoProgramas").show();
+				}
+			}
+
+		});
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	$("#tablaSolicitudes").on("click", "#detalles",verDetallesSolicitud);
 	$("#frmDetallesSolicitud").on("submit",detallesSolicitud);
 	$("#filtroSolicitudes").on("change",filtroSolicitudes);
+	$("#btnFiltroSolicitudes").on("click",filtrarSolicitudes);
 	
 	$("#muestraProgramas").on("click",muestralistaprogramas);
 	$("#tblprogramas").on("click","#detallesProgramas",detallesProgramas);
@@ -1022,6 +1063,7 @@ var admin = function (){
 	$("#frmDetallesPrograma").on("submit",modificarPrograma);
 	$("#estadoPrograma").on("change", cargaVigencia);
 	$("#filtroProgramas").on("change",cargaFiltros);
+	$("#btnFiltroProgramas").on("click",filtrarProgramas);
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	$("#filtroAlumnos").on("change",filtroAlumnos);

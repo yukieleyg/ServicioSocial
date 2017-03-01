@@ -451,7 +451,7 @@ function llenaDptoProgramas(){
 			$resV 			= mysql_query($qryVacantesO);
 		 	$rowV 			= mysql_fetch_array($resV);
 			$vacantesO 		= $rowV['TOTAL'];
-			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado != 1", $cveprograma);
+			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 0", $cveprograma);
 			$resVs 			= mysql_query($qryVacantesS);
 		 	$rowVs			= mysql_fetch_array($resVs);
 			$vacantesS 		= $rowVs['TOTAL'];
@@ -770,11 +770,16 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Empresa</th>";
 		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Periodo</th>";
 		$tabla 		.=  "<th>Ver Expediente</th>";
 		$tabla		.=	"</thead></tr>";
-		$qryExpediente  = sprintf("SELECT DISTINCT cveusuario_1,estado,cveprograma_1 FROM expedientes");
-		$res 			= mysql_query($qryExpediente);
+		$qryExpediente  = sprintf("SELECT E.estado, P.cveprograma, D.cvedependencia, E.cveusuario_1, D.nomdependencia, S.pdocve_1 FROM expedientes E 
+				INNER JOIN programas P on P.cveprograma = E.cveprograma_1 
+				INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud");
+		$res = mysql_query($qryExpediente);
 		while($rowE = mysql_fetch_array($res)){
+			$periodo 		= $rowE['pdocve_1'];
 			$ncontrol 		= $rowE['cveusuario_1'];
 			$estado 		= $rowE['estado'];
 			$estadoN 		= "";
@@ -783,25 +788,22 @@ function llenaDptoProgramas(){
 			}else if ($estado ==2 ){
 				$estadoN="Finalizado";
 			}
-			$cveprograma 	= $rowE['cveprograma_1'];
-			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
-			$resD 		= mysql_query($qryDependencia);
-			$rowD 		= mysql_fetch_array($resD);
-			$cvedependencia = $rowD['cvedependencia'];
-			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
-			$resND 		= mysql_query($qryNdepedencia);
-			$rowND 		= mysql_fetch_array($resND);
-			$nombreDependencia = $rowND['nomdependencia'];
-			$cn			= conexionBD();
-			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO
-				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
-			$resA		= mysql_query($qryAlumno);
+			$cveprograma 	= $rowE['cveprograma'];
+			$cvedependencia = $rowE['cvedependencia'];
+			$nombreDependencia = $rowE['nomdependencia'];
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNOM FROM DALUMN A 
+									INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR 
+									INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE 
+									WHERE  A.ALUCTR = %s", $ncontrol);
+			$resA		= mysql_query($qryAlumno, conexionBD());
 			$rowA 		= mysql_fetch_array($resA);
 			$nombre		=	$rowA["ALUNOM"];
 			$apellidopa	=	$rowA["ALUAPP"];
 			$apellidoma	=	$rowA["ALUAPM"];
-			$carrera 	=   $rowA["CARNCO"];
-			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			$carrera 	=   $rowA["CARNOM"];
+			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'>
+							<button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'>
+							<i class='material-icons'>open_in_new</i></button></td></tr>";
 
 		}
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
@@ -912,7 +914,6 @@ function llenaDptoProgramas(){
 		$opcion  		= $_POST['opcion'];
 		$filtro  		= $_POST['filtro'];
 		$periodo  		= $_POST['periodo'];
-		//var_dump($periodo);
 		$respuesta	= true;
 		$cn 		= conexionLocal();
 		$tabla		= "";
@@ -922,18 +923,24 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Empresa</th>";
 		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Periodo</th>";
 		$tabla 		.=  "<th>Ver Expediente</th>";
 		$tabla		.=	"</thead></tr>";
 		$opcionCve   = ""; 
-		if($opcion == '2'){
-			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+		if($filtro == '2'){
+			$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia
 										FROM expedientes E 
 										INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
-										WHERE E.estado = %s AND S.pdocve_1 =%s", $filtro, $periodo);
+										INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+										INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+										WHERE E.estado = %s AND S.pdocve_1 =%s", $opcion, $periodo);
+		//}else if(){
 		}else {
-			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+			$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
 							FROM expedientes E 
-							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
+							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
+							INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
 							WHERE S.pdocve_1 =%s", $periodo);
 		}
 		$res 			= mysql_query($qryExpediente);
@@ -947,28 +954,122 @@ function llenaDptoProgramas(){
 				$estadoN="Finalizado";
 			}
 			$cveprograma 	= $rowE['cveprograma_1'];
-			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
-			$resD 		= mysql_query($qryDependencia);
-			$rowD 		= mysql_fetch_array($resD);
-			$cvedependencia = $rowD['cvedependencia'];
-			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
-			$resND 		= mysql_query($qryNdepedencia);
-			$rowND 		= mysql_fetch_array($resND);
-			$nombreDependencia = $rowND['nomdependencia'];
-			$cn			= conexionBD();
-			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO, DC.CARCVE
+			$cvedependencia = $rowE['cvedependencia'];
+			$nombreDependencia = $rowE['nomdependencia'];
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNOM, DC.CARCVE
 				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
-			$resA		= mysql_query($qryAlumno);
+			$resA		= mysql_query($qryAlumno, conexionBD());
 			$rowA 		= mysql_fetch_array($resA);
 			$nombre		=	$rowA["ALUNOM"];
 			$apellidopa	=	$rowA["ALUAPP"];
 			$apellidoma	=	$rowA["ALUAPM"];
-			$carrera 	=   $rowA["CARNCO"];
+			$carrera 	=   $rowA["CARNOM"];
 			$cvecarrera =   $rowA["CARCVE"];
-			if(($opcion == '0' and $cvecarrera == $filtro)OR($opcion == '1' and $cvedependencia == $filtro)OR($opcion == '2')OR($opcion == '0' and $filtro == '0')){
-				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			if(($filtro == '0' and $cvecarrera == $opcion)OR($filtro == '1' and $cvedependencia == $opcion)OR($filtro == '2')OR($filtro == '0' and $opcion == '0')){
+				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
 			}
 		}
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		print json_encode($arrayJSON);
+	}
+	function filtrarSolicitudes(){
+		$opcion  		= $_POST['opcion'];
+		$filtro  		= $_POST['filtro'];
+		$periodo  		= $_POST['periodo'];
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$tabla		= "";
+		$tabla		.= "<thead><tr>";
+		$tabla		.= "<th>No. de Control</th>";
+		$tabla		.=	"<th>Nombre</th>";
+		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Programa</th>";
+		$tabla		.=	"<th></th>";
+		$tabla		.=	"</thead></tr>";
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		print json_encode($arrayJSON);
+
+	}
+	function filtrarProgramas(){
+		$opcion  		= $_POST['opcion'];
+		$filtro  		= $_POST['filtro'];
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$qryProgramas = "";
+		$tabla		= "";
+		$tabla 		= "<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		switch($filtro){
+			case '0':
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE vigencia = %s", $opcion);
+				break;
+			case '1': 
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE cvedependencia =%s", $opcion);
+				break;
+			case '2': 
+				if($opcion == '0'){
+					$qryProgramas = sprintf("SELECT * FROM programas");
+				}else{
+					$qryProgramas = sprintf("SELECT * FROM programas P 
+											INNER JOIN carrera_programa CP 
+											ON P.cveprograma = CP.cveprograma 
+											WHERE CP.cvecarrera = %s",$opcion);
+				}
+				break;
+			case '3': 
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE estado =%s", $opcion);
+				break;
+		}
+		$res 	= mysql_query($qryProgramas);
+		while($renglon 	= mysql_fetch_array($res)){
+			$cveprograma= $renglon["cveprograma"];
+			$nombre 	= $renglon["nombre"];
+			$dependencia= $renglon["cvedependencia"];
+			$qryNombreD = sprintf("SELECT * FROM dependencias WHERE cvedependencia =%s", $dependencia);
+			$resD 		= mysql_query($qryNombreD);	
+			$rowD 		= mysql_fetch_array($resD);
+			$nombreDependencia = $rowD['nomdependencia'];
+			$vacantes 	= $renglon["vacantes"];
+			
+			$cveprograma 	= $renglon["cveprograma"];
+			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
+			$resV 			= mysql_query($qryVacantesO);
+		 	$rowV 			= mysql_fetch_array($resV);
+			$vacantesO 		= $rowV['TOTAL'];
+			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado != 1", $cveprograma);
+			$resVs 			= mysql_query($qryVacantesS);
+		 	$rowVs			= mysql_fetch_array($resVs);
+			$vacantesS 		= $rowVs['TOTAL'];
+			$estado 		= $renglon["estado"];
+			$estadoN 		= "";
+			if($estado == "0"){
+				$estadoN="Pendiente";
+			}elseif($estado == "1"){
+				$estadoN="Aceptado";
+			}elseif($estado == "2"){
+				$estadoN="Rechazado";
+			}
+			$vigencia 		= $renglon["vigencia"]; 
+			if($vigencia=="1"){
+				$vigencia= "Vigente";
+			}else if($vigencia == "2"){
+				$vigencia = "Expirado";
+			}else{
+				$vigencia ="Sin Asignar";
+			}
+
+			if($estado == "0"){
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+			}else{
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+			}
+
+		}		
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
@@ -1051,6 +1152,12 @@ function llenaDptoProgramas(){
 			break;
 		case 'filtrarAlumnos':
 			filtrarAlumnos();
+			break;
+		case 'filtrarSolicitudes':
+			filtrarSolicitudes();
+			break;
+		case 'filtrarProgramas':
+			filtrarProgramas();
 			break;
 		default:
 		# code...

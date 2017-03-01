@@ -1,4 +1,5 @@
 <div class="container" id="listadoAlumnosC">
+	<h1>LISTADO DE ALUMNOS</h1>
 	<div class="row inline" id="rowFiltroAlumnos"><br>
 			<div class="col s3">
 				<select name="filtroAlumnos" id="filtroAlumnos">
