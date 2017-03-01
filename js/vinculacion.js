@@ -201,7 +201,7 @@ var admin = function (){
 				success: function(data){
 				 if(data.respuesta==true){
 				 	$("#selprogdep").find('option').remove();
-				 	$("#selprogdep").append('<option disabled selected>Seleccione dependencia..</option>');
+				 	$("#selprogdep").append('<option value="" disabled selected>Seleccione dependencia..</option>');
 				 	var opcs=data.opciones;
 				 	$("#selprogdep").append(opcs).html();
 				 	$('select').material_select();
@@ -238,8 +238,19 @@ var admin = function (){
 
 	var registroProgramas=function(){
 		var parametros = $("#frmRegistroProgramas").serialize()+"&opc=registrarPrograma"+"&id="+Math.random();
-		console.log($("#selprogest").val());
-		console.log(parametros);
+		var anyInvalid=false;
+		if($("#selprogdep").val()	=== '' ||
+		$("#selprogdpto").val()	=== '' ||
+		$("#selprogtipo").val()	=== '' ||
+		$("#selprogest").val()	=== '' ||
+		$("#selprogmod").val()	=== '' ||
+		$("#selprogcar").val().length==0){
+			anyInvalid=true;
+		}
+		if (anyInvalid) {
+		    $.alert('Uno o más campos no tienen opcion seleccionada');
+		    return false;
+		}
 		$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -254,6 +265,7 @@ var admin = function (){
  					$('input:not([type=radio],[type=submit])').val("");
  					$('textarea').val("");
  					$('input[type="radio"]').prop('checked', false);
+ 					$("#btnagregardpto").attr('disabled','disabled');
  					$('select').prop('selectedIndex',0);
  					$('select').material_select();
 				    
@@ -333,12 +345,15 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogdpto").find('option').remove();
-				 	$("#selprogdpto").append('<option disabled selected>Seleccione departamento..</option>');
+				 	$("#selprogdpto").append('<option value="" disabled selected>Seleccione departamento..</option>');
 				 	$("#selprogdpto").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
 				}
 		});
+		if($("#selprogdep").val()!=""){
+			$("#btnagregardpto").attr('disabled',false);
+		}
 	}
 	var muestralistaprogramas=function(){
 		var parametros="opc=tablaprogramas";
@@ -853,7 +868,7 @@ var admin = function (){
 				 if(data.respuesta==true){
 				 	var opcs=data.opciones;
 				 	$("#selprogtipo").find('option').remove();
-				 	$("#selprogtipo").append('<option disabled>Seleccione un tipo de programa..</option>');
+				 	$("#selprogtipo").append('<option value="" disabled selected>Seleccione un tipo de programa..</option>');
 				 	$("#selprogtipo").append(opcs).html();
 				 	$('#selprogtipo').material_select();
 				 }			 
@@ -873,7 +888,7 @@ var admin = function (){
 				 	console.log(data.opciones);
 				 	var opcs=data.opciones;
 				 	$("#selprogcar").find('option').remove();
-				 	$("#selprogcar").append('<option disabled selected>Seleccione carrera preferente..</option>');
+				 	$("#selprogcar").append('<option value="" disabled selected>Seleccione carrera preferente..</option>');
 				 	$("#selprogcar").append(opcs).html();
 				 	$("#selprogcar").material_select();
 				 }			 
@@ -982,6 +997,73 @@ var admin = function (){
 				});
 		}
 	}
+	var agregarDepartamento	= function(){
+		$.confirm({
+		    title: 'Agregar departamento',
+		    content:  '' +
+    '<form action="" class="formName">' +
+	    '<div>' +
+		    '<label>Nombre Departamento</label>' +
+		    '<input type="text" placeholder="Nombre Departamento" class="name" id="agdpto" required />' +
+	    '</div>' +
+    '</form>',
+		    buttons: {
+		        confirm: {
+		            text: 'Agregar',
+		            btnClass: 'btn-blue',
+		            action: function () {
+		                var name = this.$content.find('.name').val();
+		                if(!name){
+		                    $.alert('Ingrese el nombre del departamento');
+		                    return false;
+		                }
+		                var dep=$("#selprogdep").val();
+		                test(name,dep);
+
+		            },
+		            
+		        },
+		        cancel: {
+		        	text: 'Cancelar',
+		        	function () {
+		            //close
+		        	},
+		        }
+		    },
+		    onContentReady: function () {
+		        // bind to events
+		        var jc = this;
+		        this.$content.find('form').on('submit', function (e) {
+		            // if the user submits the form by pressing enter in the field.
+		            e.preventDefault();
+		            jc.$$formSubmit.trigger('click'); // reference the button and click it
+		        });
+		    },
+		    onDestroy: function(){
+		    	var lastOpc=$("#selprogdpto").find('option').length-1;
+		    	$("#selprogdpto").prop('selectedIndex',lastOpc);
+		    	$("#selprogdpto").material_select();
+		    }
+		});
+	}
+	var test = function(name,dependencia){
+		var parametros = "opc=agregarDepartamento"+"&dependencia="+dependencia+"&nombre="+name+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta){
+				 	$.alert('Se ha registrado el departamento: '+name);
+				 	cargadepartamentos();
+				 }else{
+				 	Materialize.toast(data.mensaje, 4000);
+				 }
+				}
+
+			});
+	}
 	var expedienteAlumno = function(){
 		var nocontrol = $("#expediente").val();
 		$("#txtbuscaTarjeta").val(nocontrol);
@@ -1006,7 +1088,6 @@ var admin = function (){
 			 }			 
 			}
 		});
-
 	}
 	var filtrarSolicitudes = function(){
 		var filtro 	= $("#filtroSolicitudes");
@@ -1083,6 +1164,7 @@ var admin = function (){
 	$("#badgeexpediente").on("click",documentosExpediente);
 	$("#badgedatos").on("click",buscarTarjeta);
 	$("#menuTarjeta").on("click",muestraTarjeta);
+	$("#btnagregardpto").on("click",agregarDepartamento);
 
 }
 $(document).on("ready",admin);

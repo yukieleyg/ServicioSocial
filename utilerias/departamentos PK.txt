@@ -1,0 +1,10 @@
+ALTER TABLE `departamentos` DROP PRIMARY KEY, ADD PRIMARY KEY( `cvedepartamento`);
+alter table programas drop foreign key programas_ibfk_1
+ALTER TABLE `departamentos`drop primary key
+ALTER TABLE `departamentos` CHANGE `cvedepartamento` `cvedepartamento` INT(11) NULL;
+UPDATE `serviciosocial`.`departamentos` SET `cvedepartamento` =NULL WHERE `departamentos`.`cvedepartamento` = 1
+ALTER TABLE `departamentos` CHANGE `cvedepartamento` `cvedepartamento` INT(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `departamentos` ADD PRIMARY KEY(`cvedepartamento`);
+ALTER TABLE `programas` ADD CONSTRAINT `fk_departamento` FOREIGN KEY (`cvedepartamento`) REFERENCES `serviciosocial`.`departamentos`(`cvedepartamento`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `departamentos` ADD CONSTRAINT `FK_dependencia` FOREIGN KEY (`cvedependencia`) REFERENCES `serviciosocial`.`dependencias`(`cvedependencia`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `departamentos` DROP `puesto`;
