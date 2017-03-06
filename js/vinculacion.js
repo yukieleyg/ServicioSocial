@@ -55,7 +55,7 @@ var admin = function (){
 					}
 				},
 				cancel: function () {
-					$.alert("La solicitud no fue aceptada");
+					$.alert("La solicitud no fue modificada");
 				}
 			}
 		});	
@@ -90,7 +90,7 @@ var admin = function (){
 						}
 					},
 					cancel: function () {
-						$.alert("La solicitud no fue rechazada");
+						$.alert("La solicitud no fue modificada");
 					}
 				}
 			});	
@@ -586,7 +586,7 @@ var admin = function (){
 									}
 								},
 								cancel: function (){
-									$.alert("El programa no fue aceptado");
+									$.alert("No se modifico la solicitud");
 								}
 							}
 						});
@@ -697,7 +697,7 @@ var admin = function (){
 					}
 				},
 				cancel: function () {
-					$.alert("El programa no fue aceptado");
+					$.alert("El programa no fue modificado");
 				}
 			}
 		});
@@ -733,7 +733,7 @@ var admin = function (){
 						}
 					},
 					cancel: function () {
-						$.alert("El programa no fue rechazado");
+						$.alert("El programa no fue modificado");
 					}
 				}
 			});
@@ -1129,6 +1129,26 @@ var admin = function (){
 
 		});
 	}
+	var muestraResultados = function(){
+		var parametros ="opc=mostrarResultados";
+		event.preventDefault();
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$('#listadoResultados').show("slow");
+					$('#ulResultados').html(data.ul);
+					
+				}
+			}
+
+		});
+
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1165,6 +1185,8 @@ var admin = function (){
 	$("#badgedatos").on("click",buscarTarjeta);
 	$("#menuTarjeta").on("click",muestraTarjeta);
 	$("#btnagregardpto").on("click",agregarDepartamento);
+
+	$("#muestraResultados").on("click",muestraResultados);
 
 }
 $(document).on("ready",admin);

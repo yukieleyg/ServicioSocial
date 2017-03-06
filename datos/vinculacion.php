@@ -831,7 +831,7 @@ function llenaDptoProgramas(){
 			$res 			= mysql_query($qryvalida);
 			while($row = mysql_fetch_array($res)){
 			 	$cve 		= $row['CARCVE'];
-				$nom 		= $row['CARNOM'];
+				$nom 		= $row['CARNCO'];
 				$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
 				$respuesta = true;
 			}
@@ -1154,6 +1154,24 @@ function llenaDptoProgramas(){
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
 		print json_encode($arrayJSON);
 	}
+	function mostrarResultados(){
+		$respuesta = true;
+		$cn 		= conexionLocal();
+		$qryPeriodos	= sprintf("SELECT DISTINCT pdocve_1 FROM solicitudes");
+		$res 			= mysql_query($qryPeriodos);
+		$ul="";
+		while ($row = mysql_fetch_array($res)) {
+          $periodo = $row['pdocve_1']; 
+          $ul .= '<li>
+  					<div class="collapsible-header" id="badgedatos"><i class="material-icons">label</i><span class="left">'.$periodo.'</span></div>
+  						<div class="collapsible-body">
+  						</div>
+  					</div>
+  				</li>';
+         }
+		$arrayJSON = array('respuesta' => $respuesta, 'ul'=> $ul);
+		print json_encode($arrayJSON);
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -1241,7 +1259,10 @@ function llenaDptoProgramas(){
 			filtrarProgramas();
 			break;
 		case 'agregarDepartamento':
-		agregarDepartamento();
+			agregarDepartamento();
+			break;
+		case  'mostrarResultados':
+			mostrarResultados();
 			break;
 		default:
 		# code...

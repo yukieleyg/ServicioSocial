@@ -24,7 +24,7 @@
 					
 						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">class</i>Tarjeta de Control</a>
 
-						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">toc</i>Resultados</a>
+						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="muestraResultados"><i class="material-icons right">toc</i>Resultados</a>
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">vpn_key</i>Contraseña</a>
 
@@ -58,6 +58,9 @@
 	</div>
 	<div id="listadoAlumnos" class="card">
 		<?php include 'divListadoAlumnos.php' ?>
+	</div>
+	<div id="listadoResultados" class="card">
+		<?php include 'divListadoResultados.php' ?>
 	</div>
 </section>
 </body>
