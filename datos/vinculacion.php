@@ -1161,13 +1161,117 @@ function llenaDptoProgramas(){
 		$res 			= mysql_query($qryPeriodos);
 		$ul="";
 		while ($row = mysql_fetch_array($res)) {
-          $periodo = $row['pdocve_1']; 
-          $ul .= '<li>
+        	$periodo = $row['pdocve_1']; 
+        	$cn 				= conexionLocal();
+			$qrySolicitudesT 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE pdocve_1 =%s",$periodo);
+			$resST 				= mysql_query($qrySolicitudesT);
+			$rowST 				= mysql_fetch_array($resST);
+			$totalSolicitudes 	= $rowST['TOTAL'];
+			$qrySolicitudesAcep 	= sprintf("SELECT COUNT(*) AS TOTALACEP FROM solicitudes WHERE pdocve_1 =%s AND estado = 1",$periodo);
+			$resSA 				= mysql_query($qrySolicitudesAcep);
+			$rowSA 				= mysql_fetch_array($resSA);
+			$totalSolicitudesA 	= $rowSA['TOTALACEP'];
+			$qrySolicitudesRech	= sprintf("SELECT COUNT(*) AS TOTALRECH FROM solicitudes WHERE pdocve_1 =%s AND estado = 2",$periodo);
+			$resSR 				= mysql_query($qrySolicitudesRech);
+			$rowSR 				= mysql_fetch_array($resSR);
+			$totalSolicitudesR 	= $rowSR['TOTALRECH'];
+			$qryCartaTerminacion = sprintf("SELECT COUNT(*) AS TOTALCT FROM documentos D 
+												INNER JOIN  expedientes E ON D.cveexpediente_1 = E.cveexpediente 
+												INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud WHERE D.tipoDoc = 'cT' AND S.pdocve_1 = %s",$periodo);
+        	$resTF				=  mysql_query($qryCartaTerminacion);
+        	$rowTF 				=  mysql_fetch_array($resTF);
+        	$totalTramiteFin	=  $rowTF['TOTALCT'];
+        	$ul .= '<li>
   					<div class="collapsible-header" id="badgedatos"><i class="material-icons">label</i><span class="left">'.$periodo.'</span></div>
   						<div class="collapsible-body">
+  							<div class="container">
+  								<table  class="bordered">
+  									<tr>
+  										<td>
+  											<i class="material-icons">playlist_add_check</i>
+	  						         		Solicitudes Iniciales:		'.$totalSolicitudes.'
+		  						         </td>
+		  						         <td>
+		  						         	<i class="material-icons">done</i>
+		  						         	Solicitudes Aceptadas:		'.$totalSolicitudesA.'
+		  						   		 </td>
+		  						         <td>
+		  						         	<i class="material-icons">clear</i>
+		  						         	Solicitudes Rechazadas: 	'.$totalSolicitudesR.'
+		  						    	</td>
+		  						    		<td>
+		  						    		<i class="material-icons">done_all</i>
+		  						    		Trámites Finalizados:		'.$totalTramiteFin.'
+	  									</td>  									
+  								</table><br>
+  								<table>
+		  							<thead>
+		  							  	<th>No. de control</th>
+		  								<th>Nombre</th>
+		  								<th>1er. Reporte</th>
+		  								<th>2do. Reporte</th>
+		  								<th>3er. Reporte</th>
+		  								<th>Calificación Final</th>
+		  							</thead>';
+
+				$qryAlumnos 	= sprintf("SELECT * FROM solicitudes S  
+											INNER JOIN expedientes E ON S.cvesolicitud = E.cvesolicitud
+											WHERE pdocve_1=%s",$periodo);
+				$resAlumnos 	= mysql_query($qryAlumnos);
+				while($rowA = mysql_fetch_array($resAlumnos)){
+					$ul	.=  '<tr><td>'.$rowA['cveusuario_1'].'</td>';
+					
+					//CONSULTA PARA SACAR EL NOMBRE DE LOS ALUMNOS
+					$qryDatos = sprintf("SELECT * FROM DALUMN WHERE ALUCTR = %s", $rowA['cveusuario_1']);
+					$resDatos = mysql_query($qryDatos, conexionBD());
+					$rowDatos = mysql_fetch_array($resDatos);
+					$ul	.=  '<td>'.$rowDatos['ALUNOM']." ".$rowDatos['ALUAPP']." ".$rowDatos['ALUAPM'].'</td>';
+					$cn 		= conexionLocal();
+					//CONSULTA PARA TOMAR LA CALIFICACION DEL REPORTE 1  
+					$qryRU	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 1 ",$rowA['reporteuno']);
+					$resRU 	= mysql_query($qryRU);
+					if($resRU == true){
+						$rowRU 	= mysql_fetch_array($resRU);
+						$ul	.=  '<td>'.$rowRU['calificacion'].'</td>';
+					}else{
+						$ul	.=  '<td> 0 </td>';
+					}
+					
+					//REPORTE 2 
+					$qryRD	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 2 ",$rowA['reportedos']);
+					$resRD 	= mysql_query($qryRD);
+					if($resRD == true){
+						$rowRD 	= mysql_fetch_array($resRD);
+						$ul	.=  '<td>'.$rowRD['calificacion'].'</td>';
+					}else{
+						$ul	.=  '<td> 0 </td>';
+					}
+					
+					//REPORTE 3
+					$qryRT	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 3 ",$rowA['reportetres']);
+					$resRT 	= mysql_query($qryRT);
+					if($resRT == true){
+						$rowRT 	= mysql_fetch_array($resRT);
+						$ul	.=  '<td>'.$rowRT['calificacion'].'</td></tr>';
+					}else{
+						$ul	.=  '<td> 0 </td></tr>';
+					}
+					/*CARTA LIBERAACION
+					$qryRT	= sprintf("SELECT *  FROM documentos WHERE cvereporte = %s AND noreporte = 3 ",$rowA['reportetres']);
+					$resRT 	= mysql_query($qryRT);
+					if($resRT == true){
+						$rowRT 	= mysql_fetch_array($resRT);
+						$ul	.=  '<td>'.$rowRT['calificacion'].'</td></tr>';
+					}else{
+						$ul	.=  '<td> 0 </td></tr>';
+					}*/
+				}
+
+				$ul .='			</table>
+  							</div>
   						</div>
   					</div>
-  				</li>';
+  				</li><br>';
          }
 		$arrayJSON = array('respuesta' => $respuesta, 'ul'=> $ul);
 		print json_encode($arrayJSON);
