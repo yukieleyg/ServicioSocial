@@ -1149,6 +1149,13 @@ var admin = function (){
 		});
 
 	}
+	var cambioClave = function(){
+		$('#opcVinculacion>div').hide();
+		$('#cambioClave').show("slow");
+	}
+	var guardarNuevaClave = function(){
+		
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1187,6 +1194,8 @@ var admin = function (){
 	$("#btnagregardpto").on("click",agregarDepartamento);
 
 	$("#muestraResultados").on("click",muestraResultados);
+	$("#btnCambioClave").on("click",cambioClave);
+	$("#btnGuardarNuevaClave").on("click",guardarNuevaClave);
 
 }
 $(document).on("ready",admin);

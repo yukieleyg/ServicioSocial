@@ -26,7 +26,7 @@
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="muestraResultados"><i class="material-icons right">toc</i>Resultados</a>
 
-						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">vpn_key</i>Contraseña</a>
+						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="btnCambioClave"><i class="material-icons right">vpn_key</i>Contraseña</a>
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">input</i>Salir</a>
 
@@ -61,6 +61,9 @@
 	</div>
 	<div id="listadoResultados" class="card">
 		<?php include 'divListadoResultados.php' ?>
+	</div>
+		<div id="cambioClave" class="card">
+		<?php include 'divClave.php' ?>
 	</div>
 </section>
 </body>
