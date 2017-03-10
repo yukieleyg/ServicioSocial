@@ -1276,6 +1276,27 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('respuesta' => $respuesta, 'ul'=> $ul);
 		print json_encode($arrayJSON);
 	}
+
+	function guardarNuevaClave(){
+		$cn = conexionLocal();
+		$respuesta = false;
+		$claveactual 	= md5($_POST["claveActual"]);
+		$nuevaclave 	= "'".md5($_POST['nuevaClave'])."'";;
+		$user 			= "'".$_POST['user']."'";
+		$qryUsuario 	= sprintf("SELECT * FROM usuarios WHERE cveusuario =%s",$user);
+		$res 			= mysql_query($qryUsuario);
+		$row 			= mysql_fetch_array($res);
+		if($row['clave']==$claveactual){
+			if(mysql_affected_rows()>0){
+				$qryUpdate 		= sprintf("UPDATE usuarios SET clave = %s WHERE cveusuario = %s",$nuevaclave, $user);
+				$resU 			= mysql_query($qryUpdate);
+				$respuesta 		= true;
+			}
+		}
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
+
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -1367,6 +1388,9 @@ function llenaDptoProgramas(){
 			break;
 		case  'mostrarResultados':
 			mostrarResultados();
+			break;
+		case 'guardarNuevaClave':
+			guardarNuevaClave();
 			break;
 		default:
 		# code...

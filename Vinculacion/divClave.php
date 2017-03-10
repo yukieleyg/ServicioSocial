@@ -1,4 +1,4 @@
-<div class="container" id="divCambiarClave">
+<div class="container" id="divCambiarClave"><br>	
 	<h5>Cambiar Contraseña</h5><br>
 		<div id="divInputsClave">
 			<div class="input-field col s5">

@@ -1154,7 +1154,43 @@ var admin = function (){
 		$('#cambioClave').show("slow");
 	}
 	var guardarNuevaClave = function(){
-		
+		var user 			= $("#txtUsuario").val();
+		var claveActual 	= $("#txtClaveActual").val();
+		var nuevaClave  	= $("#txtClaveNueva").val();
+		var confNuevaClave 	= $("#txtClaveNuevaConfirmacion").val();
+		var parametros 		= "opc=guardarNuevaClave"+"&nuevaClave="+nuevaClave+"&claveActual="+claveActual+"&user="+user;
+		if(nuevaClave == confNuevaClave ){
+			if(nuevaClave.length<8){
+				Materialize.toast("La contraseña debe contener al menos 8 caracteres",4000);
+			}else{
+				$.ajax({
+					type:"POST",
+					dataType: "json",
+					url: "../datos/vinculacion.php",
+					data: parametros,
+					success: function (data){
+						if(data.respuesta== true){
+							Materialize.toast("Contraseña Modificada",4000);
+							$("#txtClaveNuevaConfirmacion").val("");
+							$("#txtClaveActual").val("");
+							$("#txtClaveNueva").val("");
+							$('#cambioClave').hide();
+						}else{
+							Materialize.toast("La contraseña actual es incorrecta",4000);
+							$("#txtClaveNuevaConfirmacion").val("");
+							$("#txtClaveActual").val("");
+							$("#txtClaveNueva").val("");
+						}
+					}			
+				});	
+			}		
+		}else{
+				Materialize.toast("Las Contraseñas no coinciden",4000);
+				$("#txtClaveNuevaConfirmacion").val("");
+				$("#txtClaveActual").val("");
+				$("#txtClaveNueva").val("");
+		}
+
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);

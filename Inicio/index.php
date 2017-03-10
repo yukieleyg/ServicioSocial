@@ -23,7 +23,7 @@
 			<div class="row">
 				<div class="input-field col s11">
 					<i class="material-icons prefix">lock_outline</i>
-					<input type="password" class="validate" id="txtClave" placeholder="Contraseña" value="admin">
+					<input type="password" class="validate" id="txtClave" placeholder="Contraseña" value="admin123">
 					<a class="btn-floating btn-small waves-effect waves-light purple darken-1" id="mostrarClave"><i class="material-icons">visibility_off</i></a>
 				</div>
 			</div>
