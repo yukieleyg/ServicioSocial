@@ -20,7 +20,9 @@
 	<div class="row" id="rowProgramas">
 		<div id="listaprogramas" class="col s14">
 			<table id="tblprogramas" class="highlight" >			
-			</table>	
+			</table>
+		</div>
+		<div id="botonesProgramas">
 		</div>
 	</div>
 </div>

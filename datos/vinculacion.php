@@ -431,13 +431,14 @@ function llenaDptoProgramas(){
 
 	}
 	function tablaprogramas(){
-		$respuesta	= false;
-		$cn=conexionLocal();
+		$respuesta		= false;
+		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qry= sprintf("select * from programas");
-		$res= mysql_query($qry);
-
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		$pagina = $_POST['pagina'];
+		$inicio = ($pagina-1)*10;
+		$qry 	= sprintf("SELECT * FROM programas LIMIT 10 OFFSET %s",$inicio);
+		$res 	= mysql_query($qry);
+		$tabla 	="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
 			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
@@ -447,7 +448,6 @@ function llenaDptoProgramas(){
 			$rowD 		= mysql_fetch_array($resD);
 			$nombreDependencia = $rowD['nomdependencia'];
 			$vacantes 	= $renglon["vacantes"];
-			/*$carrera 	= $renglon["carrerapref"];*/
 			$cveprograma 	= $renglon["cveprograma"];
 			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
 			$resV 			= mysql_query($qryVacantesO);
@@ -474,7 +474,6 @@ function llenaDptoProgramas(){
 			}else{
 				$vigencia ="Sin Asignar";
 			}
-
 			if($estado == "0"){
 				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
@@ -494,7 +493,26 @@ function llenaDptoProgramas(){
 		}
 		$tabla.="</tbody>";
 		$respuesta=true;
-		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta );
+		$qryCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas");
+		$resCount = mysql_query($qryCount);
+		$row 			= mysql_fetch_array($resCount);
+		$totalProgramas = $row['TOTAL'];
+		$botonesTotal 	= intval($totalProgramas/10);
+		$restante = $totalProgramas-($botonesTotal*10);
+		if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect teal lighten-2" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+			}
+		}
+  		$botones .= '</ul>';
+		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones );
 		print json_encode($arrayJSON);
 	}
 	
@@ -1072,35 +1090,45 @@ function llenaDptoProgramas(){
 
 	}
 	function filtrarProgramas(){
+		$pagina 		= $_POST['pagina'];
 		$opcion  		= $_POST['opcion'];
 		$filtro  		= $_POST['filtro'];
 		$respuesta	= true;
+		$inicio 	= ($pagina-1)*10;
 		$cn 		= conexionLocal();
 		$qryProgramas = "";
 		$tabla		= "";
 		$tabla 		= "<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		switch($filtro){
 			case '0':
-				$qryProgramas = sprintf("SELECT * FROM programas WHERE vigencia = %s", $opcion);
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE vigencia = %s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE vigencia = %s LIMIT 10 OFFSET %s", $opcion,$inicio);
 				break;
 			case '1': 
-				$qryProgramas = sprintf("SELECT * FROM programas WHERE cvedependencia =%s", $opcion);
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE cvedependencia =%s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE cvedependencia =%s LIMIT 10 OFFSET %s", $opcion,$inicio);
 				break;
 			case '2': 
 				if($opcion == '0'){
-					$qryProgramas = sprintf("SELECT * FROM programas");
+					$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas");
+					$qryProgramas = sprintf("SELECT * FROM programas LIMIT 10 OFFSET %s",$inicio);
 				}else{
-					$qryProgramas = sprintf("SELECT * FROM programas P 
+					$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas P 
 											INNER JOIN carrera_programa CP 
 											ON P.cveprograma = CP.cveprograma 
 											WHERE CP.cvecarrera = %s",$opcion);
+					$qryProgramas = sprintf("SELECT * FROM programas P 
+											INNER JOIN carrera_programa CP 
+											ON P.cveprograma = CP.cveprograma 
+											WHERE CP.cvecarrera = %s LIMIT 10 OFFSET %s",$opcion,$inicio);
 				}
 				break;
 			case '3': 
-				$qryProgramas = sprintf("SELECT * FROM programas WHERE estado =%s", $opcion);
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE estado =%s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE estado =%s LIMIT 10 OFFSET %s", $opcion,$inicio);
 				break;
 		}
-		$res 	= mysql_query($qryProgramas);
+		$res 		= mysql_query($qryProgramas);
 		while($renglon 	= mysql_fetch_array($res)){
 			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
@@ -1150,8 +1178,39 @@ function llenaDptoProgramas(){
 				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
 			}
 
-		}		
-		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		}
+		$resCount 	= mysql_query($qryProgramasCount);
+		$rowCount 	= mysql_fetch_array($resCount);
+		$total 	  	= $rowCount['TOTAL'];
+		$totalBotones 	= intval($total/10);
+		$restante 		= $total - ($totalBotones*10);
+		if($restante>0){
+			$totalBotones = $totalBotones+1;
+		}
+		if($totalBotones==1){
+			$totalBotones = 0;
+		}
+		$botones ='<ul class="pagination" id="botonesPaginacionF">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a disabled="disabled"><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPrevious"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$totalBotones;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="active teal lighten-2" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina==$totalBotones){
+  			$botones .= '<li class="disabled"><a disabled="disabled"><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNext"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
 	function mostrarResultados(){

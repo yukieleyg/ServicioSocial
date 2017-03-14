@@ -356,7 +356,11 @@ var admin = function (){
 		}
 	}
 	var muestralistaprogramas=function(){
-		var parametros="opc=tablaprogramas";
+		var pagina = $(this).val();
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
@@ -367,6 +371,8 @@ var admin = function (){
 					$('#opcVinculacion>div').hide();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
 				}
 			}
@@ -1111,9 +1117,13 @@ var admin = function (){
 		});
 	}
 	var filtrarProgramas = function(){
+		var pagina 	= $(this).val();
+		if(pagina == ""){
+			pagina = 1;
+		}
 		var filtro 	= $("#filtroProgramas").val();
 		var opcion 	= $("#opcionProgramas").val();
-		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion;
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
@@ -1123,7 +1133,10 @@ var admin = function (){
 				if(data.respuesta== true){
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
+
 				}
 			}
 
@@ -1192,6 +1205,54 @@ var admin = function (){
 		}
 
 	}
+	var nextProgramas = function(){
+		var paginaActual = $("#valorPagina").val();
+		var pagina = parseInt(paginaActual)+1;
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+
+				}
+			}
+
+		});
+	}
+	var previousProgramas = function(){
+		var paginaActual = $("#valorPagina").val();
+		var pagina = parseInt(paginaActual)-1;
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+
+				}
+			}
+
+		});
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1232,6 +1293,9 @@ var admin = function (){
 	$("#muestraResultados").on("click",muestraResultados);
 	$("#btnCambioClave").on("click",cambioClave);
 	$("#btnGuardarNuevaClave").on("click",guardarNuevaClave);
-
+	$("#botonesProgramas").on("click","#btnPag",muestralistaprogramas);
+	$("#botonesProgramas").on("click","#btnPagF",filtrarProgramas);
+	$("#botonesProgramas").on("click","#btnNext",nextProgramas);
+	$("#botonesProgramas").on("click","#btnPrevious",previousProgramas);
 }
 $(document).on("ready",admin);

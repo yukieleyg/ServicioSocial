@@ -28,7 +28,7 @@
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="btnCambioClave"><i class="material-icons right">vpn_key</i>Contraseña</a>
 
-						<a  class="waves-effect waves-teal btn-flat text-darken-1"><i class="material-icons right">input</i>Salir</a>
+						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="btnSalir" href="../Inicio/index.php"><i class="material-icons right">input</i>Salir</a>
 
 			</ul>
 </nav>
