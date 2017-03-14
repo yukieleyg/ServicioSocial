@@ -1,4 +1,5 @@
 <div class="container">
+	<h1>Listado de Programas</h1>
 	<div class="row inline" id="rowFiltroProgramas"><br>
 		<div class="col s3">
 			<select name="filtroProgramas" id="filtroProgramas">
@@ -19,7 +20,9 @@
 	<div class="row" id="rowProgramas">
 		<div id="listaprogramas" class="col s14">
 			<table id="tblprogramas" class="highlight" >			
-			</table>	
+			</table>
+		</div>
+		<div id="botonesProgramas">
 		</div>
 	</div>
 </div>

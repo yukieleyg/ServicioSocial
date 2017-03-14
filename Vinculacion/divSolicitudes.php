@@ -1,4 +1,5 @@
 <div class="card-panel" id="divSolicitud">
+	<h1>Listado de Solicitudes</h1>
 	<div class="row inline" id="rowFiltroSolicitudes"><br>
 			<div class="col s3">
 				<select name="filtroSolicitudes" id="filtroSolicitudes">

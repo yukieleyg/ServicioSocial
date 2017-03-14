@@ -1,10 +1,14 @@
-#registroAlumnos,#listadoAlumnos,#detallesPrograma, #listadoSolicitudes,#detallesSolicitudA, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas,#frmdatosExpediente, #controlexpediente1, #registroEmpresas, #registroProgramas{
+#registroAlumnos,#cambioClave,#listadoResultados,#listadoAlumnos,#detallesPrograma, #listadoSolicitudes,#detallesSolicitudA, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas,#frmdatosExpediente, #controlexpediente1, #registroEmpresas, #registroProgramas{
 	display: none;
 }
 #barra{
 	background-color: gray;
 	margin-top:-5%;	
 	margin-left: -7%;
+}
+#divInputsClave{
+	width:50%;
+	margin-left: 25%;
 }
 .display{
 	margin-top: 10%;

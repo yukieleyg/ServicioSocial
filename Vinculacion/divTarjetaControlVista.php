@@ -28,7 +28,7 @@
   						<input type="text" class="" name="tnombre" id="tnombre" readonly placeholder="Nombre">
   					</div>
   					<div class="input-field">
-  						<label for="" class="col-sm-2">Edad</label>
+  						<label class="col-sm-2">Edad</label>
   						<input type="text" class="" name="tedad" id="tedad" readonly placeholder="Edad">
   					</div>
   					<div class="input-field">

@@ -55,7 +55,7 @@ var admin = function (){
 					}
 				},
 				cancel: function () {
-					$.alert("La solicitud no fue aceptada");
+					$.alert("La solicitud no fue modificada");
 				}
 			}
 		});	
@@ -90,7 +90,7 @@ var admin = function (){
 						}
 					},
 					cancel: function () {
-						$.alert("La solicitud no fue rechazada");
+						$.alert("La solicitud no fue modificada");
 					}
 				}
 			});	
@@ -356,7 +356,11 @@ var admin = function (){
 		}
 	}
 	var muestralistaprogramas=function(){
-		var parametros="opc=tablaprogramas";
+		var pagina = $(this).val();
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
@@ -367,6 +371,8 @@ var admin = function (){
 					$('#opcVinculacion>div').hide();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
 				}
 			}
@@ -586,7 +592,7 @@ var admin = function (){
 									}
 								},
 								cancel: function (){
-									$.alert("El programa no fue aceptado");
+									$.alert("No se modifico la solicitud");
 								}
 							}
 						});
@@ -697,7 +703,7 @@ var admin = function (){
 					}
 				},
 				cancel: function () {
-					$.alert("El programa no fue aceptado");
+					$.alert("El programa no fue modificado");
 				}
 			}
 		});
@@ -733,7 +739,7 @@ var admin = function (){
 						}
 					},
 					cancel: function () {
-						$.alert("El programa no fue rechazado");
+						$.alert("El programa no fue modificado");
 					}
 				}
 			});
@@ -1071,8 +1077,8 @@ var admin = function (){
 		muestraTarjeta();		
 	}
 	var filtrarAlumnos = function(){
-		var opcion 		= $("#filtroAlumnos").val();
-		var filtro 		= $("#opcionAlumnos").val();
+		var filtro 		= $("#filtroAlumnos").val();
+		var opcion		= $("#opcionAlumnos").val();
 		var periodo 	= $("#filtroPeriodoAlumnos").val();
 		var parametros = "opc=filtrarAlumnos"+"&opcion="+opcion+"&filtro="+filtro+"&periodo="+periodo;
 		$.ajax({
@@ -1214,12 +1220,220 @@ var admin = function (){
 		});
 	}
 
+	var filtrarSolicitudes = function(){
+		var filtro 	= $("#filtroSolicitudes").val();
+		var opcion 	= $("#opcionSolicitudes").val();
+		var periodo 	= $("#filtroPeriodo").val();
+		var nocontrol 	= $("#filtroNoControlSolicitudes").val();
+		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tablaSolicitudes").html("");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#listadoSolicitudes").show();
+				}
+			}
+
+		});
+	}
+	var filtrarProgramas = function(){
+		var pagina 	= $(this).val();
+		if(pagina == ""){
+			pagina = 1;
+		}
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+
+				}
+			}
+
+		});
+	}
+	var muestraResultados = function(){
+		var parametros ="opc=mostrarResultados";
+		event.preventDefault();
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$('#listadoResultados').show("slow");
+					$('#ulResultados').html(data.ul);
+					
+				}
+			}
+
+		});
+
+	}
+	var cambioClave = function(){
+		$('#opcVinculacion>div').hide();
+		$('#cambioClave').show("slow");
+	}
+	var guardarNuevaClave = function(){
+		var user 			= $("#txtUsuario").val();
+		var claveActual 	= $("#txtClaveActual").val();
+		var nuevaClave  	= $("#txtClaveNueva").val();
+		var confNuevaClave 	= $("#txtClaveNuevaConfirmacion").val();
+		var parametros 		= "opc=guardarNuevaClave"+"&nuevaClave="+nuevaClave+"&claveActual="+claveActual+"&user="+user;
+		if(nuevaClave == confNuevaClave ){
+			if(nuevaClave.length<8){
+				Materialize.toast("La contraseña debe contener al menos 8 caracteres",4000);
+			}else{
+				$.ajax({
+					type:"POST",
+					dataType: "json",
+					url: "../datos/vinculacion.php",
+					data: parametros,
+					success: function (data){
+						if(data.respuesta== true){
+							Materialize.toast("Contraseña Modificada",4000);
+							$("#txtClaveNuevaConfirmacion").val("");
+							$("#txtClaveActual").val("");
+							$("#txtClaveNueva").val("");
+							$('#cambioClave').hide();
+						}else{
+							Materialize.toast("La contraseña actual es incorrecta",4000);
+							$("#txtClaveNuevaConfirmacion").val("");
+							$("#txtClaveActual").val("");
+							$("#txtClaveNueva").val("");
+						}
+					}			
+				});	
+			}		
+		}else{
+				Materialize.toast("Las Contraseñas no coinciden",4000);
+				$("#txtClaveNuevaConfirmacion").val("");
+				$("#txtClaveActual").val("");
+				$("#txtClaveNueva").val("");
+		}
+
+	}
+	var nextProgramasN =function(){
+		var paginaActual = $("#valorPaginaN").val();
+		var pagina = parseInt(paginaActual)+1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+				}
+			}
+		});
+	}
+	var previousProgramasN = function(){
+		var paginaActual = $("#valorPaginaN").val();
+		var pagina = parseInt(paginaActual)-1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+				}
+			}
+		});
+	}
+	var nextProgramas = function(){
+		var paginaActual = $("#valorPagina").val();
+		var pagina = parseInt(paginaActual)+1;
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+
+				}
+			}
+
+		});
+	}
+	var previousProgramas = function(){
+		var paginaActual = $("#valorPagina").val();
+		var pagina = parseInt(paginaActual)-1;
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.tabla);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+
+				}
+			}
+
+		});
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
 	$("#tablaSolicitudes").on("click", "#detalles",verDetallesSolicitud);
 	$("#frmDetallesSolicitud").on("submit",detallesSolicitud);
 	$("#filtroSolicitudes").on("change",filtroSolicitudes);
+	$("#btnFiltroSolicitudes").on("click",filtrarSolicitudes);
 	
 	$("#muestraProgramas").on("click",muestralistaprogramas);
 	$("#tblprogramas").on("click","#detallesProgramas",detallesProgramas);
@@ -1228,6 +1442,7 @@ var admin = function (){
 	$("#frmDetallesPrograma").on("submit",modificarPrograma);
 	$("#estadoPrograma").on("change", cargaVigencia);
 	$("#filtroProgramas").on("change",cargaFiltros);
+	$("#btnFiltroProgramas").on("click",filtrarProgramas);
 
 	$("#muestraAlumnos").on("click", muestraAlumnos);
 	$("#filtroAlumnos").on("change",filtroAlumnos);
@@ -1256,5 +1471,14 @@ var admin = function (){
 
 
 
+	$("#muestraResultados").on("click",muestraResultados);
+	$("#btnCambioClave").on("click",cambioClave);
+	$("#btnGuardarNuevaClave").on("click",guardarNuevaClave);
+	$("#botonesProgramas").on("click","#btnPag",muestralistaprogramas);
+	$("#botonesProgramas").on("click","#btnPagF",filtrarProgramas);
+	$("#botonesProgramas").on("click","#btnNext",nextProgramas);
+	$("#botonesProgramas").on("click","#btnPrevious",previousProgramas);
+	$("#botonesProgramas").on("click","#btnNextN",nextProgramasN);
+	$("#botonesProgramas").on("click","#btnPreviousN",previousProgramasN);
 }
 $(document).on("ready",admin);

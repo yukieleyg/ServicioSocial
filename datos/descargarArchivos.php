@@ -86,10 +86,10 @@ require('fpdf.php');
 	$pdf->Text(97,166.5,$iniciopdo);
 	$pdf->Text(153,166.5,$finpdo);
 	$pdf->Text(47,111,$meses);
-	$qryvalida	= sprintf("select CARNOM from DCARRE where CARCVE = %s",$cve);
+	$qryvalida	= sprintf("select CARNCO from DCARRE where CARCVE = %s",$cve);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
-	$nombre		= $row["CARNOM"];
+	$nombre		= $row["CARNCO"];
 	$pdf->Text(98,103.5,$nombre);
 	$pdf->Text(95,111,$periodo);
 	$pdf->Text(120,111,$email);
@@ -115,37 +115,38 @@ require('fpdf.php');
 	$qryvalida	= sprintf("select * from departamentos where cvedependencia = %d and cvedepartamento=%d",$cvedependencia,$cvedepartamento);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
-	$puesto		= $row["puesto"];
 	$departamento = $row["nomdepartamento"];
-	$pdf->Text(50,152,$puesto);
 	$pdf->Text(58,137,$departamento);
 	$qryvalida	= sprintf("select * from dependencias where cvedependencia = %s",$cvedependencia);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$nomdependencia = $row["nomdependencia"];
 	$titular		= $row["titular"];
-	if ($tipoprog=="Educacion para adultos") {
+	$puesto		= $row["puesto"];
+	$pdf->Text(50,152,$puesto);
+	//"Educacion para adultos"
+	if ($tipoprog==1) {
 		$pdf->Text(28,193,"X");
 		
-	}elseif ($tipoprog=="Contingencia"){
+	}elseif ($tipoprog==2){//"Contingencia"
 		$pdf->Text(28,197,"X");
 		
-	}elseif ($tipoprog=="Apoyo a la salud"){
+	}elseif ($tipoprog==3){//"Apoyo a la salud"
 		$pdf->Text(28,201,"X");
 		
-	}elseif ($tipoprog=="Establecido por el ITC"){
+	}elseif ($tipoprog==4){//"Apoyo a la salud"
 		$pdf->Text(28,205.5,"X");
 		
-	}elseif ($tipoprog=="Gubernamental"){
+	}elseif ($tipoprog==5){//"Gubernamental"
 		$pdf->Text(73.5,193,"X");
 		
-	}elseif ($tipoprog=="Actividades deportivas, culturales y civicas"){
+	}elseif ($tipoprog==6){//"Actividades deportivas, culturales y civicas"
 		$pdf->Text(73.5,197,"X");
 		
-	}elseif ($tipoprog=="Cuidado al medio ambiente y desarrollo sustentable"){
+	}elseif ($tipoprog==7){//"Cuidado al medio ambiente y desarrollo sustentable"
 		$pdf->Text(73.5,201,"X");
 		
-	}elseif ($tipoprog=="Otros") {
+	}elseif ($tipoprog==8) {//"Otros"
 		$pdf->Text(73.5,205.5,"X");
 		
 	}

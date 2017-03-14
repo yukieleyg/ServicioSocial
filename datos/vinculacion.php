@@ -431,13 +431,14 @@ function llenaDptoProgramas(){
 
 	}
 	function tablaprogramas(){
-		$respuesta	= false;
-		$cn=conexionLocal();
+		$respuesta		= false;
+		$cn 			= conexionLocal();
 		mysql_query("set NAMES utf8");
-		$qry= sprintf("select * from programas");
-		$res= mysql_query($qry);
-
-		$tabla="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		$pagina = $_POST['pagina'];
+		$inicio = ($pagina-1)*10;
+		$qry 	= sprintf("SELECT * FROM programas LIMIT 10 OFFSET %s",$inicio);
+		$res 	= mysql_query($qry);
+		$tabla 	="<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
 		while($renglon=mysql_fetch_array($res)){
 			$cveprograma= $renglon["cveprograma"];
 			$nombre 	= $renglon["nombre"];
@@ -447,13 +448,12 @@ function llenaDptoProgramas(){
 			$rowD 		= mysql_fetch_array($resD);
 			$nombreDependencia = $rowD['nomdependencia'];
 			$vacantes 	= $renglon["vacantes"];
-			/*$carrera 	= $renglon["carrerapref"];*/
 			$cveprograma 	= $renglon["cveprograma"];
 			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
 			$resV 			= mysql_query($qryVacantesO);
 		 	$rowV 			= mysql_fetch_array($resV);
 			$vacantesO 		= $rowV['TOTAL'];
-			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado != 1", $cveprograma);
+			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 0", $cveprograma);
 			$resVs 			= mysql_query($qryVacantesS);
 		 	$rowVs			= mysql_fetch_array($resVs);
 			$vacantesS 		= $rowVs['TOTAL'];
@@ -474,7 +474,6 @@ function llenaDptoProgramas(){
 			}else{
 				$vigencia ="Sin Asignar";
 			}
-
 			if($estado == "0"){
 				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
 				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
@@ -494,7 +493,39 @@ function llenaDptoProgramas(){
 		}
 		$tabla.="</tbody>";
 		$respuesta=true;
-		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta );
+		$qryCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas");
+		$resCount = mysql_query($qryCount);
+		$row 			= mysql_fetch_array($resCount);
+		$totalProgramas = $row['TOTAL'];
+		$botonesTotal 	= intval($totalProgramas/10);
+		$restante = $totalProgramas-($botonesTotal*10);
+		if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousN"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect teal lighten-2" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina==$botonesTotal){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaN">';
+		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones );
 		print json_encode($arrayJSON);
 	}
 	
@@ -772,11 +803,16 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Empresa</th>";
 		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Periodo</th>";
 		$tabla 		.=  "<th>Ver Expediente</th>";
 		$tabla		.=	"</thead></tr>";
-		$qryExpediente  = sprintf("SELECT DISTINCT cveusuario_1,estado,cveprograma_1 FROM expedientes");
-		$res 			= mysql_query($qryExpediente);
+		$qryExpediente  = sprintf("SELECT E.estado, P.cveprograma, D.cvedependencia, E.cveusuario_1, D.nomdependencia, S.pdocve_1 FROM expedientes E 
+				INNER JOIN programas P on P.cveprograma = E.cveprograma_1 
+				INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud");
+		$res = mysql_query($qryExpediente);
 		while($rowE = mysql_fetch_array($res)){
+			$periodo 		= $rowE['pdocve_1'];
 			$ncontrol 		= $rowE['cveusuario_1'];
 			$estado 		= $rowE['estado'];
 			$estadoN 		= "";
@@ -785,25 +821,22 @@ function llenaDptoProgramas(){
 			}else if ($estado ==2 ){
 				$estadoN="Finalizado";
 			}
-			$cveprograma 	= $rowE['cveprograma_1'];
-			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
-			$resD 		= mysql_query($qryDependencia);
-			$rowD 		= mysql_fetch_array($resD);
-			$cvedependencia = $rowD['cvedependencia'];
-			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
-			$resND 		= mysql_query($qryNdepedencia);
-			$rowND 		= mysql_fetch_array($resND);
-			$nombreDependencia = $rowND['nomdependencia'];
-			$cn			= conexionBD();
-			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO
-				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
-			$resA		= mysql_query($qryAlumno);
+			$cveprograma 	= $rowE['cveprograma'];
+			$cvedependencia = $rowE['cvedependencia'];
+			$nombreDependencia = $rowE['nomdependencia'];
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNOM FROM DALUMN A 
+									INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR 
+									INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE 
+									WHERE  A.ALUCTR = %s", $ncontrol);
+			$resA		= mysql_query($qryAlumno, conexionBD());
 			$rowA 		= mysql_fetch_array($resA);
 			$nombre		=	$rowA["ALUNOM"];
 			$apellidopa	=	$rowA["ALUAPP"];
 			$apellidoma	=	$rowA["ALUAPM"];
-			$carrera 	=   $rowA["CARNCO"];
-			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			$carrera 	=   $rowA["CARNOM"];
+			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'>
+							<button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'>
+							<i class='material-icons'>open_in_new</i></button></td></tr>";
 
 		}
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
@@ -829,7 +862,7 @@ function llenaDptoProgramas(){
 			$res 			= mysql_query($qryvalida);
 			while($row = mysql_fetch_array($res)){
 			 	$cve 		= $row['CARCVE'];
-				$nom 		= $row['CARNOM'];
+				$nom 		= $row['CARNCO'];
 				$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
 				$respuesta = true;
 			}
@@ -941,7 +974,6 @@ function llenaDptoProgramas(){
 		$opcion  		= $_POST['opcion'];
 		$filtro  		= $_POST['filtro'];
 		$periodo  		= $_POST['periodo'];
-		//var_dump($periodo);
 		$respuesta	= true;
 		$cn 		= conexionLocal();
 		$tabla		= "";
@@ -951,18 +983,24 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Carrera</th>";
 		$tabla		.=	"<th>Empresa</th>";
 		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Periodo</th>";
 		$tabla 		.=  "<th>Ver Expediente</th>";
 		$tabla		.=	"</thead></tr>";
 		$opcionCve   = ""; 
-		if($opcion == '2'){
-			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+		if($filtro == '2'){
+			$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia
 										FROM expedientes E 
 										INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
-										WHERE E.estado = %s AND S.pdocve_1 =%s", $filtro, $periodo);
+										INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+										INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+										WHERE E.estado = %s AND S.pdocve_1 =%s", $opcion, $periodo);
+		//}else if(){
 		}else {
-			$qryExpediente  = sprintf("SELECT DISTINCT E.cveusuario_1, E.estado, E.cveprograma_1 
+			$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
 							FROM expedientes E 
-							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
+							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
+							INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
 							WHERE S.pdocve_1 =%s", $periodo);
 		}
 		$res 			= mysql_query($qryExpediente);
@@ -976,29 +1014,216 @@ function llenaDptoProgramas(){
 				$estadoN="Finalizado";
 			}
 			$cveprograma 	= $rowE['cveprograma_1'];
-			$qryDependencia = sprintf("SELECT cvedependencia FROM programas WHERE cveprograma = %s",$cveprograma);
-			$resD 		= mysql_query($qryDependencia);
-			$rowD 		= mysql_fetch_array($resD);
-			$cvedependencia = $rowD['cvedependencia'];
-			$qryNdepedencia = sprintf("SELECT nomdependencia FROM dependencias WHERE cvedependencia =%s",$cvedependencia);
-			$resND 		= mysql_query($qryNdepedencia);
-			$rowND 		= mysql_fetch_array($resND);
-			$nombreDependencia = $rowND['nomdependencia'];
-			$cn			= conexionBD();
-			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNCO, DC.CARCVE
+			$cvedependencia = $rowE['cvedependencia'];
+			$nombreDependencia = $rowE['nomdependencia'];
+			$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, DC.CARNOM, DC.CARCVE
 				FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE DC ON D.CARCVE = DC.CARCVE WHERE  A.ALUCTR = %s",$ncontrol);
-			$resA		= mysql_query($qryAlumno);
+			$resA		= mysql_query($qryAlumno, conexionBD());
 			$rowA 		= mysql_fetch_array($resA);
 			$nombre		=	$rowA["ALUNOM"];
 			$apellidopa	=	$rowA["ALUAPP"];
 			$apellidoma	=	$rowA["ALUAPM"];
-			$carrera 	=   $rowA["CARNCO"];
+			$carrera 	=   $rowA["CARNOM"];
 			$cvecarrera =   $rowA["CARCVE"];
-			if(($opcion == '0' and $cvecarrera == $filtro)OR($opcion == '1' and $cvedependencia == $filtro)OR($opcion == '2')OR($opcion == '0' and $filtro == '0')){
-				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			if(($filtro == '0' and $cvecarrera == $opcion)OR($filtro == '1' and $cvedependencia == $opcion)OR($filtro == '2')OR($filtro == '0' and $opcion == '0')){
+				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
 			}
 		}
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		print json_encode($arrayJSON);
+	}
+	function filtrarSolicitudes(){
+		$opcion  		= $_POST['opcion'];
+		$filtro  		= $_POST['filtro'];
+		$periodo  		= $_POST['periodo'];
+		$nocontrol 		= $_POST['nocontrol'];
+		$respuesta	= true;
+		$cn 		= conexionLocal();
+		$tabla		= "";
+		$tabla		.= "<thead><tr>";
+		$tabla		.= "<th>No. de Control</th>";
+		$tabla		.=	"<th>Nombre</th>";
+		$tabla		.=	"<th>Estado</th>";
+		$tabla		.=	"<th>Programa</th>";
+		$tabla		.=	"<th></th>";
+		$tabla		.=	"</thead></tr>";
+		switch ($filtro) {
+			case '0':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.estado = %s AND S.pdocve_1 =%s",$opcion, $periodo);
+				break;
+			case '1':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.cveprograma_1 =%s AND S.pdocve_1 =%s",$opcion, $periodo);
+				break;
+			case '2':
+				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.cveusuario_1 = %s ",$nocontrol);
+				break;
+		}
+		$res = mysql_query($qrySolicitud);
+		while($row0 = mysql_fetch_array($res)){
+			$cveusuario  	= $row0["cveusuario_1"];
+			$cvesolicitud 	= $row0["cvesolicitud"];
+			$nombrePro 		= $row0['nombre'];
+			$estado 		= $row0["estado"];
+			$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
+			$res		= mysql_query($qryvalida, conexionBD());
+			$row 		= mysql_fetch_array($res);
+			$tabla		.= "<tr>";
+			$tabla		.= "<td>".$row["ALUCTR"]."</td>";
+			$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+			if($row0["estado"]==0){
+				$tabla		.= "<td>"."PENDIENTE"."</td>";
+			}else if($row0["estado"]==1){
+				$tabla		.="<td>"."ACEPTADO"."</td>";
+			}else{
+				$tabla		.="<td>"."RECHAZADO"."</td>";
+			}
+
+			if($estado !=0){
+				$tabla		.= "<td>".$nombrePro."</td>";
+				$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+				
+			}else{
+				$tabla		.= "<td>".$nombrePro."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
+				$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+				$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+
+			}
+
+			$tabla		.= "</tr>";
+		
+
+		}
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		print json_encode($arrayJSON);
+
+	}
+	function filtrarProgramas(){
+		$pagina 		= $_POST['pagina'];
+		$opcion  		= $_POST['opcion'];
+		$filtro  		= $_POST['filtro'];
+		$respuesta	= true;
+		$inicio 	= ($pagina-1)*10;
+		$cn 		= conexionLocal();
+		$qryProgramas = "";
+		$tabla		= "";
+		$tabla 		= "<thead><tr><th>Nombre</th><th>Dependencia</th><th>Estado</th><th>Vigencia</th><th>Vacantes Disponibles</th><th>Vacantes Ocupadas</th><th>Vacantes Solicitadas</th><th></th></tr></thead><tbody>";
+		switch($filtro){
+			case '0':
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE vigencia = %s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE vigencia = %s LIMIT 10 OFFSET %s", $opcion,$inicio);
+				break;
+			case '1': 
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE cvedependencia =%s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE cvedependencia =%s LIMIT 10 OFFSET %s", $opcion,$inicio);
+				break;
+			case '2': 
+				if($opcion == '0'){
+					$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas");
+					$qryProgramas = sprintf("SELECT * FROM programas LIMIT 10 OFFSET %s",$inicio);
+				}else{
+					$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas P 
+											INNER JOIN carrera_programa CP 
+											ON P.cveprograma = CP.cveprograma 
+											WHERE CP.cvecarrera = %s",$opcion);
+					$qryProgramas = sprintf("SELECT * FROM programas P 
+											INNER JOIN carrera_programa CP 
+											ON P.cveprograma = CP.cveprograma 
+											WHERE CP.cvecarrera = %s LIMIT 10 OFFSET %s",$opcion,$inicio);
+				}
+				break;
+			case '3': 
+				$qryProgramasCount = sprintf("SELECT COUNT(*) AS TOTAL FROM programas WHERE estado =%s", $opcion);
+				$qryProgramas = sprintf("SELECT * FROM programas WHERE estado =%s LIMIT 10 OFFSET %s", $opcion,$inicio);
+				break;
+		}
+		$res 		= mysql_query($qryProgramas);
+		while($renglon 	= mysql_fetch_array($res)){
+			$cveprograma= $renglon["cveprograma"];
+			$nombre 	= $renglon["nombre"];
+			$dependencia= $renglon["cvedependencia"];
+			$qryNombreD = sprintf("SELECT * FROM dependencias WHERE cvedependencia =%s", $dependencia);
+			$resD 		= mysql_query($qryNombreD);	
+			$rowD 		= mysql_fetch_array($resD);
+			$nombreDependencia = $rowD['nomdependencia'];
+			$vacantes 	= $renglon["vacantes"];
+			
+			$cveprograma 	= $renglon["cveprograma"];
+			$qryVacantesO 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado = 1", $cveprograma);
+			$resV 			= mysql_query($qryVacantesO);
+		 	$rowV 			= mysql_fetch_array($resV);
+			$vacantesO 		= $rowV['TOTAL'];
+			$qryVacantesS 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE cveprograma_1 = %s AND estado != 1", $cveprograma);
+			$resVs 			= mysql_query($qryVacantesS);
+		 	$rowVs			= mysql_fetch_array($resVs);
+			$vacantesS 		= $rowVs['TOTAL'];
+			$estado 		= $renglon["estado"];
+			$estadoN 		= "";
+			if($estado == "0"){
+				$estadoN="Pendiente";
+			}elseif($estado == "1"){
+				$estadoN="Aceptado";
+			}elseif($estado == "2"){
+				$estadoN="Rechazado";
+			}
+			$vigencia 		= $renglon["vigencia"]; 
+			if($vigencia=="1"){
+				$vigencia= "Vigente";
+			}else if($vigencia == "2"){
+				$vigencia = "Expirado";
+			}else{
+				$vigencia ="Sin Asignar";
+			}
+
+			if($estado == "0"){
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."'><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."'><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+			}else{
+				$tabla 		.="<tr><td>".$nombre."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td>".$vigencia."</td><td style='text-align: center'>".$vacantes."</td><td style='text-align: center'>".$vacantesO."</td><td style='text-align: center'>".$vacantesS."</td>";
+				$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cveprograma."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+				$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cveprograma."' disabled><i class= 'material-icons'>close</i></button></td>";
+				$tabla		.= "<td><button id='detallesProgramas' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cveprograma."' ><i class = 'material-icons'>list</i></button></td><tr>";
+			}
+
+		}
+		$resCount 	= mysql_query($qryProgramasCount);
+		$rowCount 	= mysql_fetch_array($resCount);
+		$total 	  	= $rowCount['TOTAL'];
+		$totalBotones 	= intval($total/10);
+		$restante 		= $total - ($totalBotones*10);
+		if($restante>0){
+			$totalBotones = $totalBotones+1;
+		}
+		if($totalBotones==1){
+			$totalBotones = 0;
+		}
+		$botones ='<ul class="pagination" id="botonesPaginacionF">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPrevious"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$totalBotones;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="active teal lighten-2" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina==$totalBotones){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNext"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
 	function registroAlumnos(){
@@ -1169,6 +1394,148 @@ function llenaDptoProgramas(){
 		}
 		return false;		
 	}
+	function mostrarResultados(){
+		$respuesta = true;
+		$cn 		= conexionLocal();
+		$qryPeriodos	= sprintf("SELECT DISTINCT pdocve_1 FROM solicitudes");
+		$res 			= mysql_query($qryPeriodos);
+		$ul="";
+		while ($row = mysql_fetch_array($res)) {
+        	$periodo = $row['pdocve_1']; 
+        	$cn 				= conexionLocal();
+			$qrySolicitudesT 	= sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes WHERE pdocve_1 =%s",$periodo);
+			$resST 				= mysql_query($qrySolicitudesT);
+			$rowST 				= mysql_fetch_array($resST);
+			$totalSolicitudes 	= $rowST['TOTAL'];
+			$qrySolicitudesAcep 	= sprintf("SELECT COUNT(*) AS TOTALACEP FROM solicitudes WHERE pdocve_1 =%s AND estado = 1",$periodo);
+			$resSA 				= mysql_query($qrySolicitudesAcep);
+			$rowSA 				= mysql_fetch_array($resSA);
+			$totalSolicitudesA 	= $rowSA['TOTALACEP'];
+			$qrySolicitudesRech	= sprintf("SELECT COUNT(*) AS TOTALRECH FROM solicitudes WHERE pdocve_1 =%s AND estado = 2",$periodo);
+			$resSR 				= mysql_query($qrySolicitudesRech);
+			$rowSR 				= mysql_fetch_array($resSR);
+			$totalSolicitudesR 	= $rowSR['TOTALRECH'];
+			$qryCartaTerminacion = sprintf("SELECT COUNT(*) AS TOTALCT FROM documentos D 
+												INNER JOIN  expedientes E ON D.cveexpediente_1 = E.cveexpediente 
+												INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud WHERE D.tipoDoc = 'cT' AND S.pdocve_1 = %s",$periodo);
+        	$resTF				=  mysql_query($qryCartaTerminacion);
+        	$rowTF 				=  mysql_fetch_array($resTF);
+        	$totalTramiteFin	=  $rowTF['TOTALCT'];
+        	$ul .= '<li>
+  					<div class="collapsible-header" id="badgedatos"><i class="material-icons">label</i><span class="left">'.$periodo.'</span></div>
+  						<div class="collapsible-body">
+  							<div class="container">
+  								<table  class="bordered">
+  									<tr>
+  										<td>
+  											<i class="material-icons">playlist_add_check</i>
+	  						         		Solicitudes Iniciales:		'.$totalSolicitudes.'
+		  						         </td>
+		  						         <td>
+		  						         	<i class="material-icons">done</i>
+		  						         	Solicitudes Aceptadas:		'.$totalSolicitudesA.'
+		  						   		 </td>
+		  						         <td>
+		  						         	<i class="material-icons">clear</i>
+		  						         	Solicitudes Rechazadas: 	'.$totalSolicitudesR.'
+		  						    	</td>
+		  						    		<td>
+		  						    		<i class="material-icons">done_all</i>
+		  						    		Trámites Finalizados:		'.$totalTramiteFin.'
+	  									</td>  									
+  								</table><br>
+  								<table>
+		  							<thead>
+		  							  	<th>No. de control</th>
+		  								<th>Nombre</th>
+		  								<th>1er. Reporte</th>
+		  								<th>2do. Reporte</th>
+		  								<th>3er. Reporte</th>
+		  								<th>Calificación Final</th>
+		  							</thead>';
+
+				$qryAlumnos 	= sprintf("SELECT * FROM solicitudes S  
+											INNER JOIN expedientes E ON S.cvesolicitud = E.cvesolicitud
+											WHERE pdocve_1=%s",$periodo);
+				$resAlumnos 	= mysql_query($qryAlumnos);
+				while($rowA = mysql_fetch_array($resAlumnos)){
+					$ul	.=  '<tr><td>'.$rowA['cveusuario_1'].'</td>';
+					
+					//CONSULTA PARA SACAR EL NOMBRE DE LOS ALUMNOS
+					$qryDatos = sprintf("SELECT * FROM DALUMN WHERE ALUCTR = %s", $rowA['cveusuario_1']);
+					$resDatos = mysql_query($qryDatos, conexionBD());
+					$rowDatos = mysql_fetch_array($resDatos);
+					$ul	.=  '<td>'.$rowDatos['ALUNOM']." ".$rowDatos['ALUAPP']." ".$rowDatos['ALUAPM'].'</td>';
+					$cn 		= conexionLocal();
+					//CONSULTA PARA TOMAR LA CALIFICACION DEL REPORTE 1  
+					$qryRU	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 1 ",$rowA['reporteuno']);
+					$resRU 	= mysql_query($qryRU);
+					if($resRU == true){
+						$rowRU 	= mysql_fetch_array($resRU);
+						$ul	.=  '<td>'.$rowRU['calificacion'].'</td>';
+					}else{
+						$ul	.=  '<td> 0 </td>';
+					}
+					
+					//REPORTE 2 
+					$qryRD	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 2 ",$rowA['reportedos']);
+					$resRD 	= mysql_query($qryRD);
+					if($resRD == true){
+						$rowRD 	= mysql_fetch_array($resRD);
+						$ul	.=  '<td>'.$rowRD['calificacion'].'</td>';
+					}else{
+						$ul	.=  '<td> 0 </td>';
+					}
+					
+					//REPORTE 3
+					$qryRT	= sprintf("SELECT *  FROM reportes WHERE cvereporte = %s AND noreporte = 3 ",$rowA['reportetres']);
+					$resRT 	= mysql_query($qryRT);
+					if($resRT == true){
+						$rowRT 	= mysql_fetch_array($resRT);
+						$ul	.=  '<td>'.$rowRT['calificacion'].'</td></tr>';
+					}else{
+						$ul	.=  '<td> 0 </td></tr>';
+					}
+					/*CARTA LIBERAACION
+					$qryRT	= sprintf("SELECT *  FROM documentos WHERE cvereporte = %s AND noreporte = 3 ",$rowA['reportetres']);
+					$resRT 	= mysql_query($qryRT);
+					if($resRT == true){
+						$rowRT 	= mysql_fetch_array($resRT);
+						$ul	.=  '<td>'.$rowRT['calificacion'].'</td></tr>';
+					}else{
+						$ul	.=  '<td> 0 </td></tr>';
+					}*/
+				}
+
+				$ul .='			</table>
+  							</div>
+  						</div>
+  					</div>
+  				</li><br>';
+         }
+		$arrayJSON = array('respuesta' => $respuesta, 'ul'=> $ul);
+		print json_encode($arrayJSON);
+	}
+
+	function guardarNuevaClave(){
+		$cn = conexionLocal();
+		$respuesta = false;
+		$claveactual 	= md5($_POST["claveActual"]);
+		$nuevaclave 	= "'".md5($_POST['nuevaClave'])."'";;
+		$user 			= "'".$_POST['user']."'";
+		$qryUsuario 	= sprintf("SELECT * FROM usuarios WHERE cveusuario =%s",$user);
+		$res 			= mysql_query($qryUsuario);
+		$row 			= mysql_fetch_array($res);
+		if($row['clave']==$claveactual){
+			if(mysql_affected_rows()>0){
+				$qryUpdate 		= sprintf("UPDATE usuarios SET clave = %s WHERE cveusuario = %s",$nuevaclave, $user);
+				$resU 			= mysql_query($qryUpdate);
+				$respuesta 		= true;
+			}
+		}
+		$arrayJSON = array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+	}
 
 	$opc= $_POST["opc"];
 	switch ($opc){
@@ -1250,20 +1617,32 @@ function llenaDptoProgramas(){
 		case 'filtrarAlumnos':
 			filtrarAlumnos();
 			break;
+		case 'filtrarSolicitudes':
+			filtrarSolicitudes();
+			break;
+		case 'filtrarProgramas':
+			filtrarProgramas();
+			break;
 		case 'agregarDepartamento':
-		agregarDepartamento();
+			agregarDepartamento();
 			break;
 		case 'registroAlumnos':
-		registroAlumnos();
+			registroAlumnos();
 			break;
 		case 'programasAsignacion':
-		programasAsignacion();
+			programasAsignacion();
 			break;
 		case 'asignarprogramaAl':
-		asignarprogramaAl();
+			asignarprogramaAl();
 			break;
 		case 'altaAlumnoUsuario':
 			altaAlumnoUsuario();
+			break;
+		case  'mostrarResultados':
+			mostrarResultados();
+			break;
+		case 'guardarNuevaClave':
+			guardarNuevaClave();
 			break;
 		default:
 		# code...
