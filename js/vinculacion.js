@@ -1205,6 +1205,54 @@ var admin = function (){
 		}
 
 	}
+	var nextProgramasN =function(){
+		var paginaActual = $("#valorPaginaN").val();
+		var pagina = parseInt(paginaActual)+1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+				}
+			}
+		});
+	}
+	var previousProgramasN = function(){
+		var paginaActual = $("#valorPaginaN").val();
+		var pagina = parseInt(paginaActual)-1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data:parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#opcVinculacion>div').hide();
+					$("#tblprogramas").html("");
+					$("#tblprogramas").append(data.renglones);
+					$("#botonesProgramas").html("");
+					$("#botonesProgramas").append(data.botones);
+					$("#listadoProgramas").show();
+				}
+			}
+		});
+	}
 	var nextProgramas = function(){
 		var paginaActual = $("#valorPagina").val();
 		var pagina = parseInt(paginaActual)+1;
@@ -1297,5 +1345,7 @@ var admin = function (){
 	$("#botonesProgramas").on("click","#btnPagF",filtrarProgramas);
 	$("#botonesProgramas").on("click","#btnNext",nextProgramas);
 	$("#botonesProgramas").on("click","#btnPrevious",previousProgramas);
+	$("#botonesProgramas").on("click","#btnNextN",nextProgramasN);
+	$("#botonesProgramas").on("click","#btnPreviousN",previousProgramasN);
 }
 $(document).on("ready",admin);

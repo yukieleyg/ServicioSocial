@@ -501,8 +501,16 @@ function llenaDptoProgramas(){
 		$restante = $totalProgramas-($botonesTotal*10);
 		if($restante>0){
 			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
 		}
 		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousN"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
 		for($i=0;$i<$botonesTotal;$i++){
 			$numero  	= $i+1;
 			if($numero==$pagina){
@@ -511,7 +519,12 @@ function llenaDptoProgramas(){
 				$botones 	.='<li class="waves-effect teal lighten-2" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
 			}
 		}
-  		$botones .= '</ul>';
+		if($pagina==$botonesTotal){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaN">';
 		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones );
 		print json_encode($arrayJSON);
 	}
@@ -1192,7 +1205,7 @@ function llenaDptoProgramas(){
 		}
 		$botones ='<ul class="pagination" id="botonesPaginacionF">';
 		if($pagina==1){
-			$botones .= '<li class="disabled"><a disabled="disabled"><i class="material-icons">chevron_left</i></a></li>  ';
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
 		}else{	
 			$botones .= '<li class="waves-effect" id="btnPrevious"><a><i class="material-icons">chevron_left</i></a></li>  ';
 		}
@@ -1205,7 +1218,7 @@ function llenaDptoProgramas(){
 			}
 		}
 		if($pagina==$totalBotones){
-  			$botones .= '<li class="disabled"><a disabled="disabled"><i class="material-icons">chevron_right</i></a></li>';
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNext"><a><i class="material-icons">chevron_right</i></a></li>';
 		}
