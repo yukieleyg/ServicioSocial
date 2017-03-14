@@ -47,6 +47,9 @@
 	<div id="tarjetaControl" class="card">
 		<?php include 'divTarjetaControlVista.php'; ?>
 	</div>
+	<div id="registroAlumnos" class="card">
+		<?php include 'divRegistroAlumnos.php' ?>
+	</div>
 	<div id="registroEmpresas" class="card">
 		<?php include 'divRegistroEmpresa.php' ?>
 	</div>
