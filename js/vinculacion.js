@@ -2,8 +2,11 @@ var admin = function (){
 	var parametros="";
 	const TECLA_ENTER = 13;
 	var alumnosSolicitudes = function(){
-
-		var parametros ="opc=muestraSolicitudes";
+		var pagina 		= $(this).val();
+		if(pagina== ""){
+			pagina =1;
+		}
+		var parametros 	= "opc=muestraSolicitudes"+"&pagina="+pagina;
 		
 		$.ajax({
 			type: "POST",
@@ -12,9 +15,11 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
+					$('#btnClearFiltroSol').attr('disabled','disabled');
 					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
+					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
 				}
 				
@@ -368,6 +373,8 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
+					$("#opcionProgramas").find('option').remove();
+		    		$("#filtroProgramas").prop('selectedIndex',0);
 					$("#btnClearFiltroPro").attr('disabled','disabled');
 					$("#btnFiltroProgramas").attr('disabled',false);
 					$("#filtroProgramas").attr('disabled',false);
@@ -1438,18 +1445,6 @@ var admin = function (){
 
 		});
 	}
-	var limpiarTablaProgramas = function(){
-		$("#tblprogramas").html("");
-		$("#botonesProgramas").html("");
-		$("#filtroProgramas").attr('disabled',false);
-		$("#opcionProgramas").attr('disabled', false);
-		$("#filtroProgramas").material_select();
-		$("#opcionProgramas").material_select();
-		$("#btnFiltroProgramas").attr('disabled',false);
-		$("#btnFiltroProgramas").attr('disabled',false);
-		$("#listadoProgramas").show();
-
-	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1491,9 +1486,6 @@ var admin = function (){
 	$("#tblcandidatos").on("click","#btnasignaprog",btnprogramasAsignacion);
 	$("#btnasignarmodal").on("click",asignarprogramaAl);
 
-
-
-
 	$("#muestraResultados").on("click",muestraResultados);
 	$("#btnCambioClave").on("click",cambioClave);
 	$("#btnGuardarNuevaClave").on("click",guardarNuevaClave);
@@ -1503,6 +1495,6 @@ var admin = function (){
 	$("#botonesProgramas").on("click","#btnPrevious",previousProgramas);
 	$("#botonesProgramas").on("click","#btnNextN",nextProgramasN);
 	$("#botonesProgramas").on("click","#btnPreviousN",previousProgramasN);
-	$("#btnClearFiltroPro").on("click",limpiarTablaProgramas);
+	$("#btnClearFiltroPro").on("click",muestralistaprogramas);
 }
 $(document).on("ready",admin);

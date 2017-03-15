@@ -1,4 +1,4 @@
-<div class="container" id="listadoAlumnosC">
+<div class="container" id="listadoAlumnosC"><br>
 	<h1>Listado de Alumnos</h1>
 	<div class="row inline" id="rowFiltroAlumnos"><br>
 			<div class="col s3">

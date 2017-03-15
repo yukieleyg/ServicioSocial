@@ -11,7 +11,8 @@
 			</select>	
 		</div>
 		<div class="col s5">
-			<select name="opcionProgramas" id="opcionProgramas"></select>	
+			<select name="opcionProgramas" id="opcionProgramas">
+			</select>	
 		</div>
 		<div class="col s2">	
 			<button class="btn" id="btnFiltroProgramas"><i class="material-icons">search</i></button>
