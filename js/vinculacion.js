@@ -1101,6 +1101,131 @@ var admin = function (){
 			}
 		});
 	}
+	var muestraRegAlumnos	=	function(){
+		$('#opcVinculacion>div').hide();
+		$("#registroAlumnos").show();
+		$("#load").show("slow");
+		var parametros ="opc=registroAlumnos";
+			$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	$("#tblcandidatos").html("");
+				$("#tblcandidatos").append(data.tabla);
+				$("#load").hide("slow");
+				$("#registroAlumnos").show();
+				//$("#ncontrol").val($("#btnasignaprog").val());
+			 }			 
+			}
+		});
+	}
+	var btnprogramasAsignacion =function(){
+		var ncontrol= $(this).val();
+		programasAsignacion(ncontrol);
+	}
+	var programasAsignacion	=	function(ncontrol){
+		
+		var parametros ="opc=programasAsignacion&ncontrol="+ncontrol;
+			$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	var opciones="";
+			 	$.each(data.opciones, function( i, opc ) {
+					opciones+="<option value='"+opc.cveprograma+"'>"+opc.nombre+"</option>";
+			 	});
+			 	$("#pdisponibles").html("").append(opciones);
+			 	$("#pdisponibles").material_select();
+			 	$("#carrera").val(data.carrera);
+			 	$("#nombre").val(data.nombrealm);
+			 	$("label").addClass('active');
+			 	$("#pcreditos").val($("#"+ncontrol).html());
+			 	$("#ncontrol").val(ncontrol);
+			 	$("#observaciones").val("");
+			 	$('#asignarprograma').openModal();
+			 }			 
+			}
+		});
+	}
+	var asignarprogramaAl	= function(){
+		var programaSel	= $("#pdisponibles").val();
+		var alumno 		= $("#ncontrol").val();
+		var observaciones=$("#observaciones").val();
+		var parametros 	="opc=asignarprogramaAl&programa="+programaSel+"&alumno="+alumno+"&observaciones="+observaciones;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	if(data.permisoAlumno==false){
+			 		//El alumno no es usuario
+			 		$.confirm({
+					title: 'Faltan requisitos',
+					content: "El alumno incumple al menos 1 requisito, ¿Desea habilitarlo como usuario?",
+					buttons: {
+						aceptar: {
+							text: 'Habilitar como usuario',
+							btnClass: 'waves-effect waves-light btn',
+							keys: ['enter', 'shift'],
+							action: function(){
+								$.ajax({
+									type: "POST",
+									dataType: "json",
+									url: "../datos/vinculacion.php",
+									data: 'opc=altaAlumnoUsuario&alumno='+alumno,
+									success: function(data){
+										//$.alert(data.mensaje);
+										if(data.respuesta==true){
+											continuarAsignacion(alumno);					
+										}
+									}
+								});
+							}
+						},
+						cancel: function () {
+							$.alert("No se ha asignado un programa al alumno");
+						}
+					}
+				});	
+
+			 	}
+			 	//el alumno si es usuario
+			 	$.alert(data.mensaje);
+			 	//eliminar de la lista de candidatos
+			 	muestraRegAlumnos();
+
+			 }			 
+			}
+		});
+	} 
+	var continuarAsignacion = function(alumno){
+		$.confirm({
+		    title: 'Continuar asignación de programa',
+		    content: 'El alumno ya puede ingresar al sistema.. ¿Desea continuar con la asignación?',
+		    buttons: {
+		        continuar: {
+		            text: 'Continuar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+		            action: function(){
+		                programasAsignacion(alumno);
+		            }
+		        },
+		        cancel: function () {
+		            $.alert('No se ha asignó programa al alumno');
+		        }
+		    }
+		});
+	}
+
 	var filtrarSolicitudes = function(){
 		var filtro 	= $("#filtroSolicitudes").val();
 		var opcion 	= $("#opcionSolicitudes").val();
@@ -1348,6 +1473,8 @@ var admin = function (){
 	$("#btnFiltroAlumnos").on("click", filtrarAlumnos);
 
 	//$("#txtbuscaTarjeta").on("keypress",buscarTarjeta);
+	$("#menuregistroAlumnos").on("click",muestraRegAlumnos);
+	//$("").on("click",registrarAlumno);
 	$("#menuregistroEmpresas").on("click",muestraRegEmpresas);
 	$("#frmRegistroEmpresa").on("submit",registrarEmpresa);
 	$("#menuregistroProgramas").on("click",muestraRegProgramas);
@@ -1361,6 +1488,11 @@ var admin = function (){
 	$("#badgedatos").on("click",buscarTarjeta);
 	$("#menuTarjeta").on("click",muestraTarjeta);
 	$("#btnagregardpto").on("click",agregarDepartamento);
+	$("#tblcandidatos").on("click","#btnasignaprog",btnprogramasAsignacion);
+	$("#btnasignarmodal").on("click",asignarprogramaAl);
+
+
+
 
 	$("#muestraResultados").on("click",muestraResultados);
 	$("#btnCambioClave").on("click",cambioClave);

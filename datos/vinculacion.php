@@ -945,27 +945,27 @@ function llenaDptoProgramas(){
 	}
 
 	function agregarDepartamento(){
-		$respuesta 	= false;
-		$cn 		= conexionLocal();
+		$respuesta 	= 	false;
+		$cn 		=	conexionLocal();
 		$dptonom	=	strtoupper("'".$_POST['nombre']."'");
 		$depcve		=	$_POST['dependencia'];
-		$qryexiste	=sprintf("SELECT dp.cvedepartamento, d.nomdependencia 
+		$qryexiste	=	sprintf("SELECT dp.cvedepartamento, d.nomdependencia 
 							FROM departamentos dp 
 							INNER JOIN dependencias d ON dp.cvedependencia=d.cvedependencia
                             WHERE dp.cvedependencia =%s AND dp.nomdepartamento=%s",$depcve,$dptonom);
-		$resaux		=mysql_query($qryexiste);
+		$resaux		=	mysql_query($qryexiste);
 		if($row= mysql_fetch_array($resaux)){
 			$nombreDep		= $row["nomdependencia"];
-			$mensaje="Ya existe un departamento con ese nombre en ".$nombreDep;
+			$mensaje		= "Ya existe un departamento con ese nombre en ".$nombreDep;
 
 		}else{
 			$qryDpto	= sprintf("INSERT INTO departamentos(cvedepartamento,cvedependencia,nomdepartamento)
 										VALUES(NULL,$depcve,$dptonom)");
-				$res 		= mysql_query($qryDpto);
-					if(mysql_affected_rows()>0){
-						$respuesta=true;
-						$mensaje="Se ha agregado el departamento ".$dptonom;
-					}
+			$res 		= mysql_query($qryDpto);
+				if(mysql_affected_rows()>0){
+					$respuesta=true;
+					$mensaje="Se ha agregado el departamento ".$dptonom;
+				}
 		}
 		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
 		print json_encode($arrayJSON); 
@@ -1228,6 +1228,174 @@ function llenaDptoProgramas(){
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
+	function registroAlumnos(){
+		//funcion que devuelve a los alumnos candidatos 
+		$respuesta 	= true;
+		$mensaje 	="";
+		$cn 		= conexionBD();
+		$qrycandidatos 	= sprintf("SELECT alm.ALUCTR, 
+							TRUNCATE((inf.calcac/p.placre),2) AS PORC, 
+							inf.CARCVE 
+							FROM DALUMN alm 
+							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR 
+							INNER JOIN DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE 
+							INNER JOIN DCLIST dc ON dc.ALUCTR=alm.ALUCTR 
+							WHERE (inf.CALSIT=1 AND dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
+												AND alm.ALUCTR NOT IN (SELECT sol.cveusuario_1 FROM %s.solicitudes sol where estado!=2)) 
+							HAVING PORC>=0.7 
+							ORDER BY `PORC` DESC, alm.ALUCTR ASC",$GLOBALS['bdss']);
+		$res = mysql_query($qrycandidatos);
+		$tbl="<tr><th>No. Control</th><th>PORCENTAJE</th><th>Asignación</th></tr>";
+		while($row = mysql_fetch_array($res)){
+			$nc=$row["ALUCTR"];
+			$porcentaje=$row["PORC"];
+			$tbl.="<tr><td>".$nc."</td><td id='".$nc."''>".$porcentaje."</td>".
+			"<td><button class='btn-floating waves-effect waves-light blue' id='btnasignaprog' value='".$nc."'><i class='material-icons'>library_add</i></button></td></tr>";
+			$respuesta=true;
+		}
+
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tabla'=>$tbl);
+		print json_encode($arrayJSON); 
+	}
+	function programasAsignacion(){
+		//function que devuelve la lista de programas segun la carrera del alumno
+		$respuesta 	=	false;
+		$mensaje	=	"No se ha podido Mostrar la lista de programas";
+	$cnBD  		=	conexionBD();
+		$ncontrol 	=	$_POST["ncontrol"];
+		$qryAlumno 	= sprintf("SELECT A.ALUNOM, A.ALUAPP, A.ALUAPM, D.CARCVE, C.CARNCO
+								FROM DALUMN A 
+								INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR
+								INNER JOIN DCARRE C ON C.CARCVE = D.CARCVE 
+								WHERE  A.ALUCTR = %s",$ncontrol);
+		$resBD 		=	mysql_query($qryAlumno);	
+		$cvecarrera	="";
+		$carrera 	="";
+		$nombre		="";
+			
+		if($row= mysql_fetch_array($resBD)){
+			$cvecarrera	=	$row["CARCVE"];		
+			$carrera 	=	$row["CARNCO"];
+			$nombre		=	$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"];			
+		}
+	$cn=conexionLocal();	
+		//echo mysql_errno($cnBD) . ": " . mysql_error($cnBD). "\n";	
+		$qryprogramas=	sprintf("SELECT p.cveprograma, p.nombre, c.carnco 
+								FROM programas p 
+								INNER JOIN carrera_programa cp ON cp.cveprograma=p.cveprograma 
+								INNER JOIN carreras c ON c.carcve=cp.cvecarrera 
+								WHERE cp.cvecarrera=0 OR cp.cvecarrera=%s
+								ORDER BY p.nombre ASC",$cvecarrera);
+		$res= mysql_query($qryprogramas,$cn);
+		$renglones = array();
+		while($r = mysql_fetch_assoc($res)) {
+			$renglones[] = $r;
+			$respuesta 	=	true;
+			$mensaje="";
+		}
+		//echo mysql_errno($cn) . ": " . mysql_error($cn). "\n";
+		$arrayJSON = array('respuesta'=>$respuesta, 'opciones'=>$renglones,'nombrealm'=>$nombre,'carrera'=>$carrera, 'mensaje'=>$mensaje);
+		print json_encode($arrayJSON);
+	}
+	function alumnoesusuario($alumno){  
+		mysql_query("set NAMES utf8");
+		$consultaruser	= sprintf("select * from usuarios where cveusuario=%s and tipousuario=3 limit 1",$alumno);
+		$res 			= mysql_query($consultaruser,conexionLocal());
+		if($row = mysql_fetch_array($res)){
+			return true;
+		}
+		return false;
+	}	
+	function asignarprogramaAl(){
+
+		//funcion que asigna un programa a un alumno :. solicitud
+
+		//VERIFICAR QUE EXISTA EL ALUMNO!!
+	$respuesta 	=	false;
+	$alumno			=	$_POST['alumno'];
+	$permisoAlumno	= alumnoesusuario($alumno);
+	
+	if(!$permisoAlumno){
+	//el alumno no es usuario
+		$arrayJSON = array('respuesta'=>true, 'permisoAlumno'=>$permisoAlumno);
+		print json_encode($arrayJSON);
+		return;
+		
+	}
+		//EL ALUMNO ES USUARIO
+		$mensaje		= "No se ha podido asignar al alumno";
+		$programa		=	$_POST['programa'];
+		$observaciones	=	"'".$_POST['observaciones']."'";
+		
+		//INSERTAR SI EL ALUMNO NO TIENE SOLICITUDES PENDIENTES O ACEPTADAS!
+		$qrysolicitudprevia=sprintf("SELECT * FROM solicitudes WHERE cveusuario_1=%s and (estado=1 or estado=0)",$alumno);
+		$resprevia=mysql_query($qrysolicitudprevia,conexionLocal());
+		if($rowS = mysql_fetch_array($resprevia)){
+			//YA EXISTE UNA SOLICITUD DEL ALUMNO :. NO SE PUEDE INSERTAR
+			$arrayJSON = array('respuesta'=>true, 'mensaje'=>'No se puede asignar. El alumno ya cuenta con una solicitud Pendiente o Aceptada');
+			print json_encode($arrayJSON);
+			return;
+		}
+		//OBTENER PERIODO ACTUAL
+		$qryperiodo	= sprintf("select PARFOL1 from DPARAM where PARCVE= 'PRDO'");
+		$res		= mysql_query($qryperiodo,conexionBD());
+		$row 		= mysql_fetch_array($res);
+		$periodoAct	= $row["PARFOL1"];
+
+		$qrysolicitud 	=sprintf("INSERT INTO solicitudes(cvesolicitud,cveusuario_1,cveprograma_1,estado,pdocve_1,motivo,observaciones) 
+			VALUES (NULL,%s,%s,1,%s,'-',%s)",$alumno,$programa,$periodoAct,$observaciones);
+
+		$res2 =mysql_query($qrysolicitud, conexionLocal());
+		
+		if(mysql_affected_rows()>0){
+			$respuesta 	=true;
+			$mensaje="Se ha asignado el alumno al programa";
+		}
+
+				
+		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
+		print json_encode($arrayJSON);
+	}
+	function altaAlumnoUsuario(){
+		/*AGREGAR ALUMNO A USUARIOS--->
+		CONECTAR A SIE OBTENER CONTRASEÑA
+		*/
+		$respuesta=false;
+		$mensaje="El alumno ya es usuario";
+		$alumno=$_POST['alumno'];
+		$aluPas=alupassword($alumno);
+		if($aluPas==false){
+			$mensaje="No se encontró numero de control";
+			$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
+			print json_encode($arrayJSON);
+			return;
+		}
+		/*---->CIFRARLA MD5 */
+		$md5pas= "'".md5($aluPas)."'";
+		/*insertar en ss bd*/
+		$qryaltaAlumno=sprintf("INSERT INTO usuarios(cveusuario,clave,tipousuario)
+								VALUES(%s,%s,3)",$alumno,$md5pas);
+		$res2 =mysql_query($qryaltaAlumno, conexionLocal());
+		
+		if(mysql_affected_rows()>0){
+			$respuesta 	=true;
+			$mensaje="Se ha habilitado al alumno como usuario del sistema";
+		}
+		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
+			print json_encode($arrayJSON);
+	}
+	function alupassword($alumno){
+		//funcion que obtiene contraseña del alumno
+		$cnSIE=conexionBD();
+		$qryPassword=sprintf("SELECT ALUPAS FROM DALUMN WHERE ALUCTR=%s",$alumno);
+		$res=mysql_query($qryPassword);
+		if($row = mysql_fetch_array($res)){
+			$contrasena=$row['ALUPAS'];
+			//INSERTAR EN BD SS
+			return $contrasena;
+		}
+		return false;		
+	}
 	function mostrarResultados(){
 		$respuesta = true;
 		$cn 		= conexionLocal();
@@ -1459,6 +1627,18 @@ function llenaDptoProgramas(){
 			break;
 		case 'agregarDepartamento':
 			agregarDepartamento();
+			break;
+		case 'registroAlumnos':
+			registroAlumnos();
+			break;
+		case 'programasAsignacion':
+			programasAsignacion();
+			break;
+		case 'asignarprogramaAl':
+			asignarprogramaAl();
+			break;
+		case 'altaAlumnoUsuario':
+			altaAlumnoUsuario();
 			break;
 		case  'mostrarResultados':
 			mostrarResultados();
