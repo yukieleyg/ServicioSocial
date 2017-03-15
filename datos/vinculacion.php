@@ -1200,29 +1200,31 @@ function llenaDptoProgramas(){
 		if($restante>0){
 			$totalBotones = $totalBotones+1;
 		}
-		if($totalBotones==1){
+		if($totalBotones<=1){
 			$totalBotones = 0;
-		}
-		$botones ='<ul class="pagination" id="botonesPaginacionF">';
-		if($pagina==1){
-			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
-		}else{	
-			$botones .= '<li class="waves-effect" id="btnPrevious"><a><i class="material-icons">chevron_left</i></a></li>  ';
-		}
-		for($i=0;$i<$totalBotones;$i++){
-			$numero  	= $i+1;
-			if($numero==$pagina){
-				$botones 	.='<li class="active teal lighten-2" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
-			}else{
-				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
-			}
-		}
-		if($pagina==$totalBotones){
-  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+			$botones = ' ';
 		}else{
-  			$botones .= '<li class="waves-effect" id="btnNext"><a><i class="material-icons">chevron_right</i></a></li>';
+			$botones ='<ul class="pagination" id="botonesPaginacionF">';
+			if($pagina==1){
+				$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+			}else{	
+				$botones .= '<li class="waves-effect" id="btnPrevious"><a><i class="material-icons">chevron_left</i></a></li>  ';
+			}
+			for($i=0;$i<$totalBotones;$i++){
+				$numero  	= $i+1;
+				if($numero==$pagina){
+					$botones 	.='<li class="active teal lighten-2" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+				}else{
+					$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+				}
+			}
+			if($pagina==$totalBotones){
+	  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+			}else{
+	  			$botones .= '<li class="waves-effect" id="btnNext"><a><i class="material-icons">chevron_right</i></a></li>';
+			}
+			$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
 		}
-		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
