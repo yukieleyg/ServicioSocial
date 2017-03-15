@@ -368,6 +368,12 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
+					$("#btnClearFiltroPro").attr('disabled','disabled');
+					$("#btnFiltroProgramas").attr('disabled',false);
+					$("#filtroProgramas").attr('disabled',false);
+					$("#opcionProgramas").attr('disabled',false);
+					$("#filtroProgramas").material_select();
+					$("#opcionProgramas").material_select();
 					$('#opcVinculacion>div').hide();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.renglones);
@@ -1256,6 +1262,12 @@ var admin = function (){
 			data: parametros,
 			success: function (data){
 				if(data.respuesta== true){
+					$("#btnFiltroProgramas").attr('disabled','disabled');
+					$("#btnClearFiltroPro").attr('disabled',false);
+					$("#filtroProgramas").attr('disabled','disabled');
+					$("#opcionProgramas").attr('disabled','disabled');
+					$("#filtroProgramas").material_select();
+					$("#opcionProgramas").material_select();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.tabla);
 					$("#botonesProgramas").html("");
@@ -1426,7 +1438,18 @@ var admin = function (){
 
 		});
 	}
+	var limpiarTablaProgramas = function(){
+		$("#tblprogramas").html("");
+		$("#botonesProgramas").html("");
+		$("#filtroProgramas").attr('disabled',false);
+		$("#opcionProgramas").attr('disabled', false);
+		$("#filtroProgramas").material_select();
+		$("#opcionProgramas").material_select();
+		$("#btnFiltroProgramas").attr('disabled',false);
+		$("#btnFiltroProgramas").attr('disabled',false);
+		$("#listadoProgramas").show();
 
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1480,5 +1503,6 @@ var admin = function (){
 	$("#botonesProgramas").on("click","#btnPrevious",previousProgramas);
 	$("#botonesProgramas").on("click","#btnNextN",nextProgramasN);
 	$("#botonesProgramas").on("click","#btnPreviousN",previousProgramasN);
+	$("#btnClearFiltroPro").on("click",limpiarTablaProgramas);
 }
 $(document).on("ready",admin);

@@ -16,6 +16,9 @@
 		<div class="col s2">	
 			<button class="btn" id="btnFiltroProgramas"><i class="material-icons">search</i></button>
 		</div>
+		<div class="col s2">
+			<button class="btn" id="btnClearFiltroPro"><i class="material-icons">loop</i></button>
+		</div>
 	</div>
 	<div class="row" id="rowProgramas">
 		<div id="listaprogramas" class="col s14">
