@@ -7,7 +7,6 @@ var admin = function (){
 			pagina =1;
 		}
 		var parametros 	= "opc=muestraSolicitudes"+"&pagina="+pagina;
-		
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -19,6 +18,7 @@ var admin = function (){
 					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
+					$("#paginacionSolicitudes").html("");
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
 				}
@@ -28,7 +28,6 @@ var admin = function (){
 
 		
 	}
-
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
 		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
@@ -1349,12 +1348,7 @@ var admin = function (){
 		}
 
 	}
-	var nextProgramasN =function(){
-		var paginaActual = $("#valorPaginaN").val();
-		var pagina = parseInt(paginaActual)+1;
-		if(pagina== ""){
-			pagina =1;
-		}
+	var mostrarProgramas = function (pagina){
 		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
@@ -1372,6 +1366,14 @@ var admin = function (){
 				}
 			}
 		});
+	}
+	var nextProgramasN =function(){
+		var paginaActual = $("#valorPaginaN").val();
+		var pagina = parseInt(paginaActual)+1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		mostrarProgramas(pagina);
 	}
 	var previousProgramasN = function(){
 		var paginaActual = $("#valorPaginaN").val();
@@ -1379,71 +1381,85 @@ var admin = function (){
 		if(pagina== ""){
 			pagina =1;
 		}
-		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
+		mostrarProgramas(pagina);
+
+	}
+	var mostrarProgramasFiltro = function(pagina){
+		var filtro 	= $("#filtroProgramas").val();
+		var opcion 	= $("#opcionProgramas").val();
+		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
-			url:"../datos/vinculacion.php",
-			data:parametros,
-			success: function(data){
-				if(data.respuesta==true){
-					$('#opcVinculacion>div').hide();
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
 					$("#tblprogramas").html("");
-					$("#tblprogramas").append(data.renglones);
+					$("#tblprogramas").append(data.tabla);
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
+
 				}
 			}
+
 		});
 	}
 	var nextProgramas = function(){
 		var paginaActual = $("#valorPagina").val();
 		var pagina = parseInt(paginaActual)+1;
-		var filtro 	= $("#filtroProgramas").val();
-		var opcion 	= $("#opcionProgramas").val();
-		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
-		$.ajax({
-			type:"POST",
-			dataType: "json",
-			url: "../datos/vinculacion.php",
-			data: parametros,
-			success: function (data){
-				if(data.respuesta== true){
-					$("#tblprogramas").html("");
-					$("#tblprogramas").append(data.tabla);
-					$("#botonesProgramas").html("");
-					$("#botonesProgramas").append(data.botones);
-					$("#listadoProgramas").show();
-
-				}
-			}
-
-		});
+		if(pagina== ""){
+			pagina =1;
+		}
+		mostrarProgramasFiltro(pagina);
 	}
 	var previousProgramas = function(){
 		var paginaActual = $("#valorPagina").val();
 		var pagina = parseInt(paginaActual)-1;
-		var filtro 	= $("#filtroProgramas").val();
-		var opcion 	= $("#opcionProgramas").val();
-		var parametros = "opc=filtrarProgramas"+"&filtro="+filtro+"&opcion="+opcion+"&pagina="+pagina;
+		if(pagina== ""){
+			pagina =1;
+		}
+		mostrarProgramasFiltro(pagina);
+	}
+	var funcionAlumnosSol = function(pagina){
+		var parametros 	= "opc=muestraSolicitudes"+"&pagina="+pagina;
 		$.ajax({
-			type:"POST",
+			type: "POST",
 			dataType: "json",
-			url: "../datos/vinculacion.php",
+			url:"../datos/vinculacion.php",
 			data: parametros,
-			success: function (data){
-				if(data.respuesta== true){
-					$("#tblprogramas").html("");
-					$("#tblprogramas").append(data.tabla);
-					$("#botonesProgramas").html("");
-					$("#botonesProgramas").append(data.botones);
-					$("#listadoProgramas").show();
-
+			success: function(data){
+				if(data.respuesta){
+					$('#btnClearFiltroSol').attr('disabled','disabled');
+					$('#opcVinculacion>div').hide();
+					$("#tablaSolicitudes").html("");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#paginacionSolicitudes").html("");
+					$("#paginacionSolicitudes").append(data.botones);
+					$("#listadoSolicitudes").show();
 				}
+				
 			}
-
 		});
+
+	}
+	var previousSolicitudes = function(){
+		var paginaActual = $("#valorPagSol").val();
+		var pagina = parseInt(paginaActual)-1;
+		if(pagina== ""){
+				pagina =1;
+		}
+		funcionAlumnosSol(pagina);
+	}
+	var nextSolicitudes = function(){
+		var paginaActual = $("#valorPagSol").val();
+		var pagina = parseInt(paginaActual)+1;
+		if(pagina== ""){
+				pagina =1;
+		}
+		funcionAlumnosSol(pagina);
+
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -1496,5 +1512,9 @@ var admin = function (){
 	$("#botonesProgramas").on("click","#btnNextN",nextProgramasN);
 	$("#botonesProgramas").on("click","#btnPreviousN",previousProgramasN);
 	$("#btnClearFiltroPro").on("click",muestralistaprogramas);
+	$("#paginacionSolicitudes").on("click","#btnPagSol",alumnosSolicitudes);
+	$("#paginacionSolicitudes").on("click","#btnNextSol",nextSolicitudes);
+	$("#paginacionSolicitudes").on("click","#btnPreviousSol",previousSolicitudes);
+
 }
 $(document).on("ready",admin);

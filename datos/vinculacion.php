@@ -3,13 +3,14 @@ require_once('entrar.php');
 //require_once('documentos.php');
 function muestraSolicitudes(){
 	$pagina 	= $_POST['pagina'];
+	$inicio 	= ($pagina - 1)*10;
 	$respuesta	= false;
 	$cn0		= conexionLocal();
-	$qryvalida0	= sprintf("SELECT * FROM solicitudes");
 	$qryvalidaC = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes");
 	$resTotal 	= mysql_query($qryvalidaC);
 	$rowTotal 	= mysql_fetch_array($resTotal);
 	$total 		= $rowTotal['TOTAL'];
+	$qryvalida0	= sprintf("SELECT * FROM solicitudes LIMIT 10 OFFSET %s",$inicio);
 	$res0		= mysql_query($qryvalida0);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -25,10 +26,9 @@ function muestraSolicitudes(){
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
 		$cn1		= conexionLocal();
-		$qryvalida1	= sprintf("SELECT * FROM programas WHERE cveprograma = %s",$cveprograma);
+		$qryvalida1	= sprintf("SELECT * FROM programas WHERE cveprograma = %s ",$cveprograma);
 		$res1		= mysql_query($qryvalida1);
 		$row1		= mysql_fetch_array($res1);
-
 
 
 		$cn 		= conexionBD();
@@ -71,25 +71,25 @@ function muestraSolicitudes(){
 	}
 	$botones = '<ul class="pagination">';
 	if($pagina==1){
-	    $botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';
+	    $botones .= '<li class="disabled" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
 	}else{
-	    $botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';
+	    $botones .= '<li class="waves-effect" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
 	}
 	for($i=0;$i<$totalBotones;$i++){
 		$numero = $i+1;
 		if($numero==$pagina){
-   			$botones.= '<li class="teal lighten-2 active" value = '.$numero.'><a>'.$numero.'</a></li>';
+   			$botones.= '<li class="teal lighten-2 active" value = '.$numero.'id="btnPagSol"><a>'.$numero.'</a></li>';
 		}else{
-   			$botones.= '<li class="waves-effect" value = '.$numero.'><a>'.$numero.'</a></li>';
+   			$botones.= '<li class="waves-effect" value = '.$numero.' id="btnPagSol"><a>'.$numero.'</a></li>';
 		}
 	}
     
     if($pagina==$totalBotones){
-	    $botones.= '<li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>';
+	    $botones.= '<li class="disabled" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
     }else{
-	    $botones.= '<li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>';
+	    $botones.= '<li class="waves-effect" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
     }
-  	$botones .= '</ul>';
+  	$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagSol">';
 	if($totalBotones==1){
 		$botones = '';
 
