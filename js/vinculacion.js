@@ -1198,7 +1198,9 @@ var admin = function (){
 
 			 	}
 			 	//el alumno si es usuario
-			 	$.alert(data.mensaje);
+			 	if(data.mensaje){
+	  				$.alert(data.mensaje);
+			 	}
 			 	//eliminar de la lista de candidatos
 			 	muestraRegAlumnos();
 
