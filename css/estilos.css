@@ -58,7 +58,7 @@ table tr th{
 #tblprogramas th{
 	text-align: left;
 }
-#rowProgramas, #rowSolicitudes, #rowAlumnos{
+#rowProgramas, #rowSolicitudes, #rowAlumnos, #divClearFiltroSol{
 	margin-left: -5%;
 }
 #rowFiltroProgramas, #rowFiltroSolicitudes, #rowFiltroAlumnos{

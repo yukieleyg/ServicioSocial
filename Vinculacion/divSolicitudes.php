@@ -9,10 +9,10 @@
 					<option value="2">No.de Control</option>
 				</select>	
 			</div>
-			<div class="col s5" id="opcionSolicitudesNC">
+			<div class="col s3" id="opcionSolicitudesNC">
 				<input type="number" id="filtroNoControlSolicitudes">	
 			</div>
-			<div class="col s5" id="opcionSolicitudesDiv">
+			<div class="col s3" id="opcionSolicitudesDiv">
 				<select name="opcionSolicitudes" id="opcionSolicitudes"></select>
 			</div>
 			<div class="col s2" id="opcionPeriodo">	
@@ -20,10 +20,15 @@
 			</div>
 			<div class="col s2">	
 				<button class="btn" id="btnFiltroSolicitudes"><i class="material-icons">search</i></button>
+			</div>	
+			<div class="col s2 "id="divClearFiltroSol">
+				<button class="btn" id="btnClearFiltroSol"><i class="material-icons">loop</i></button>
 			</div>
 	</div>				
 	<div class="row">	
 		<table id="tablaSolicitudes">
 		</table>
+		<div id="paginacionSolicitudes">
+		</div>
 	</div>
 </div>

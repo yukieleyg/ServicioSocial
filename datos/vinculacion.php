@@ -2,9 +2,14 @@
 require_once('entrar.php');
 //require_once('documentos.php');
 function muestraSolicitudes(){
+	$pagina 	= $_POST['pagina'];
 	$respuesta	= false;
 	$cn0		= conexionLocal();
-	$qryvalida0	= sprintf("select * from solicitudes");
+	$qryvalida0	= sprintf("SELECT * FROM solicitudes");
+	$qryvalidaC = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes");
+	$resTotal 	= mysql_query($qryvalidaC);
+	$rowTotal 	= mysql_fetch_array($resTotal);
+	$total 		= $rowTotal['TOTAL'];
 	$res0		= mysql_query($qryvalida0);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -20,14 +25,14 @@ function muestraSolicitudes(){
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
 		$cn1		= conexionLocal();
-		$qryvalida1	= sprintf("select * from programas where cveprograma = %s",$cveprograma);
+		$qryvalida1	= sprintf("SELECT * FROM programas WHERE cveprograma = %s",$cveprograma);
 		$res1		= mysql_query($qryvalida1);
 		$row1		= mysql_fetch_array($res1);
 
 
 
 		$cn 		= conexionBD();
-		$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
+		$qryvalida	= sprintf("SELECT ALUCTR, ALUNOM, ALUAPP, ALUAPM FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
 		$res		= mysql_query($qryvalida);
 		$row 		= mysql_fetch_array($res);
 		$tabla		.= "<tr>";
@@ -59,8 +64,38 @@ function muestraSolicitudes(){
 
 		$tabla		.= "</tr>";
 	}
+	$totalBotones = intval($total/10);
+	$restante = $total - $totalBotones;
+	if($restante>0){
+		$totalBotones=$totalBotones+1;
+	}
+	$botones = '<ul class="pagination">';
+	if($pagina==1){
+	    $botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';
+	}else{
+	    $botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';
+	}
+	for($i=0;$i<$totalBotones;$i++){
+		$numero = $i+1;
+		if($numero==$pagina){
+   			$botones.= '<li class="teal lighten-2 active" value = '.$numero.'><a>'.$numero.'</a></li>';
+		}else{
+   			$botones.= '<li class="waves-effect" value = '.$numero.'><a>'.$numero.'</a></li>';
+		}
+	}
+    
+    if($pagina==$totalBotones){
+	    $botones.= '<li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>';
+    }else{
+	    $botones.= '<li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>';
+    }
+  	$botones .= '</ul>';
+	if($totalBotones==1){
+		$botones = '';
+
+	}
 	$respuesta = true;
-	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta );
+	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta , 'botones'=> $botones);
 	print json_encode($arrayJSON);
 }
 function aceptarSolicitudes (){
@@ -514,9 +549,9 @@ function llenaDptoProgramas(){
 		for($i=0;$i<$botonesTotal;$i++){
 			$numero  	= $i+1;
 			if($numero==$pagina){
-				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 			}else{
-				$botones 	.='<li class="waves-effect teal lighten-2" value ='.$numero.' id="btnPag"><a style="color: white;">'.$numero.'</a></li>  ';	
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 			}
 		}
 		if($pagina==$botonesTotal){
@@ -1047,6 +1082,7 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Programa</th>";
 		$tabla		.=	"<th></th>";
 		$tabla		.=	"</thead></tr>";
+		mysql_query("set NAMES utf8");
 		switch ($filtro) {
 			case '0':
 				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.estado = %s AND S.pdocve_1 =%s",$opcion, $periodo);
@@ -1064,11 +1100,13 @@ function llenaDptoProgramas(){
 			$cvesolicitud 	= $row0["cvesolicitud"];
 			$nombrePro 		= $row0['nombre'];
 			$estado 		= $row0["estado"];
-			$qryvalida	= sprintf("select * from DALUMN where ALUCTR = %s",$cveusuario);
-			$res		= mysql_query($qryvalida, conexionBD());
-			$row 		= mysql_fetch_array($res);
 			$tabla		.= "<tr>";
-			$tabla		.= "<td>".$row["ALUCTR"]."</td>";
+			$tabla			.= "<td>".$row0["cveusuario_1"]."</td>";
+			mysql_query("set NAMES utf8");
+			$cn2	 		= conexionBD();
+			$qryvalida		= sprintf("SELECT D.ALUNOM, D.ALUAPP, D.ALUAPM FROM DALUMN D WHERE ALUCTR = %s",$cveusuario);
+			$resN			= mysql_query($qryvalida, $cn2);
+			$row 			= mysql_fetch_array($resN);
 			$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
 			if($row0["estado"]==0){
 				$tabla		.= "<td>"."PENDIENTE"."</td>";
