@@ -1322,7 +1322,7 @@ function llenaDptoProgramas(){
 								FROM programas p 
 								INNER JOIN carrera_programa cp ON cp.cveprograma=p.cveprograma 
 								INNER JOIN carreras c ON c.carcve=cp.cvecarrera 
-								WHERE cp.cvecarrera=0 OR cp.cvecarrera=%s
+								WHERE (cp.cvecarrera=0 OR cp.cvecarrera=%s) AND vacantes>=1
 								ORDER BY p.nombre ASC",$cvecarrera);
 		$res= mysql_query($qryprogramas,$cn);
 		$renglones = array();
