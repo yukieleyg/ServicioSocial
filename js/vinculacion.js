@@ -14,6 +14,18 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
+					$("#filtroSolicitudes").attr('disabled',false);
+					$("#opcionSolicitudes").attr('disabled',false);
+					$("#filtroPeriodo").attr('disabled',false);
+					$("#filtroNoControlSolicitudes").attr('disabled','disabled');
+					$("#filtroNoControlSolicitudes").val("");
+					$("#btnFiltroSolicitudes").attr('disabled',false);
+					$("#opcionSolicitudes").find('option').remove();
+					$("#filtroPeriodo").find('option').remove();
+		    		$("#filtroSolicitudes").prop('selectedIndex',0);
+					$("#opcionSolicitudes").material_select();
+					$("#filtroPeriodo").material_select();
+		    		$("#filtroSolicitudes").material_select();
 					$('#btnClearFiltroSol').attr('disabled','disabled');
 					$('#opcVinculacion>div').hide();
 					$("#tablaSolicitudes").html("");
@@ -963,6 +975,7 @@ var admin = function (){
 				});
 			break;
 			case '2': 
+				$("#filtroNoControlSolicitudes").attr('disabled',false);
 				$("#opcionPeriodo").hide();
 				$("#opcionSolicitudesDiv").hide();
 				$("#opcionSolicitudesNC").show();
@@ -1233,11 +1246,16 @@ var admin = function (){
 	}
 
 	var filtrarSolicitudes = function(){
-		var filtro 	= $("#filtroSolicitudes").val();
+		var pagina 	= $(this).val();
+		if(pagina == ""){
+			pagina = 1;
+		}
+		funcionFiltrarSolicitudes(pagina);
+		/*var filtro 	= $("#filtroSolicitudes").val();
 		var opcion 	= $("#opcionSolicitudes").val();
 		var periodo 	= $("#filtroPeriodo").val();
 		var nocontrol 	= $("#filtroNoControlSolicitudes").val();
-		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol;
+		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
@@ -1247,11 +1265,17 @@ var admin = function (){
 				if(data.respuesta== true){
 					$("#tablaSolicitudes").html("");
 					$("#tablaSolicitudes").append(data.tabla);
+					$("#paginacionSolicitudes").html("");
+					$("#btnFiltroSolicitudes").attr('disabled','disabled');
+					$("#btnClearFiltroSol").attr('disabled',false);
+					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
+				}else{
+					Materialize.toast("No se encuentran solicitudes que coincidan",5000);
 				}
 			}
 
-		});
+		});*/
 	}
 	var filtrarProgramas = function(){
 		var pagina 	= $(this).val();
@@ -1280,6 +1304,8 @@ var admin = function (){
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
 
+				}else{
+					Materialize.toast("No hay programas que coincidan",5000);
 				}
 			}
 
@@ -1461,6 +1487,56 @@ var admin = function (){
 		funcionAlumnosSol(pagina);
 
 	}
+	var previousSolicitudesFiltro = function(){
+		var paginaActual = $("#valorPaginaSF").val();
+		var pagina = parseInt(paginaActual)-1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		funcionFiltrarSolicitudes(pagina);
+	}
+	var nextSolicitudesFiltro = function(){
+		var paginaActual = $("#valorPaginaSF").val();
+		var pagina = parseInt(paginaActual)+1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		funcionFiltrarSolicitudes(pagina);
+
+	}
+	var funcionFiltrarSolicitudes = function(pagina){
+		var filtro 	= $("#filtroSolicitudes").val();
+		var opcion 	= $("#opcionSolicitudes").val();
+		var periodo 	= $("#filtroPeriodo").val();
+		var nocontrol 	= $("#filtroNoControlSolicitudes").val();
+		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol+"&pagina="+pagina;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					$("#filtroSolicitudes").attr('disabled','disabled');
+					$("#opcionSolicitudes").attr('disabled','disabled');
+					$("#filtroPeriodo").attr('disabled','disabled');
+					$("#filtroSolicitudes").material_select();
+					$("#opcionSolicitudes").material_select();
+					$("#filtroPeriodo").material_select();
+					$("#tablaSolicitudes").html("");
+					$("#tablaSolicitudes").append(data.tabla);
+					$("#paginacionSolicitudes").html("");
+					$("#btnFiltroSolicitudes").attr('disabled','disabled');
+					$("#btnClearFiltroSol").attr('disabled',false);
+					$("#paginacionSolicitudes").append(data.botones);
+					$("#listadoSolicitudes").show();
+				}else{
+					Materialize.toast("No se encuentran solicitudes que coincidan",5000);
+				}
+			}
+
+		});
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1515,6 +1591,10 @@ var admin = function (){
 	$("#paginacionSolicitudes").on("click","#btnPagSol",alumnosSolicitudes);
 	$("#paginacionSolicitudes").on("click","#btnNextSol",nextSolicitudes);
 	$("#paginacionSolicitudes").on("click","#btnPreviousSol",previousSolicitudes);
+	$("#btnClearFiltroSol").on("click",alumnosSolicitudes);
+	$("#paginacionSolicitudes").on("click","#btnPagFS",filtrarSolicitudes);
+	$("#paginacionSolicitudes").on("click","#btnNextFS",nextSolicitudesFiltro);
+	$("#paginacionSolicitudes").on("click","#btnPreviousFS",previousSolicitudesFiltro);
 
 }
 $(document).on("ready",admin);
