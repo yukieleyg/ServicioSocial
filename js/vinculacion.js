@@ -2,10 +2,14 @@ var admin = function (){
 	var parametros="";
 	const TECLA_ENTER = 13;
 	var alumnosSolicitudes = function(){
-		var pagina 		= $(this).val();
-		if(pagina== ""){
+		var pagina 	= $(this).val();
+		if(pagina == ""){
 			pagina =1;
 		}
+		funcionAlumnosSolicitudes(pagina);
+		
+	}
+	var funcionAlumnosSolicitudes = function(pagina){
 		var parametros 	= "opc=muestraSolicitudes"+"&pagina="+pagina;
 		$.ajax({
 			type: "POST",
@@ -33,12 +37,13 @@ var admin = function (){
 					$("#paginacionSolicitudes").html("");
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
+					$("#opcionActualSol").val(2);
+					$("#paginaActualSol").val(pagina);
 				}
 				
 			}
 		});
 
-		
 	}
 	var aceptarSolicitudes = function(){
 		var solicitud 	= $(this).val();
@@ -59,7 +64,13 @@ var admin = function (){
 							data: parametros,
 							success: function(data){
 								if(data.respuesta){
-									alumnosSolicitudes();
+										var opcion = 	("#opcionActualSol");
+										var pagina =	("#paginaActualSol");
+										if(opcion == 1){
+												funcionFiltrarSolicitudes(pagina);
+										}else{
+												funcionAlumnosSolicitudes(pagina);
+										}
 									Materialize.toast("Solicitud Aceptada",4000);
 								}else{
 									$.alert("Esta solicitud no ha podido ser aceptada");
@@ -97,7 +108,13 @@ var admin = function (){
 								success: function(data){
 									if(data.respuesta){
 										Materialize.toast("Solicitud Rechazada",4000);
-										alumnosSolicitudes();
+										var opcion = 	("#opcionActualSol");
+										var pagina =("#paginaActualSol");
+										if(opcion == 1){
+												funcionFiltrarSolicitudes(pagina);
+										}else{
+												funcionAlumnosSolicitudes(pagina);
+										}
 									}else{
 										$alert("Esta solicitud no ha podido ser rechazada");
 									}
@@ -371,11 +388,15 @@ var admin = function (){
 			$("#btnagregardpto").attr('disabled',false);
 		}
 	}
-	var muestralistaprogramas=function(){
+	var muestralistaprogramas =function(){
 		var pagina = $(this).val();
 		if(pagina== ""){
 			pagina =1;
 		}
+		funMuestraListaProgramas(pagina);
+
+	}
+	var funMuestraListaProgramas = function(pagina){
 		var parametros="opc=tablaprogramas"+"&pagina="+pagina;
 		$.ajax({
 			type:"POST",
@@ -384,6 +405,7 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
+					$("#opcionActual").val(1);
 					$("#opcionProgramas").find('option').remove();
 		    		$("#filtroProgramas").prop('selectedIndex',0);
 					$("#btnClearFiltroPro").attr('disabled','disabled');
@@ -398,12 +420,12 @@ var admin = function (){
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
+					$("#paginaActualG").val(pagina);
+
 				}
 			}
 		});
-
 	}
-
     var disponibilidad=function(){
     	var username = $("#txtdepusuario").val(); // Get username textbox using $(this)
         var Result = $('#resultado'); // Get ID of the result DIV where we display the results
@@ -597,16 +619,34 @@ var admin = function (){
 													if(dataM.respuestaM){
 														Materialize.toast("Modificación Exitosa",4000);
 														$('#divDetalles').hide();
-														alumnosSolicitudes();
+														var opcion = 	("#opcionActualSol");
+														var pagina = 	("#paginaActualSol");
+														if(opcion == 1){
+																funcionFiltrarSolicitudes(pagina);
+														}else{
+																funcionAlumnosSolicitudes(pagina);
+														}
 													}else{
 														if(dataM.borrarExp){
 															$.alert("No se puede modificar la solicitud");
 															$('#divDetalles').hide();
-															alumnosSolicitudes();	
+															var opcion = 	("#opcionActualSol");
+															var pagina = 	("#paginaActualSol");
+																if(opcion == 1){
+																		funcionFiltrarSolicitudes(pagina);
+																}else{
+																		funcionAlumnosSolicitudes(pagina);
+																}
 														}else{
 															$.alert("No se puede modificar el estado de la solicitud debido a que tiene un expediente existente");
 															$('#divDetalles').hide();
-															alumnosSolicitudes();											
+															var opcion = 	("#opcionActualSol");
+															var pagina = 	("#paginaActualSol");
+																if(opcion == 1){
+																		funcionFiltrarSolicitudes(pagina);
+																}else{
+																		funcionAlumnosSolicitudes(pagina);
+																}										
 														}								
 													}
 												}
@@ -621,7 +661,13 @@ var admin = function (){
 							}
 						});
 					}else{
-						alumnosSolicitudes();
+							var opcion = 	("#opcionActualSol");
+						 	var pagina = 	("#paginaActualSol");
+							if(opcion == 1){
+									funcionFiltrarSolicitudes(pagina);
+							}else{
+									funcionAlumnosSolicitudes(pagina);
+							}
 					}
 				}
 			});	
@@ -714,8 +760,14 @@ var admin = function (){
 							url: "../datos/vinculacion.php",
 							data: parametros,
 							success: function(data){
-								if(data.respuesta){
-									muestralistaprogramas();
+								if(data.respuesta){						
+									var opcion = $("#opcionActual").val();
+									var pagina = $("#paginaActualG").val();
+									if(opcion == 1){
+											funMuestraListaProgramas(pagina);
+									}else{
+											mostrarProgramasFiltro(pagina);
+									}
 									Materialize.toast("Programa Aceptado",4000);
 								}else{
 									$.alert("El programa no ha podido ser aceptado");
@@ -751,7 +803,13 @@ var admin = function (){
 								data: parametros,
 								success: function(data){
 									if(data.respuesta){
-										muestralistaprogramas();
+										var opcion = $("#opcionActual").val();
+										var pagina = $("#paginaActualG").val();
+										if(opcion == 1){
+											funMuestraListaProgramas(pagina);
+										}else{
+											mostrarProgramasFiltro(pagina);
+										}
 										Materialize.toast("Programa Rechazado",4000);
 									}else{
 										$.alert("El programa no ha podido ser rechazado");
@@ -807,7 +865,13 @@ var admin = function (){
 										success:function(data){
 											if(data.respuesta){
 												Materialize.toast("Modificación Exitosa",4000);
-												muestralistaprogramas();
+												var opcion = $("#opcionActual").val();
+												var pagina = $("#paginaActualG").val();
+												if(opcion == 1){
+														funMuestraListaProgramas(pagina);
+												}else{
+														mostrarProgramasFiltro(pagina);
+												}
 											}
 										}
 									});
@@ -815,7 +879,13 @@ var admin = function (){
 							},
 							cancel: function () {
 								$.alert("El programa no fue modificado");
-								muestralistaprogramas();
+								var opcion = $("#opcionActual").val();
+								var pagina = $("#paginaActualG").val();
+									if(opcion == 1){
+											funMuestraListaProgramas(pagina);
+									}else{
+											mostrarProgramasFiltro(pagina);
+									}
 
 							}
 						}
@@ -840,21 +910,42 @@ var admin = function (){
 												success:function(data){
 													if(data.respuesta){
 														Materialize.toast("Modificación Exitosa",4000);
-														muestralistaprogramas();
-													}
+														var opcion = $("#opcionActual").val();
+														var pagina = $("#paginaActualG").val();
+															if(opcion == 1){
+																	funMuestraListaProgramas(pagina);
+															}else{
+																	mostrarProgramasFiltro(pagina);
+															}
+
+														}	
 												}
 											});
 										}
 									},
 									cancel: function () {
 										$.alert("El programa no fue modificado");
-										muestralistaprogramas();
+										var opcion = $("#opcionActual").val();
+										var pagina = $("#paginaActualG").val();
+											if(opcion == 1){
+													funMuestraListaProgramas(pagina);
+											}else{
+													mostrarProgramasFiltro(pagina);
+											}
+
 
 									}
 								}
 							});
 					}else{
-						muestralistaprogramas();
+						var opcion = $("#opcionActual").val();
+						var pagina = $("#paginaActualG").val();
+							if(opcion == 1){
+									funMuestraListaProgramas(pagina);
+							}else{
+									mostrarProgramasFiltro(pagina);
+							}
+
 					}
 				}
 			}
@@ -1251,31 +1342,6 @@ var admin = function (){
 			pagina = 1;
 		}
 		funcionFiltrarSolicitudes(pagina);
-		/*var filtro 	= $("#filtroSolicitudes").val();
-		var opcion 	= $("#opcionSolicitudes").val();
-		var periodo 	= $("#filtroPeriodo").val();
-		var nocontrol 	= $("#filtroNoControlSolicitudes").val();
-		var parametros = "opc=filtrarSolicitudes"+"&filtro="+filtro+"&opcion="+opcion+"&periodo="+periodo+"&nocontrol="+nocontrol+"&pagina="+pagina;
-		$.ajax({
-			type:"POST",
-			dataType: "json",
-			url: "../datos/vinculacion.php",
-			data: parametros,
-			success: function (data){
-				if(data.respuesta== true){
-					$("#tablaSolicitudes").html("");
-					$("#tablaSolicitudes").append(data.tabla);
-					$("#paginacionSolicitudes").html("");
-					$("#btnFiltroSolicitudes").attr('disabled','disabled');
-					$("#btnClearFiltroSol").attr('disabled',false);
-					$("#paginacionSolicitudes").append(data.botones);
-					$("#listadoSolicitudes").show();
-				}else{
-					Materialize.toast("No se encuentran solicitudes que coincidan",5000);
-				}
-			}
-
-		});*/
 	}
 	var filtrarProgramas = function(){
 		var pagina 	= $(this).val();
@@ -1292,6 +1358,8 @@ var admin = function (){
 			data: parametros,
 			success: function (data){
 				if(data.respuesta== true){
+					$("#opcionActual").val(2);
+					$('#opcVinculacion>div').hide();
 					$("#btnFiltroProgramas").attr('disabled','disabled');
 					$("#btnClearFiltroPro").attr('disabled',false);
 					$("#filtroProgramas").attr('disabled','disabled');
@@ -1303,9 +1371,14 @@ var admin = function (){
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
+					$("#paginaActualG").val(pagina);
+/*
+					$("#opcionActual").val(1);
+					$('#opcVinculacion>div').hide();
 
+*/
 				}else{
-					Materialize.toast("No hay programas que coincidan",5000);
+					Materialize.toast("No hay programas que coincidan",3000);
 				}
 			}
 
@@ -1389,6 +1462,7 @@ var admin = function (){
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
+					$("#paginaActualG").val(pagina);
 				}
 			}
 		});
@@ -1426,7 +1500,7 @@ var admin = function (){
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
-
+					$("#paginaActualG").val(pagina);
 				}
 			}
 
@@ -1464,6 +1538,8 @@ var admin = function (){
 					$("#paginacionSolicitudes").html("");
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
+					$("#paginaActualSol").val(pagina);
+					$("#opcionActualSol").val(1);
 				}
 				
 			}
@@ -1530,6 +1606,8 @@ var admin = function (){
 					$("#btnClearFiltroSol").attr('disabled',false);
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
+					$("#paginaActualSol").val(pagina);
+					$("#opcionActualSol").val(2);
 				}else{
 					Materialize.toast("No se encuentran solicitudes que coincidan",5000);
 				}

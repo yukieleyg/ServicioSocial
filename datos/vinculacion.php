@@ -95,7 +95,7 @@ function muestraSolicitudes(){
 
 	}
 	$respuesta = true;
-	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta , 'botones'=> $botones);
+	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta , 'botones'=> $botones, 'pagina' => $pagina);
 	print json_encode($arrayJSON);
 }
 function aceptarSolicitudes (){
@@ -560,7 +560,7 @@ function llenaDptoProgramas(){
   			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
 		}
 		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaN">';
-		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones );
+		$arrayJSON = array('renglones' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones,'pagActual' => $pagina);
 		print json_encode($arrayJSON);
 	}
 	
@@ -1143,6 +1143,7 @@ function llenaDptoProgramas(){
 		$cn 	= conexionLocal();
 		$resCount = mysql_query($qrySolicitudCount);
 		$rowCount = mysql_fetch_array($resCount);
+		//var_dump($qrySolicitudCount);
 		$total 	  = $rowCount['TOTAL'];
 		$totalBotones 	= intval($total/10);
 		$restante 		= $total - ($totalBotones*10);
@@ -1172,10 +1173,10 @@ function llenaDptoProgramas(){
 			}else{
 	  			$botones .= '<li class="waves-effect" id="btnNextFS"><a><i class="material-icons">chevron_right</i></a></li>';
 			}
-			$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaSF">';
+			$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
 		}
 		$tabla		.= "</tr>";
-		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones, 'pagina' => $pagina);
 		print json_encode($arrayJSON);
 
 	}
@@ -1303,7 +1304,7 @@ function llenaDptoProgramas(){
 			}
 			$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagina">';
 		}
-		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones,'pagActual' => $pagina);
 		print json_encode($arrayJSON);
 	}
 	function registroAlumnos(){
