@@ -1141,6 +1141,70 @@ var admin = function (){
 			}
 		});
 	}
+	var muestraRegAlumnos2	=	function(){
+		/*metodo alterno para paginacion..incompleto*/
+		$('#opcVinculacion>div').hide();
+		$("#registroAlumnos").show();
+		$("#load").show("slow");
+		var parametros ="opc=totRegistroAlumnos";
+			$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	$("#tblcandidatos").html("");
+				$("#tblcandidatos").append(data.tabla);
+				$("#load").hide("slow");
+				$("#registroAlumnos").show();
+				$("#ulpagregalm").html("");
+    			$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+				var npags=data.total/100;
+				if(data.total%100!=0){
+					npags=parseInt(npags)+1;
+				}
+				for (var i = 1; i <= npags; i++) {
+					$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos">'+i+'</li>');
+				}
+				$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+
+				alert(npags);
+				//$("#ncontrol").val($("#btnasignaprog").val());
+			 }			 
+			}
+		});
+	}
+	var pagAlmReg=function(){
+		//alert(pag);
+		var pagina 	=	$(this).val();
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/vinculacion.php",
+			data: "opc=registroAlumnos&pagina="+pagina,
+			success: function(data){
+			 if(data.respuesta==true){
+			 	$(this).addClass('active');
+
+			 	$("#tblcandidatos").html("");
+				$("#tblcandidatos").append(data.tabla);
+				$("#load").hide("slow");
+				$("#registroAlumnos").show();
+				$("#ulpagregalm").html("");
+    			$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+			/*	for (var i = 1; i <= npags; i++) {
+					$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos">'+i+'</li>');
+				}
+				$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+*/
+				//alert(npags);
+				//$("#ncontrol").val($("#btnasignaprog").val());
+			 }			 
+			}
+		});
+	}
+	
 	var btnprogramasAsignacion =function(){
 		var ncontrol= $(this).val();
 		programasAsignacion(ncontrol);
@@ -1597,6 +1661,7 @@ var admin = function (){
 	$("#paginacionSolicitudes").on("click","#btnPagFS",filtrarSolicitudes);
 	$("#paginacionSolicitudes").on("click","#btnNextFS",nextSolicitudesFiltro);
 	$("#paginacionSolicitudes").on("click","#btnPreviousFS",previousSolicitudesFiltro);
+	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
 
 }
 $(document).on("ready",admin);

@@ -59,6 +59,11 @@
 		<table id="tblcandidatos" class="highlight">
 
 		</table>
+		<div id="btnPagRegAlm">
+		<ul class="pagination" id="ulpagregalm">
+   
+  </ul>
+		</div>
 
 	</form>
 	<br>

@@ -1308,6 +1308,54 @@ function llenaDptoProgramas(){
 	}
 	function registroAlumnos(){
 		//funcion que devuelve a los alumnos candidatos 
+		/*complementario a muestraregAlumnos2 en JS
+		$paginaI 	=$_POST['pagina'];
+		$paginaI-=1;
+		$respuesta 	= true;
+		$mensaje 	="";
+		$cn 		= conexionBD();
+		$qrycandidatos 	= sprintf("SELECT alm.ALUCTR, 
+							TRUNCATE((inf.calcac/p.placre),2) AS PORC, 
+							inf.CARCVE 
+							FROM DALUMN alm 
+							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR 
+							INNER JOIN DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE 
+							INNER JOIN DCLIST dc ON dc.ALUCTR=alm.ALUCTR 
+							WHERE (inf.CALSIT=1 AND dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
+												AND alm.ALUCTR NOT IN (SELECT sol.cveusuario_1 FROM %s.solicitudes sol where estado!=2)) 
+							HAVING PORC>=0.7 
+							ORDER BY `PORC` DESC, alm.ALUCTR ASC LIMIT 100 OFFSET %s",$GLOBALS['bdss'],($paginaI*100));
+		*/
+		$respuesta 	= true;
+		$mensaje 	="";
+		$cn 		= conexionBD();
+		$qrycandidatos 	= sprintf("SELECT alm.ALUCTR, 
+							TRUNCATE((inf.calcac/p.placre),2) AS PORC, 
+							inf.CARCVE 
+							FROM DALUMN alm 
+							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR 
+							INNER JOIN DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE 
+							INNER JOIN DCLIST dc ON dc.ALUCTR=alm.ALUCTR 
+							WHERE (inf.CALSIT=1 AND dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
+												AND alm.ALUCTR NOT IN (SELECT sol.cveusuario_1 FROM %s.solicitudes sol where estado!=2)) 
+							HAVING PORC>=0.7 
+							ORDER BY `PORC` DESC, alm.ALUCTR ",$GLOBALS['bdss']);
+
+		$res = mysql_query($qrycandidatos);
+		//print mysql_num_rows($res);
+		$tbl="<tr><th>No. Control</th><th>PORCENTAJE</th><th>Asignación</th></tr>";
+		while($row = mysql_fetch_array($res)){
+			$nc=$row["ALUCTR"];
+			$porcentaje=$row["PORC"];
+			$tbl.="<tr><td>".$nc."</td><td id='".$nc."''>".$porcentaje."</td>".
+			"<td><button class='btn-floating waves-effect waves-light blue' id='btnasignaprog' value='".$nc."'><i class='material-icons'>library_add</i></button></td></tr>";
+			$respuesta=true;
+		}
+
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tabla'=>$tbl);
+		print json_encode($arrayJSON); 
+	}
+	function totRegistroAlumnos(){
 		$respuesta 	= true;
 		$mensaje 	="";
 		$cn 		= conexionBD();
@@ -1323,16 +1371,8 @@ function llenaDptoProgramas(){
 							HAVING PORC>=0.7 
 							ORDER BY `PORC` DESC, alm.ALUCTR ASC",$GLOBALS['bdss']);
 		$res = mysql_query($qrycandidatos);
-		$tbl="<tr><th>No. Control</th><th>PORCENTAJE</th><th>Asignación</th></tr>";
-		while($row = mysql_fetch_array($res)){
-			$nc=$row["ALUCTR"];
-			$porcentaje=$row["PORC"];
-			$tbl.="<tr><td>".$nc."</td><td id='".$nc."''>".$porcentaje."</td>".
-			"<td><button class='btn-floating waves-effect waves-light blue' id='btnasignaprog' value='".$nc."'><i class='material-icons'>library_add</i></button></td></tr>";
-			$respuesta=true;
-		}
-
-		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tabla'=>$tbl);
+		$total=mysql_num_rows($res);
+		$arrayJSON = array('respuesta' => $respuesta, 'total'=>$total);
 		print json_encode($arrayJSON); 
 	}
 	function programasAsignacion(){
@@ -1723,6 +1763,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'guardarNuevaClave':
 			guardarNuevaClave();
+			break;
+		case 'totRegistroAlumnos':
+			totRegistroAlumnos();# code...
 			break;
 		default:
 		# code...
