@@ -25,7 +25,9 @@
 	<div class="row">
 		<div id="listaAlumnos" class="col s12">
 			<table id="tablaAlumnos" class="highlight">			
-			</table>	
+			</table>
+			<div id="paginacionAlumnos">
+			</div>	
 		</div>
 	</div>
 </div>

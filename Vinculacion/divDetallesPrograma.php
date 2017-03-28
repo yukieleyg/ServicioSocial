@@ -5,7 +5,7 @@
 		<div class="row" style="margin-left:100px;"  name="divGrales">
 			<div class="col s10" style="text-align:left">
 				<label >Nombre</label>
-				<input id="nombre" type="text" disabled><br>	
+				<input id="nombrePrograma" type="text" disabled><br>	
 				<label> Tipo de Actividades</label>
 				<input id ="tipodeactividades" type="text" disabled><br>	
 				<label>Descripcion de Actividades</label>

@@ -18,6 +18,7 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
+					$('#opcVinculacion>div').hide();
 					$("#filtroSolicitudes").attr('disabled',false);
 					$("#opcionSolicitudes").attr('disabled',false);
 					$("#filtroPeriodo").attr('disabled',false);
@@ -37,8 +38,10 @@ var admin = function (){
 					$("#paginacionSolicitudes").html("");
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
-					$("#opcionActualSol").val(2);
+					$("#opcionActualSol").val(2);					
 					$("#paginaActualSol").val(pagina);
+				}else{
+					funcionAlumnosSolicitudes(1);
 				}
 				
 			}
@@ -64,14 +67,14 @@ var admin = function (){
 							data: parametros,
 							success: function(data){
 								if(data.respuesta){
-										var opcion = 	("#opcionActualSol");
-										var pagina =	("#paginaActualSol");
+										var opcion = 	$("#opcionActualSol").val();
+										var pagina =	$("#paginaActualSol").val();
 										if(opcion == 1){
 												funcionFiltrarSolicitudes(pagina);
 										}else{
 												funcionAlumnosSolicitudes(pagina);
 										}
-									Materialize.toast("Solicitud Aceptada",4000);
+										Materialize.toast("Solicitud Aceptada",4000);
 								}else{
 									$.alert("Esta solicitud no ha podido ser aceptada");
 								}
@@ -108,8 +111,8 @@ var admin = function (){
 								success: function(data){
 									if(data.respuesta){
 										Materialize.toast("Solicitud Rechazada",4000);
-										var opcion = 	("#opcionActualSol");
-										var pagina =("#paginaActualSol");
+										var opcion = 	$("#opcionActualSol").val();
+										var pagina = 	$("#paginaActualSol").val();
 										if(opcion == 1){
 												funcionFiltrarSolicitudes(pagina);
 										}else{
@@ -393,6 +396,7 @@ var admin = function (){
 		if(pagina== ""){
 			pagina =1;
 		}
+		$("#paginaActualG").val(1);
 		funMuestraListaProgramas(pagina);
 
 	}
@@ -421,6 +425,9 @@ var admin = function (){
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
 					$("#paginaActualG").val(pagina);
+
+				}else{
+					funMuestraListaProgramas(1);
 
 				}
 			}
@@ -619,8 +626,8 @@ var admin = function (){
 													if(dataM.respuestaM){
 														Materialize.toast("Modificación Exitosa",4000);
 														$('#divDetalles').hide();
-														var opcion = 	("#opcionActualSol");
-														var pagina = 	("#paginaActualSol");
+														var opcion = 	$("#opcionActualSol").val();
+														var pagina = 	$("#paginaActualSol").val();
 														if(opcion == 1){
 																funcionFiltrarSolicitudes(pagina);
 														}else{
@@ -630,8 +637,8 @@ var admin = function (){
 														if(dataM.borrarExp){
 															$.alert("No se puede modificar la solicitud");
 															$('#divDetalles').hide();
-															var opcion = 	("#opcionActualSol");
-															var pagina = 	("#paginaActualSol");
+															var opcion = 	$("#opcionActualSol").val();
+															var pagina = 	$("#paginaActualSol").val();
 																if(opcion == 1){
 																		funcionFiltrarSolicitudes(pagina);
 																}else{
@@ -640,8 +647,8 @@ var admin = function (){
 														}else{
 															$.alert("No se puede modificar el estado de la solicitud debido a que tiene un expediente existente");
 															$('#divDetalles').hide();
-															var opcion = 	("#opcionActualSol");
-															var pagina = 	("#paginaActualSol");
+															var opcion = 	$("#opcionActualSol").val();
+															var pagina = 	$("#paginaActualSol").val();
 																if(opcion == 1){
 																		funcionFiltrarSolicitudes(pagina);
 																}else{
@@ -661,8 +668,8 @@ var admin = function (){
 							}
 						});
 					}else{
-							var opcion = 	("#opcionActualSol");
-						 	var pagina = 	("#paginaActualSol");
+							var opcion = 	$("#opcionActualSol").val();
+						 	var pagina = 	$("#paginaActualSol").val();
 							if(opcion == 1){
 									funcionFiltrarSolicitudes(pagina);
 							}else{
@@ -692,7 +699,7 @@ var admin = function (){
 			success: function(data){
 				if(data.respuesta){
 					$("#idPrograma").val(programa);
-					$('#nombre').val(data.nombreP);
+					$('#nombrePrograma').val(data.nombreP);
 					$('#tipodeactividades').val(data.tipoAct);
 					$('#desAct').val(data.desAct);
 					$('#tipoprograma').val(data.tipoP);
@@ -952,7 +959,15 @@ var admin = function (){
 		});
 	}
 	var muestraAlumnos = function(){
-		var parametros ="opc=muestraAlumnos";
+		var pagina = 1;
+		funMuestraAlumnos(1);
+	}
+	var btnMuestraAlumnos = function(){
+		var pagina 	= $(this).val();
+		funMuestraAlumnos(pagina);
+	}
+	var funMuestraAlumnos = function(pagina){
+		var parametros ="opc=muestraAlumnos"+"&pagina="+pagina;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -960,17 +975,17 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
+					$("#paginacionAlumnos").html("");
 					$('#opcVinculacion>div').hide();
 					$("#tablaAlumnos").html("");
 					$("#tablaAlumnos").append(data.tabla);
+					$("#paginacionAlumnos").append(data.botones);
 					$("#listadoAlumnos").show();
 				}
 				
 			}
 		});
-		
 	}
-
 	var collapseAll=function(){
 		$(".collapsible-header").removeClass(function(){
 		    return "active";
@@ -1456,6 +1471,8 @@ var admin = function (){
 			data:parametros,
 			success: function(data){
 				if(data.respuesta==true){
+					$("#opcionActual").val(1);
+					$('#opcVinculacion>div').hide();
 					$('#opcVinculacion>div').hide();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.renglones);
@@ -1495,12 +1512,16 @@ var admin = function (){
 			data: parametros,
 			success: function (data){
 				if(data.respuesta== true){
+					$("#opcionActual").val(2);
+					$('#opcVinculacion>div').hide();
 					$("#tblprogramas").html("");
 					$("#tblprogramas").append(data.tabla);
 					$("#botonesProgramas").html("");
 					$("#botonesProgramas").append(data.botones);
 					$("#listadoProgramas").show();
 					$("#paginaActualG").val(pagina);
+				}else{
+					funMuestraListaProgramas(1);
 				}
 			}
 
@@ -1539,7 +1560,9 @@ var admin = function (){
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
 					$("#paginaActualSol").val(pagina);
-					$("#opcionActualSol").val(1);
+					$("#opcionActualSol").val(2);
+				}else{
+					funcionAlumnosSolicitudes(1);
 				}
 				
 			}
@@ -1593,6 +1616,7 @@ var admin = function (){
 			data: parametros,
 			success: function (data){
 				if(data.respuesta== true){
+					$('#opcVinculacion>div').hide();
 					$("#filtroSolicitudes").attr('disabled','disabled');
 					$("#opcionSolicitudes").attr('disabled','disabled');
 					$("#filtroPeriodo").attr('disabled','disabled');
@@ -1607,8 +1631,9 @@ var admin = function (){
 					$("#paginacionSolicitudes").append(data.botones);
 					$("#listadoSolicitudes").show();
 					$("#paginaActualSol").val(pagina);
-					$("#opcionActualSol").val(2);
+					$("#opcionActualSol").val(1);
 				}else{
+					funcionAlumnosSolicitudes(1);
 					Materialize.toast("No se encuentran solicitudes que coincidan",5000);
 				}
 			}
@@ -1673,6 +1698,7 @@ var admin = function (){
 	$("#paginacionSolicitudes").on("click","#btnPagFS",filtrarSolicitudes);
 	$("#paginacionSolicitudes").on("click","#btnNextFS",nextSolicitudesFiltro);
 	$("#paginacionSolicitudes").on("click","#btnPreviousFS",previousSolicitudesFiltro);
+	$("#paginacionAlumnos").on("click","#btnPag",btnMuestraAlumnos);
 
 }
 $(document).on("ready",admin);

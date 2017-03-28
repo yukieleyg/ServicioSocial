@@ -20,8 +20,8 @@ function muestraSolicitudes(){
 	$tabla		.=	"<th>Programa</th>";
 	$tabla		.=	"<th></th>";
 	$tabla		.=	"</thead></tr>";
-
 	while($row0 = mysql_fetch_array($res0)){
+		$respuesta = true;
 		$cveusuario  = $row0["cveusuario_1"];
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
@@ -94,7 +94,6 @@ function muestraSolicitudes(){
 		$botones = '';
 
 	}
-	$respuesta = true;
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta , 'botones'=> $botones, 'pagina' => $pagina);
 	print json_encode($arrayJSON);
 }
@@ -102,7 +101,7 @@ function aceptarSolicitudes (){
 	$respuesta	= false;
 	$solicitud	= "'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
+	$qryvalida	= sprintf("SELECT * FROM solicitudes WHERE cvesolicitud =%s",$solicitud);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$usuario	= $row["cveusuario_1"];
@@ -112,7 +111,7 @@ function aceptarSolicitudes (){
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
 		$respuesta = true;
-		$consulta = sprintf("insert into expedientes values(NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+		$consulta = sprintf("INSERT INTO  expedientes VALUES (NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
 		$resconsulta= mysql_query($consulta);	
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
@@ -123,7 +122,7 @@ function rechazarSolicitudes (){
 	$respuesta	= false;
 	$solicitud	= "'".$_POST["solicitud"]."'";
 	$cn 		= conexionLocal();
-	$qryvalida	= sprintf("SELECT * from solicitudes where cvesolicitud =%s",$solicitud);
+	$qryvalida	= sprintf("SELECT * FROM  solicitudes WHERE cvesolicitud =%s",$solicitud);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
 	$usuario	= $row["cveusuario_1"];
@@ -791,14 +790,7 @@ function llenaDptoProgramas(){
 		if($totalS>0){
 			$solicitudes = true;
 		}
-		/*$qrySolicitudes = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes where cveprograma_1 = %s and estado =1",$programa);
-		$res 			= mysql_query($qrySolicitudes);
-		$row 			= mysql_fetch_array($res);
-		$totalS 		= $row['TOTAL'];
-		$solicitudesAceptadas 	= false;
-		if($totalS>0){
-			$solicitudesAceptadas = true;
-		}*/
+
 		$arrayJSON 		= array('modificar' => $modificar, 'solicitudes' => $solicitudes, 'modificarVacantes' => $modificarVacantes);
 		print json_encode($arrayJSON);
 	}
@@ -831,6 +823,9 @@ function llenaDptoProgramas(){
 	function muestraAlumnos(){
 		$respuesta	= true;
 		$cn 		= conexionLocal();
+		mysql_query("set NAMES utf8");
+		$pagina 	= $_POST['pagina'];
+		$inicio 	= ($pagina-1)*10;
 		$tabla		= "";
 		$tabla		.= "<thead><tr>";
 		$tabla		.= "<th>No. de Control</th>";
@@ -844,8 +839,13 @@ function llenaDptoProgramas(){
 		$qryExpediente  = sprintf("SELECT E.estado, P.cveprograma, D.cvedependencia, E.cveusuario_1, D.nomdependencia, S.pdocve_1 FROM expedientes E 
 				INNER JOIN programas P on P.cveprograma = E.cveprograma_1 
 				INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud");
-		$res = mysql_query($qryExpediente);
+				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud LIMIT 10 OFFSET %s",$inicio);
+		$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL FROM expedientes E 
+				INNER JOIN programas P on P.cveprograma = E.cveprograma_1 
+				INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud LIMIT 10 OFFSET %s",$inicio);
+		$res 		= mysql_query($qryExpediente);
+		$resCount 	= mysql_query($qryExpedienteCount); 
 		while($rowE = mysql_fetch_array($res)){
 			$periodo 		= $rowE['pdocve_1'];
 			$ncontrol 		= $rowE['cveusuario_1'];
@@ -874,7 +874,37 @@ function llenaDptoProgramas(){
 							<i class='material-icons'>open_in_new</i></button></td></tr>";
 
 		}
-		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		$row 			= mysql_fetch_array($resCount);
+		$totalProgramas = $row['TOTAL'];
+		$botonesTotal 	= intval($totalProgramas/10);
+		$restante = $totalProgramas-($botonesTotal*10);
+		if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousN"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina==$botonesTotal){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaN">';
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
 
@@ -1075,6 +1105,8 @@ function llenaDptoProgramas(){
 		$filtro  		= $_POST['filtro'];
 		$periodo  		= $_POST['periodo'];
 		$nocontrol 		= $_POST['nocontrol'];
+		$qrySolicitud = "";
+		$qrySolicitudCount ="";
 		$respuesta	= false;
 		$cn 		= conexionLocal();
 		$tabla		= "";
@@ -1085,7 +1117,6 @@ function llenaDptoProgramas(){
 		$tabla		.=	"<th>Programa</th>";
 		$tabla		.=	"<th></th>";
 		$tabla		.=	"</thead></tr>";
-		mysql_query("set NAMES utf8");
 		switch ($filtro) {
 			case '0':
 				$qrySolicitud = sprintf("SELECT P.nombre, S.cveusuario_1, S.cvesolicitud, S.estado FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.estado = %s AND S.pdocve_1 =%s LIMIT 10 OFFSET %s",$opcion, $periodo,$inicio);
@@ -1100,7 +1131,7 @@ function llenaDptoProgramas(){
 				$qrySolicitudCount = sprintf("SELECT COUNT(*) AS TOTAL FROM solicitudes S INNER JOIN programas P ON S.cveprograma_1 = P.cveprograma WHERE S.cveusuario_1 = %s ",$nocontrol);
 				break;
 		}
-		$res = mysql_query($qrySolicitud);
+		$res = mysql_query($qrySolicitud,$cn);
 		while($row0 = mysql_fetch_array($res)){
 			$respuesta 		= true;
 			$cveusuario  	= $row0["cveusuario_1"];
@@ -1143,7 +1174,6 @@ function llenaDptoProgramas(){
 		$cn 	= conexionLocal();
 		$resCount = mysql_query($qrySolicitudCount);
 		$rowCount = mysql_fetch_array($resCount);
-		//var_dump($qrySolicitudCount);
 		$total 	  = $rowCount['TOTAL'];
 		$totalBotones 	= intval($total/10);
 		$restante 		= $total - ($totalBotones*10);
