@@ -968,6 +968,11 @@ var admin = function (){
 	}
 	var funMuestraAlumnos = function(pagina){
 		var parametros ="opc=muestraAlumnos"+"&pagina="+pagina;
+		$('#opcVinculacion>div').hide();
+		$("#tablaAlumnos").html("");
+		$("#paginacionAlumnos").html(" ");
+		$("#loadAlumnos").show();
+		$("#listadoAlumnos").show();
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -975,14 +980,10 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
-					$("#paginacionAlumnos").html("");
-					$('#opcVinculacion>div').hide();
-					$("#tablaAlumnos").html("");
 					$("#tablaAlumnos").append(data.tabla);
 					$("#paginacionAlumnos").append(data.botones);
-					$("#listadoAlumnos").show();
+					$("#loadAlumnos").hide();
 				}
-				
 			}
 		});
 	}

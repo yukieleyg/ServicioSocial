@@ -843,7 +843,7 @@ function llenaDptoProgramas(){
 		$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL FROM expedientes E 
 				INNER JOIN programas P on P.cveprograma = E.cveprograma_1 
 				INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud LIMIT 10 OFFSET %s",$inicio);
+				INNER JOIN solicitudes S on E.cvesolicitud = S.cvesolicitud");
 		$res 		= mysql_query($qryExpediente);
 		$resCount 	= mysql_query($qryExpedienteCount); 
 		while($rowE = mysql_fetch_array($res)){
