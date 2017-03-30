@@ -1122,6 +1122,8 @@ var admin = function (){
 	}
 	var muestraRegAlumnos	=	function(){
 		$('#opcVinculacion>div').hide();
+		$("#tblcandidatos").html("");
+		$("#ulpagregalm").html("");
 		$("#registroAlumnos").show();
 		$("#load").show("slow");
 		var parametros ="opc=registroAlumnos";
@@ -1132,7 +1134,7 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 			 if(data.respuesta==true){
-			 	$("#tblcandidatos").html("");
+			 	
 				$("#tblcandidatos").append(data.tabla);
 				$("#load").hide("slow");
 				$("#registroAlumnos").show();
@@ -1180,7 +1182,7 @@ var admin = function (){
 			 	$(this).addClass('active');
 			 	$("#tblcandidatos").html("");
 				$("#tblcandidatos").append(data.candidatos);
-				$("#load").hide("slow");
+				
 				$("#registroAlumnos").show();
 				$("#ulpagregalm").html("");
 				if(pagina==1){
@@ -1202,6 +1204,7 @@ var admin = function (){
 				}else{
 					$("#ulpagregalm").append('<li class="" id="btnpagcandidatos" value='+(pagina+1)+'><a href="#!"><i class="material-icons">chevron_right</i></a></li>');	
 				}
+				$("#load").hide("slow");
 			 }			 
 			}
 		});
