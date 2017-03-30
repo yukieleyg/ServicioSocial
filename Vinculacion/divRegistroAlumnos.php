@@ -56,10 +56,12 @@
 		<div class="progress" id="load" style="display: none;">
 			<div class="indeterminate"></div>
 		</div>
-		<table id="tblcandidatos" class="highlight">
+		<table id="tblcandidatos" class="highlight centered">
 
 		</table>
 		<div id="btnPagRegAlm">
+		<input type="hidden" id="paginaactual">
+		<input type="hidden" id="paginastotal">
 		<ul class="pagination" id="ulpagregalm">
    
   </ul>

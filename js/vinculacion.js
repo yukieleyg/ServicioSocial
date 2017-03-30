@@ -1136,70 +1136,72 @@ var admin = function (){
 				$("#tblcandidatos").append(data.tabla);
 				$("#load").hide("slow");
 				$("#registroAlumnos").show();
-				//$("#ncontrol").val($("#btnasignaprog").val());
-			 }			 
-			}
-		});
-	}
-	var muestraRegAlumnos2	=	function(){
-		/*metodo alterno para paginacion..incompleto*/
-		$('#opcVinculacion>div').hide();
-		$("#registroAlumnos").show();
-		$("#load").show("slow");
-		var parametros ="opc=totRegistroAlumnos";
-			$.ajax({
-			type: "POST",
-			dataType: "json",
-			url:"../datos/vinculacion.php",
-			data: parametros,
-			success: function(data){
-			 if(data.respuesta==true){
-			 	$("#tblcandidatos").html("");
-				$("#tblcandidatos").append(data.tabla);
-				$("#load").hide("slow");
-				$("#registroAlumnos").show();
 				$("#ulpagregalm").html("");
-    			$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
-				var npags=data.total/100;
+    		var npags=data.total/100;
 				if(data.total%100!=0){
 					npags=parseInt(npags)+1;
 				}
-				for (var i = 1; i <= npags; i++) {
-					$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos">'+i+'</li>');
+				$("#paginastotal").val(npags);
+				if(npags>1){
+					$("#ulpagregalm").append('<li class="disabled" id="btnpagcandidatos"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+					$("#ulpagregalm").append('<li class="teal lighten-2 active" value=1 id="btnpagcandidatos"><a>1</a></li>');
+					for (var i = 2; i <= npags; i++) {
+						$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos"><a>'+i+'</a></li>');
+					}
+						$("#ulpagregalm").append('<li class="" id="btnpagcandidatos" value=2><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
 				}
-				$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+				var tabla="<tr><th>No. Control</th><th>PORCENTAJE AVANCE</th><th>Asignación</th></tr>";
 
-				alert(npags);
-				//$("#ncontrol").val($("#btnasignaprog").val());
+				$.each(data.tablaArray, function( i, opc ) {
+					tabla+="<tr><td>"+opc[0]+"</td>"+
+							"<td id='"+opc[0]+"''>"+opc[1]+"</td>"+
+							"<td><button class='btn-floating waves-effect waves-light blue' id='btnasignaprog' value='"+opc[0]+"'><i class='material-icons'>library_add</i></button></td></tr>"; 	
+			 	});
+				$("#tblcandidatos").html("");
+				$("#tblcandidatos").append(tabla);$("#load").hide("slow");
+				$("#registroAlumnos").show();
 			 }			 
 			}
 		});
 	}
+	
 	var pagAlmReg=function(){
-		//alert(pag);
+		//devuelve contenido para una sola pagina, limite 100 (controlado en php) totRegistroAlumnos
+		var pagstotal=$("#paginastotal").val();
 		var pagina 	=	$(this).val();
+		$("#paginaactual").val(pagina);
 		$.ajax({
 			type: "POST",
 			dataType: "json",
 			url:"../datos/vinculacion.php",
-			data: "opc=registroAlumnos&pagina="+pagina,
+			data: "opc=totRegistroAlumnos&pagina="+pagina,
 			success: function(data){
 			 if(data.respuesta==true){
 			 	$(this).addClass('active');
-
 			 	$("#tblcandidatos").html("");
-				$("#tblcandidatos").append(data.tabla);
+				$("#tblcandidatos").append(data.candidatos);
 				$("#load").hide("slow");
 				$("#registroAlumnos").show();
 				$("#ulpagregalm").html("");
-    			$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
-			/*	for (var i = 1; i <= npags; i++) {
-					$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos">'+i+'</li>');
+				if(pagina==1){
+					$("#ulpagregalm").append('<li class="disabled" id="btnpagcandidatos"><a href="#!"><i class="material-icons">chevron_left</i></a></li>');
+				}else{
+						$("#ulpagregalm").append('<li class="" id="btnpagcandidatos" value='+(pagina-1)+'><a href="#!"><i class="material-icons">chevron_left</i></a></li>');	
 				}
-				$("#ulpagregalm").append('<li class="disabled"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
-*/
-				//alert(npags);
-				//$("#ncontrol").val($("#btnasignaprog").val());
+
+				for (var i = 1; i <= pagstotal; i++) {
+					if(i==pagina){
+						$("#ulpagregalm").append('<li class="teal lighten-2 active" value='+i+' id="btnpagcandidatos"><a>'+i+'</a></li>');
+						continue;
+					}
+					$("#ulpagregalm").append('<li class="waves-effect" value='+i+' id="btnpagcandidatos"><a>'+i+'</a></li>');
+				}
+
+				if(pagina>=pagstotal){
+					$("#ulpagregalm").append('<li class="disabled" id="btnpagcandidatos"><a href="#!"><i class="material-icons">chevron_right</i></a></li>');
+				}else{
+					$("#ulpagregalm").append('<li class="" id="btnpagcandidatos" value='+(pagina+1)+'><a href="#!"><i class="material-icons">chevron_right</i></a></li>');	
+				}
 			 }			 
 			}
 		});
@@ -1210,7 +1212,6 @@ var admin = function (){
 		programasAsignacion(ncontrol);
 	}
 	var programasAsignacion	=	function(ncontrol){
-		
 		var parametros ="opc=programasAsignacion&ncontrol="+ncontrol;
 			$.ajax({
 			type: "POST",
