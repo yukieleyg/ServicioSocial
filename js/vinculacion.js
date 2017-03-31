@@ -958,6 +958,21 @@ var admin = function (){
 			}
 		});
 	}
+	var nextMuestraAlumnos= function(){
+		var paginaActual = $("#valorPaginaA").val();
+		var pagina 		 = parseInt(paginaActual)+1;
+		if(pagina== ""){
+			pagina =1;
+		}
+		funMuestraAlumnos(pagina);
+	}
+
+	var previousMuestraAlumnos= function(){
+		var paginaActual 	= $("#valorPaginaA").val();
+		var pagina 			= parseInt(paginaActual)-1;
+		funMuestraAlumnos(pagina);
+	
+	}
 	var muestraAlumnos = function(){
 		var pagina = 1;
 		funMuestraAlumnos(1);
@@ -983,7 +998,11 @@ var admin = function (){
 					$("#tablaAlumnos").append(data.tabla);
 					$("#paginacionAlumnos").append(data.botones);
 					$("#loadAlumnos").hide();
-				}
+					$("#valorPaginaAF").val(pagina);
+				}else{
+			 		Materialize.toast("No se encuentran registros",4000);
+			 		muestraAlumnos();
+			 	}
 			}
 		});
 	}
@@ -1209,10 +1228,35 @@ var admin = function (){
 		muestraTarjeta();		
 	}
 	var filtrarAlumnos = function(){
+		var pagina = 1;
+		funFiltrarAlumnos(pagina);
+	}
+	var btnFiltrarAlumnos =	function(){
+		var pagina = $(this).val();
+		funFiltrarAlumnos(pagina);
+	}
+	var nextMuestraAlumnosF = function(){
+		var paginaActual = $("#valorPaginaAF").val();
+		var pagina 		 = parseInt(paginaActual)+1;
+		funFiltrarAlumnos(pagina);
+	}
+
+	var previousMuestraAlumnosF = function(){
+		var paginaActual 	= $("#valorPaginaAF").val();
+		var pagina 			= parseInt(paginaActual)-1;
+		funFiltrarAlumnos(pagina);
+	
+	} 
+	var funFiltrarAlumnos = function(pagina){
+		$('#opcVinculacion>div').hide();
+		$("#tablaAlumnos").html("");
+		$("#paginacionAlumnos").html(" ");
+		$("#loadAlumnos").show();
+		$("#listadoAlumnos").show();
 		var filtro 		= $("#filtroAlumnos").val();
 		var opcion		= $("#opcionAlumnos").val();
 		var periodo 	= $("#filtroPeriodoAlumnos").val();
-		var parametros = "opc=filtrarAlumnos"+"&opcion="+opcion+"&filtro="+filtro+"&periodo="+periodo;
+		var parametros = "opc=filtrarAlumnos"+"&opcion="+opcion+"&filtro="+filtro+"&periodo="+periodo+"&pagina="+pagina;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -1220,9 +1264,14 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 			 if(data.respuesta==true){
-			 	$("#tablaAlumnos").html("");
 				$("#tablaAlumnos").append(data.tabla);
+				$("#paginacionAlumnos").append(data.botones);
 				$("#listadoAlumnos").show();
+				$("#loadAlumnos").hide();
+				$("#valorPaginaAF").val(pagina);
+			 }else{
+			 	Materialize.toast("No se encuentran registros",4000);
+			 	muestraAlumnos();
 			 }			 
 			}
 		});
@@ -1700,6 +1749,14 @@ var admin = function (){
 	$("#paginacionSolicitudes").on("click","#btnNextFS",nextSolicitudesFiltro);
 	$("#paginacionSolicitudes").on("click","#btnPreviousFS",previousSolicitudesFiltro);
 	$("#paginacionAlumnos").on("click","#btnPag",btnMuestraAlumnos);
+	$("#paginacionAlumnos").on("click","#btnPagF",btnFiltrarAlumnos);
+	$("#paginacionAlumnos").on("click","#btnNextN",nextMuestraAlumnos);
+	$("#paginacionAlumnos").on("click","#btnPreviousN",previousMuestraAlumnos);
+	$("#paginacionAlumnos").on("click", "#btnPreviousF",nextMuestraAlumnosF);
+	$("#paginacionAlumnos").on("click", "#btnNextF",previousMuestraAlumnosF);
+
+	
+
 
 }
 $(document).on("ready",admin);

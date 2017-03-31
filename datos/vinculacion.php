@@ -903,7 +903,7 @@ function llenaDptoProgramas(){
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
 		}
-		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaN">';
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaA">';
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
@@ -1039,6 +1039,8 @@ function llenaDptoProgramas(){
 		$opcion  		= $_POST['opcion'];
 		$filtro  		= $_POST['filtro'];
 		$periodo  		= $_POST['periodo'];
+		$pagina 	= $_POST['pagina'];
+		$inicio 	= ($pagina-1)*10;
 		$respuesta	= true;
 		$cn 		= conexionLocal();
 		$tabla		= "";
@@ -1058,17 +1060,46 @@ function llenaDptoProgramas(){
 										INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
 										INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
 										INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-										WHERE E.estado = %s AND S.pdocve_1 =%s", $opcion, $periodo);
+										WHERE E.estado = %s AND S.pdocve_1 =%s LIMIT 10 OFFSET %s", $opcion, $periodo, $inicio);
+			$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL
+										FROM expedientes E 
+										INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud 
+										INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+										INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+										WHERE E.estado = %s AND S.pdocve_1 =%s ", $opcion, $periodo);
 		//}else if(){
-		}else {
+		}else if($filtro == '1'){
 			$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
 							FROM expedientes E 
 							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
 							INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
 							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-							WHERE S.pdocve_1 =%s", $periodo);
+							WHERE S.pdocve_1 =%s AND P.cvedependencia = %s LIMIT 10 OFFSET %s", $periodo, $opcion, $inicio);
+			$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL
+							FROM expedientes E 
+							INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
+							INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+							WHERE S.pdocve_1 =%s AND P.cvedependencia = %s", $periodo, $opcion);
+		}else{
+			if($filtro == '0' and $opcion == '0'){
+				$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
+								FROM expedientes E 
+								INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
+								INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+								INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+								WHERE S.pdocve_1 =%s LIMIT 10 OFFSET %s", $periodo, $inicio);
+				$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL
+								FROM expedientes E 
+								INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
+								INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
+								INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
+								WHERE S.pdocve_1 =%s", $periodo);
+			}else{
+			}
 		}
 		$res 			= mysql_query($qryExpediente);
+		$resCount 		= mysql_query($qryExpedienteCount);
 		while($rowE = mysql_fetch_array($res)){
 			$ncontrol 		= $rowE['cveusuario_1'];
 			$estado 		= $rowE['estado'];
@@ -1090,11 +1121,39 @@ function llenaDptoProgramas(){
 			$apellidoma	=	$rowA["ALUAPM"];
 			$carrera 	=   $rowA["CARNOM"];
 			$cvecarrera =   $rowA["CARCVE"];
-			if(($filtro == '0' and $cvecarrera == $opcion)OR($filtro == '1' and $cvedependencia == $opcion)OR($filtro == '2')OR($filtro == '0' and $opcion == '0')){
-				$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+			$tabla 		.= "<tr><td>".$ncontrol."</td><td>".$nombre." ".$apellidopa." ".$apellidoma."</td><td>".$carrera."</td><td>".$nombreDependencia."</td><td>".$estadoN."</td><td style='text-align: center'>".$periodo."</td><td style='text-align: center'><button class='btn-floating btn-small waves-effect waves-light blue' id='expediente' target=_blank aling='right' value='".$ncontrol."'><i class='material-icons'>open_in_new</i></button></td></tr>";
+		}
+		$row 			= mysql_fetch_array($resCount);
+		$totalProgramas = $row['TOTAL'];
+		$botonesTotal 	= intval($totalProgramas/10);
+		$restante = $totalProgramas-($botonesTotal*10);
+		if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousF"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla);
+		if($pagina==$botonesTotal){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextF"><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaAF">';
+		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
 		print json_encode($arrayJSON);
 	}
 	function filtrarSolicitudes(){
