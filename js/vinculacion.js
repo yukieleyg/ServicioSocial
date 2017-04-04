@@ -1607,6 +1607,33 @@ var admin = function (){
 
 		});
 	}
+
+	var cargacsvcorreos= function(){
+		var ruta=$("#txtcargacsv").val();
+		console.log(ruta);
+
+		var parametros = "opc=cargarcsv"+"&ruta="+ruta;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/cargarcursomoodle.php",
+			data: parametros,
+			success: function (data){
+				if(data.respuesta== true){
+					
+				}else{
+					
+				}
+			}
+
+		});
+		
+		alert("CSV");
+	}
+	var mostrarcargacsv =function(){
+		alert("pantalla subir csv");
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1666,6 +1693,8 @@ var admin = function (){
 	$("#paginacionSolicitudes").on("click","#btnNextFS",nextSolicitudesFiltro);
 	$("#paginacionSolicitudes").on("click","#btnPreviousFS",previousSolicitudesFiltro);
 	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
+	$("#menusubirCSV").on("click",mostrarcargacsv)
+	$("#matchemails").on("click",cargacsvcorreos);
 
 }
 $(document).on("ready",admin);
