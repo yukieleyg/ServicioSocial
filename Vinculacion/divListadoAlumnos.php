@@ -4,7 +4,6 @@
 			<div class="col s3">
 				<select name="filtroAlumnos" id="filtroAlumnos">
 					<option value="" disabled selected>Seleccione...</option>
-					<option value="0">Carrera</option>
 					<option value="1">Empresa</option>
 					<option value="2">Estado</option>
 				</select>	

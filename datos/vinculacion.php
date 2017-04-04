@@ -1081,19 +1081,6 @@ function llenaDptoProgramas(){
 							INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
 							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
 							WHERE S.pdocve_1 =%s AND P.cvedependencia = %s", $periodo, $opcion);
-		}else{
-				$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
-								FROM expedientes E 
-								INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
-								INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
-								INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-								WHERE S.pdocve_1 =%s LIMIT 10 OFFSET %s", $periodo, $inicio);
-				$qryExpedienteCount  = sprintf("SELECT COUNT(*) AS TOTAL
-								FROM expedientes E 
-								INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
-								INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
-								INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
-								WHERE S.pdocve_1 =%s", $periodo);
 		}
 		$res 			= mysql_query($qryExpediente);
 		$resCount 		= mysql_query($qryExpedienteCount);
