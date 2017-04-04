@@ -1382,31 +1382,78 @@ function llenaDptoProgramas(){
 	}
 	function registroAlumnos(){
 		//funcion que devuelve a los alumnos candidatos 
-		$respuesta 	= true;
+		/*complementario a muestraregAlumnos2 en JS*/
+		$respuesta 	= false;
 		$mensaje 	="";
 		$cn 		= conexionBD();
 		$qrycandidatos 	= sprintf("SELECT alm.ALUCTR, 
 							TRUNCATE((inf.calcac/p.placre),2) AS PORC, 
 							inf.CARCVE 
 							FROM DALUMN alm 
-							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR 
+							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR and inf.calsit=1
 							INNER JOIN DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE 
 							INNER JOIN DCLIST dc ON dc.ALUCTR=alm.ALUCTR 
-							WHERE (inf.CALSIT=1 AND dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
+							WHERE (dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
 												AND alm.ALUCTR NOT IN (SELECT sol.cveusuario_1 FROM %s.solicitudes sol where estado!=2)) 
 							HAVING PORC>=0.7 
-							ORDER BY `PORC` DESC, alm.ALUCTR ASC",$GLOBALS['bdss']);
+							ORDER BY `PORC` DESC, alm.ALUCTR ",$GLOBALS['bdss']);
+		
 		$res = mysql_query($qrycandidatos);
+		//echo mysql_errno($cn) . ": " . mysql_error($cn). "\n";
+		$total= mysql_num_rows($res);
+
+
 		$tbl="<tr><th>No. Control</th><th>PORCENTAJE</th><th>Asignación</th></tr>";
+		$arreglo=Array();
+	//EL 100 ES ARBITRARIO NECESITO VARIABLE
+		$primerapagina=100;
+		if($total<$primerapagina)
+			$primerapagina=$total;
+
+		for ($i = 0; $i <$primerapagina; $i++) {
+		    //echo "{".$arreglo[$i][0].",".$arreglo[$i][1]."}";
+		    $row = mysql_fetch_assoc($res);
+		    $nc=$row["ALUCTR"];
+			$porcentaje=$row["PORC"];
+			$respuesta=true;
+
+			$arreglo[]=array($nc,$porcentaje);
+
+		}
+
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tablaArray'=>$arreglo, 'total'=>$total);
+		print json_encode($arrayJSON); 
+	}
+	function totRegistroAlumnos(){
+		$paginaI 	=$_POST['pagina'];
+		$paginaI-=1;
+		$respuesta 	= true;
+		$mensaje 	="No se pudieron obtener los candidatos";
+		$cn 		= conexionBD();
+
+		$qrycandidatos 	= sprintf("SELECT alm.ALUCTR, 
+							TRUNCATE((inf.calcac/p.placre),2) AS PORC, 
+							inf.CARCVE 
+							FROM DALUMN alm 
+							INNER JOIN DCALUM inf on alm.ALUCTR=inf.ALUCTR and inf.calsit=1
+							INNER JOIN DPLANE p on inf.PLACVE=p.PLACVE and inf.CARCVE=p.CARCVE 
+							INNER JOIN DCLIST dc ON dc.ALUCTR=alm.ALUCTR 
+							WHERE (dc.PDOCVE = (select PARFOL1 from DPARAM where PARCVE= 'PRDO') 
+												AND alm.ALUCTR NOT IN (SELECT sol.cveusuario_1 FROM %s.solicitudes sol where estado!=2)) 
+							HAVING PORC>=0.7 
+							ORDER BY `PORC` DESC, alm.ALUCTR ASC LIMIT 100 OFFSET %s",$GLOBALS['bdss'],($paginaI*100));
+		$res = mysql_query($qrycandidatos);
+		$tbl="<tr><th>No. Control</th><th>PORCENTAJE AVANCE</th><th>Asignación</th></tr>";
 		while($row = mysql_fetch_array($res)){
 			$nc=$row["ALUCTR"];
 			$porcentaje=$row["PORC"];
 			$tbl.="<tr><td>".$nc."</td><td id='".$nc."''>".$porcentaje."</td>".
 			"<td><button class='btn-floating waves-effect waves-light blue' id='btnasignaprog' value='".$nc."'><i class='material-icons'>library_add</i></button></td></tr>";
 			$respuesta=true;
+			$mensaje="";
 		}
 
-		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tabla'=>$tbl);
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje,'candidatos'=>$tbl);
 		print json_encode($arrayJSON); 
 	}
 	function programasAsignacion(){
@@ -1436,7 +1483,7 @@ function llenaDptoProgramas(){
 								FROM programas p 
 								INNER JOIN carrera_programa cp ON cp.cveprograma=p.cveprograma 
 								INNER JOIN carreras c ON c.carcve=cp.cvecarrera 
-								WHERE cp.cvecarrera=0 OR cp.cvecarrera=%s
+								WHERE (cp.cvecarrera=0 OR cp.cvecarrera=%s) AND vacantes>=1
 								ORDER BY p.nombre ASC",$cvecarrera);
 		$res= mysql_query($qryprogramas,$cn);
 		$renglones = array();
@@ -1797,6 +1844,12 @@ function llenaDptoProgramas(){
 			break;
 		case 'guardarNuevaClave':
 			guardarNuevaClave();
+			break;
+		case 'totRegistroAlumnos':
+			totRegistroAlumnos();# code...
+			break;
+		case 'registroAlumnos':
+			registroAlumnos();
 			break;
 		default:
 		# code...
