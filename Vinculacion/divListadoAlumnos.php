@@ -12,7 +12,7 @@
 			<div class="col s5" id="opcionAlumnosNC">
 					<input type="number" id="filtroNoControlAlumnos">
 			</div>
-			<div class="col s5" id="opcionAlumnosDiv">
+			<div class="col s3" id="opcionAlumnosDiv">
 				<select name="opcionAlumnos" id="opcionAlumnos"></select>	
 			</div>
 			<div class="col s2" id="opcionPeriodoAlumnos">	
@@ -20,6 +20,9 @@
 			</div>
 			<div class="col s2">	
 				<button class="btn" id="btnFiltroAlumnos"><i class="material-icons">search</i></button>
+			</div>		
+			<div class="col s2">
+					<button class="btn" id="btnClearFiltroAlu"><i class="material-icons">loop</i></button>
 			</div>
 	</div>		
 	<div class="row">
