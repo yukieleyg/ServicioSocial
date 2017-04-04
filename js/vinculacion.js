@@ -998,7 +998,7 @@ var admin = function (){
 					$("#tablaAlumnos").append(data.tabla);
 					$("#paginacionAlumnos").append(data.botones);
 					$("#loadAlumnos").hide();
-					$("#valorPaginaAF").val(pagina);
+					$("#valorPaginaA").val(pagina);
 				}else{
 			 		Materialize.toast("No se encuentran registros",4000);
 			 		muestraAlumnos();
@@ -1269,6 +1269,7 @@ var admin = function (){
 				$("#listadoAlumnos").show();
 				$("#loadAlumnos").hide();
 				$("#valorPaginaAF").val(pagina);
+				console.log(pagina);
 			 }else{
 			 	Materialize.toast("No se encuentran registros",4000);
 			 	muestraAlumnos();
@@ -1752,8 +1753,8 @@ var admin = function (){
 	$("#paginacionAlumnos").on("click","#btnPagF",btnFiltrarAlumnos);
 	$("#paginacionAlumnos").on("click","#btnNextN",nextMuestraAlumnos);
 	$("#paginacionAlumnos").on("click","#btnPreviousN",previousMuestraAlumnos);
-	$("#paginacionAlumnos").on("click", "#btnPreviousF",nextMuestraAlumnosF);
-	$("#paginacionAlumnos").on("click", "#btnNextF",previousMuestraAlumnosF);
+	$("#paginacionAlumnos").on("click", "#btnPreviousFA",previousMuestraAlumnosF);
+	$("#paginacionAlumnos").on("click", "#btnNextFA",nextMuestraAlumnosF);
 
 	
 

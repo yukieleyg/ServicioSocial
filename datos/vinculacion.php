@@ -1082,7 +1082,6 @@ function llenaDptoProgramas(){
 							INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
 							WHERE S.pdocve_1 =%s AND P.cvedependencia = %s", $periodo, $opcion);
 		}else{
-			if($filtro == '0' and $opcion == '0'){
 				$qryExpediente  = sprintf("SELECT E.cveusuario_1, E.estado, E.cveprograma_1, D.cvedependencia, D.nomdependencia 
 								FROM expedientes E 
 								INNER JOIN solicitudes S ON S.cvesolicitud = E.cvesolicitud
@@ -1095,8 +1094,6 @@ function llenaDptoProgramas(){
 								INNER JOIN programas P ON P.cveprograma = S.cveprograma_1
 								INNER JOIN dependencias D on D.cvedependencia = P.cvedependencia
 								WHERE S.pdocve_1 =%s", $periodo);
-			}else{
-			}
 		}
 		$res 			= mysql_query($qryExpediente);
 		$resCount 		= mysql_query($qryExpedienteCount);
@@ -1137,7 +1134,7 @@ function llenaDptoProgramas(){
 		if($pagina==1){
 			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
 		}else{	
-			$botones .= '<li class="waves-effect" id="btnPreviousF"><a><i class="material-icons">chevron_left</i></a></li>  ';
+			$botones .= '<li class="waves-effect" id="btnPreviousFA"><a><i class="material-icons">chevron_left</i></a></li>  ';
 		}
 		for($i=0;$i<$botonesTotal;$i++){
 			$numero  	= $i+1;
@@ -1150,7 +1147,7 @@ function llenaDptoProgramas(){
 		if($pagina==$botonesTotal){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
-  			$botones .= '<li class="waves-effect" id="btnNextF"><a><i class="material-icons">chevron_right</i></a></li>';
+  			$botones .= '<li class="waves-effect" id="btnNextFA"><a><i class="material-icons">chevron_right</i></a></li>';
 		}
 		$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPaginaAF">';
 		$arrayJSON 	= array('respuesta'=> $respuesta, 'tabla' => $tabla, 'botones' => $botones);
