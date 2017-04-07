@@ -61,7 +61,7 @@ table tr th{
 #rowProgramas, #rowSolicitudes, #rowAlumnos, #divClearFiltroSol{
 	margin-left: -5%;
 }
-#rowFiltroProgramas, #rowFiltroSolicitudes, #rowFiltroAlumnos{
+#rowFiltroProgramas, #rowFiltroSolicitudes{
 	margin-left: 15%
 }
 #opcionSolicitudesNC,#opcionAlumnosNC,#opcionPeriodo{

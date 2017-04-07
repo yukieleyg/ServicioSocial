@@ -1,7 +1,9 @@
-<div class="container">
+<div class="container"><br>
 	<h1>Listado de Programas</h1>
 	<div class="row inline" id="rowFiltroProgramas"><br>
 		<div class="col s3">
+			<input type="hidden" id="paginaActualG">
+			<input type="hidden" id="opcionActual">
 			<select name="filtroProgramas" id="filtroProgramas">
 				<option value="" disabled selected>Seleccione...</option>
 				<option value="3">Estado</option>
