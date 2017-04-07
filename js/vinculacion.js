@@ -1527,6 +1527,10 @@ var admin = function (){
 		});
 	}
 	var muestraResultados = function(){
+		$('#loadResultados').show();
+		$('#ulResultados').html("");
+		$('#opcVinculacion>div').hide();
+		$('#listadoResultados').show("slow");
 		var parametros ="opc=mostrarResultados";
 		event.preventDefault();
 		$.ajax({
@@ -1536,10 +1540,10 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta==true){
-					$('#opcVinculacion>div').hide();
-					$('#listadoResultados').show("slow");
+					$('#loadResultados').hide();
 					$('#ulResultados').html(data.ul);
-					
+					$("#opcionResultados").material_select();
+					$("#filtroResultados").material_select();
 				}
 			}
 
@@ -1778,6 +1782,32 @@ var admin = function (){
 		$("#filtroPeriodoAlumnos").material_select();
 		muestraAlumnos();
 	}
+	var filtroResultadosSem = function(){
+		$('#loadResultados').show();
+		$('#ulResultados').html("");
+		$('#opcVinculacion>div').hide();
+		$('#listadoResultados').show("slow");
+		var filtro = $("#filtroResultados").val();
+		var opcion = $("#opcionResultados").val();
+		var parametros ="opc=mostrarResultadosFiltro"+"&filtro="+filtro+"&opcion="+opcion;
+		event.preventDefault();
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					$('#loadResultados').hide();
+					$('#ulResultados').html(data.ul);
+					$("#opcionResultados").material_select();
+					$("#filtroResultados").material_select();
+				}
+			}
+
+		});
+
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1844,6 +1874,7 @@ var admin = function (){
 	$("#paginacionAlumnos").on("click", "#btnNextFA",nextMuestraAlumnosF);
 	$("#btnClearFiltroAlu").on("click",clearFiltroAlu);
 	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
+	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
 
 }
 $(document).on("ready",admin);
