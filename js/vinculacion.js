@@ -1932,13 +1932,9 @@ var admin = function (){
 	$("#paginacionAlumnos").on("click", "#btnNextFA",nextMuestraAlumnosF);
 	$("#btnClearFiltroAlu").on("click",clearFiltroAlu);
 	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
-<<<<<<< HEAD
 	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#matchemails").on("click",cargacsvcorreos);
-	
-=======
 	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
->>>>>>> 59f0678c3f8df1af44a8ebc94ee1e62e1712c276
 
 }
 $(document).on("ready",admin);
