@@ -1611,6 +1611,15 @@ var admin = function (){
 	var cargacsvcorreos= function(){
 		var ruta=$("#txtcargacsv").val();
 		console.log(ruta);
+		$("#tblalmNOencontrados").html("");
+		$("#tblalmencontrados").html("");
+		var tablaencontrados="";
+		var tablaNOencontrados="";
+		var cuerpoCorreo='Pasa a la oficina de servicio social a actualizar tu informacion';
+		if(ruta==""){
+			Materialize.toast("Seleccione un archivo",2000);
+			return;
+		}
 
 		var parametros = "opc=cargarcsv"+"&ruta="+ruta;
 		$.ajax({
@@ -1620,7 +1629,23 @@ var admin = function (){
 			data: parametros,
 			success: function (data){
 				if(data.respuesta== true){
-					
+					$("#correosEn").val(data.alumnos);
+					tablaencontrados+="<tr><th>No. Control</th><th>Nombre</th><th>Correo</th></tr>";
+					$.each(data.alumnos, function( i, value ) {
+						tablaencontrados+="<tr><td>"+value['ncontrol']+"</td><td>"+value['nombre']+"</td><td>"+value['correo']+"</td></tr>";
+					});
+					tablaNOencontrados+="<thead><tr><th>Correos</th></tr></thead>";
+					$.each(data.noencontrados, function( i, almcorreo ) {
+						tablaNOencontrados+="<tr><td><a href='mailto:"+almcorreo+"?Subject=Actualiza tus datos&Body="+cuerpoCorreo+"'>"+almcorreo+"</a></td></tr>";
+					});
+					$("#tblalmNOencontrados").append(tablaNOencontrados);
+					//$("#almnoencontrados").addClass("active");
+					$("#tblalmencontrados").append(tablaencontrados);
+					$("#tabNOencontrados").addClass("active");
+  					$(".collapsible").collapsible({accordion: false});
+  					if(tablaencontrados!=""){
+  						//$("#btnRegAlm").show();
+  					}
 				}else{
 					
 				}
@@ -1631,6 +1656,8 @@ var admin = function (){
 		alert("CSV");
 	}
 	var mostrarcargacsv =function(){
+		$('#opcVinculacion>div').hide();
+		$("#registroAlumnosSubirCurso").show("slow");
 		alert("pantalla subir csv");
 	}
 
@@ -1695,6 +1722,7 @@ var admin = function (){
 	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
 	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#matchemails").on("click",cargacsvcorreos);
+	
 
 }
 $(document).on("ready",admin);

@@ -23,14 +23,13 @@ function cargarcsv(){
     $correosaprobados	=obtenerCorreos($csvarray,100);//solo los que tienen 100
     $correosTomaroncurso=obtenerCorreos($csvarray,0);//0 para que traiga todos
     print obtenerAlumnos($correosTomaroncurso);
-    //print_r( $correosTomaroncurso);
     registrarAlumnos($correosaprobados);
-    //print_r($csvarray);
 
 }
 function obtenerAlumnos($correos){
+	$respuesta=false;
 	$listacorreos=strtoupper(separacomas($correos));
-	echo $listacorreos;
+	//echo $listacorreos;
 	$cn=conexionBD();
 	$qrydatosalm= sprintf("SELECT aluctr,concat(aluapp,' ',aluapm,' ',alunom) as nombre, UPPER(alumai) as correo
 							FROM dalumn
@@ -45,22 +44,12 @@ function obtenerAlumnos($correos){
 			$respuesta=true;
 			//eliminar de lista de correos original
 			$listacorreos=str_replace('"'.$correo.'"',"",$listacorreos);
-			$arregloEncontrados[]=array($nc,$nom,$correo);
+			$arregloEncontrados[]=array('ncontrol'=>$nc,'nombre'=>$nom,'correo'=>$correo);
 
 	}
-	/*$listacorreos=str_replace(",", "", $listacorreos);
-	$listacorreos=str_replace(" ", "", $listacorreos);
-	$listacorreos=str_replace('""', "\n", $listacorreos);
-	$listacorreos=str_replace('"', "", $listacorreos);*/
-	//$string = 'Ruchika < ruchika@example.com >';
     $pattern = '/[a-z0-9_\-\+]+@[a-z0-9\-]+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
     preg_match_all($pattern, $listacorreos, $noencontrados);
-   // var_dump($matches[0]);
-    //print_r($arregloEncontrados);
-	//print_r($noencontrados[0]);
-	//print json_encode($arreglo);
-	//echo $listacorreos;
-	$arrayJSON = array('alumnos'=>$arregloEncontrados,'noencontrados'=>$noencontrados[0]);
+	$arrayJSON = array('respuesta'=>$respuesta,'alumnos'=>$arregloEncontrados,'noencontrados'=>$noencontrados[0]);
 	//print json_encode($arrayJSON); 
 	return json_encode($arrayJSON); 
 }
