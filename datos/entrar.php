@@ -31,7 +31,7 @@ function validaentrada()
 	}else{
 		$clave		= "'".md5($_POST["clave"])."'";
 		$cn 		= conexionLocal();
-		$qryvalida 	= sprintf("select * from usuarios where cveusuario=%s and clave=%s limit 1", $usuario,$clave);
+		$qryvalida 	= sprintf("select * from usuarios where (cveusuario=%s and clave=%s and curso=1) limit 1", $usuario,$clave);
 		$res 		= mysql_query($qryvalida);
 		if($row = mysql_fetch_array($res)){
 			$respuesta 	= true;
