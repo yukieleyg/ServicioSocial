@@ -65,11 +65,11 @@ function separacomas($correos){
 function registrarAlumnos($correos){
 	$listacorreos=separacomas($correos);
 
-	$qrymatchemails = sprintf("INSERT INTO usuarios (cveusuario,clave,tipousuario)
-						SELECT aluctr,md5(ALUPAS),3
+	$qrymatchemails = sprintf("INSERT INTO usuarios (cveusuario,clave,tipousuario,curso)
+						SELECT aluctr,md5(ALUPAS),3,1
 						FROM %s.dalumn
 						WHERE alumai in (%s)
-						ON DUPLICATE KEY UPDATE cveusuario=cveusuario",$GLOBALS['sie'],$listacorreos);
+						ON DUPLICATE KEY UPDATE cveusuario=cveusuario,curso=1",$GLOBALS['sie'],$listacorreos);
 	$cn = conexionLocal();
 	$respuesta = false;
 	$resInsert =mysql_query($qrymatchemails);
