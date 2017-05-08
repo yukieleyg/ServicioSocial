@@ -2,17 +2,23 @@
 	<h4>Subir archivo</h4>
 <div class="row center">
 	<div class="file-field input-field" style="width:70%;">
+	<form action="../datos/upload.php" method="post" enctype="multipart/form-data" id="frmcurso">
 		<div class="btn">
 			<span>File</span>
-			<input type="file" accept=".csv">
+			<input type="file"  accept=".csv" name="fileToUpload" id="fileToUpload">
+			<!--<input type="file" accept=".csv" id="csvupload" name="csvupload">-->
+
 		</div>
 
 			<div class="file-path-wrapper">
 				<input class="file-path validate" type="text" id="txtcargacsv">		
 			</div>
-		</div>
+			<input class="waves-effect waves-light blue lighten-1 btn right" type="submit" value="Subir" name="submit">
+	</form>		
+	</div>
+    
+    
 
-	<a class="waves-effect waves-light blue lighten-1 btn" id="matchemails">Subir</a>
 </div>
 <hr>
 <br>
