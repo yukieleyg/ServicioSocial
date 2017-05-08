@@ -2,7 +2,12 @@
 require_once('conexion.php');
 function cargarcsv(){
 	# Open the File.
+	$mensaje="Falta columna Direccion de correo";
+	$colCorreo=$colCalif=false;
+
+	$posCorreo=$posCalif=0;
 	$ruta= $_POST['ruta'];
+
     if (($handle = fopen($ruta, "r")) !== FALSE) {
         # Set the parent multidimensional array key to 0.
         $nn = 0;
@@ -10,18 +15,51 @@ function cargarcsv(){
             # Count the total keys in the row.
             $c = count($data);
             # Populate the multidimensional array.
-            for ($x=0;$x<$c;$x++)
-            {
-                $csvarray[$nn][$x] = $data[$x];
-            }
+            
+            if($nn==0){
+	            for ($x=0;$x<$c;$x++)
+	            {
+	            	//$csvarray[$nn][$x] = $data[$x];
+	                if(!$colCorreo && utf8_encode($data[$x])=="Dirección de correo"){
+	                	$colCorreo=true;
+	                	$csvarray[$nn]["correo"] ="Dirección de correo";
+	                	$posCorreo=$x;
+	                	echo "Correo ".$posCorreo;
+	                }
+	                if(!$colCalif && utf8_encode($data[$x])=="Total del curso (Real)"){
+	                	$colCalif=true;
+	                	$csvarray[$nn]["calif"] ="Total del curso (Real)";
+	                	$posCalif=$x;
+	                	echo "calificacion ".$posCalif;
+	                }
+	            }
+	            $nn=1;
+	            continue;
+	            //$nn=1;	
+            } 
+            
+            	$csvarray[$nn]["correo"] = $data[$posCorreo];
+            	$csvarray[$nn]["calif"] = $data[$posCalif];
+
+            //$csvarray[$nn][$x] = $data[$x];
             $nn++;
         }
         # Close the File.
         fclose($handle);
+    }else{
+    	$mensaje="No se ha podido cargar el archivo";
+		return $mensaje; 
     }
     # Print the contents of the multidimensional array.
-    $correosaprobados	=obtenerCorreos($csvarray,100);//solo los que tienen 100
-    $correosTomaroncurso=obtenerCorreos($csvarray,0);//0 para que traiga todos
+    if($colCorreo && $colCalif){
+    	$correosaprobados	=obtenerCorreos($csvarray,100);//solo los que tienen 100
+    	$correosTomaroncurso=obtenerCorreos($csvarray,0);//0 para que traiga todos
+	}else{
+		$mensaje="Verifique que exista la columna Dirección de correo y/o Total del curso (Real)";
+		echo $mensaje;
+		return $mensaje; 
+	}
+   
     print obtenerAlumnos($correosTomaroncurso);
     registrarAlumnos($correosaprobados);
 
@@ -85,10 +123,12 @@ function registrarAlumnos($correos){
 function obtenerCorreos($csvarray,$cal){
 	$relacionCorreos= array();
 	$aprobado=$cal;
+	echo count($csvarray);
 	for($i=1;$i<count($csvarray);$i++ ){
-		$email=$csvarray[$i][5];
+		$email=$csvarray[$i]["correo"];
 		//solo los que tengan 100¿?
-		$calificacion=$csvarray[$i][count($csvarray[$i])-2];
+		//$calificacion=$csvarray[$i][count($csvarray[$i])-2];
+		$calificacion=$csvarray[$i]["calif"];
 		if($calificacion>=$aprobado){
 			$relacionCorreos[$i]=array('correo' =>$email ,'calificacion'=>$calificacion );
 		}	
