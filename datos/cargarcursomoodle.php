@@ -1,12 +1,26 @@
 <?php 
 require_once('conexion.php');
-function cargarcsv(){
+
+	$uploads_dir = 'C:\xampp\htdocs\RESIDENCIAS\ServicioSocial\datos\uploads';
+	$archivo=$_FILES["file"]["name"];
+	$ruta=$uploads_dir."\\".$archivo;
+	//echo $archivo;
+    if (is_uploaded_file($_FILES["file"]['tmp_name']))
+    {       
+        //in case you want to move  the file in uploads directory
+         if(move_uploaded_file($_FILES["file"]['tmp_name'], $ruta)){
+         	cargarcsv($ruta);
+         }
+
+    }
+
+
+function cargarcsv($ruta){
 	# Open the File.
 	$mensaje="Falta columna Direccion de correo";
 	$colCorreo=$colCalif=false;
-
 	$posCorreo=$posCalif=0;
-	$ruta= $_POST['ruta'];
+	//$ruta= $_POST['ruta'];
 
     if (($handle = fopen($ruta, "r")) !== FALSE) {
         # Set the parent multidimensional array key to 0.
@@ -24,13 +38,13 @@ function cargarcsv(){
 	                	$colCorreo=true;
 	                	$csvarray[$nn]["correo"] ="Dirección de correo";
 	                	$posCorreo=$x;
-	                	echo "Correo ".$posCorreo;
+	                	//echo "Correo ".$posCorreo;
 	                }
 	                if(!$colCalif && utf8_encode($data[$x])=="Total del curso (Real)"){
 	                	$colCalif=true;
 	                	$csvarray[$nn]["calif"] ="Total del curso (Real)";
 	                	$posCalif=$x;
-	                	echo "calificacion ".$posCalif;
+	                	//echo "calificacion ".$posCalif;
 	                }
 	            }
 	            $nn=1;
@@ -48,20 +62,23 @@ function cargarcsv(){
         fclose($handle);
     }else{
     	$mensaje="No se ha podido cargar el archivo";
-		return $mensaje; 
+    	print json_encode(array('mensaje' =>$mensaje));
+		return; 
     }
     # Print the contents of the multidimensional array.
     if($colCorreo && $colCalif){
     	$correosaprobados	=obtenerCorreos($csvarray,100);//solo los que tienen 100
     	$correosTomaroncurso=obtenerCorreos($csvarray,0);//0 para que traiga todos
 	}else{
-		$mensaje="Verifique que exista la columna Dirección de correo y/o Total del curso (Real)";
-		echo $mensaje;
-		return $mensaje; 
+		$mensaje="Verifique que existan las columnas Dirección de correo y Total del curso (Real)";
+		//echo $mensaje;
+		print json_encode(array('mensaje' =>$mensaje));
+		return;  
 	}
    
-    print obtenerAlumnos($correosTomaroncurso);
+    //print obtenerAlumnos($correosTomaroncurso);
     registrarAlumnos($correosaprobados);
+    print obtenerAlumnos($correosaprobados);
 
 }
 function obtenerAlumnos($correos){
@@ -109,9 +126,11 @@ function registrarAlumnos($correos){
 						WHERE alumai in (%s)
 						ON DUPLICATE KEY UPDATE cveusuario=cveusuario,curso=1",$GLOBALS['sie'],$listacorreos);
 	$cn = conexionLocal();
+	
 	$respuesta = false;
 	$resInsert =mysql_query($qrymatchemails);
 	$almguardados=mysql_affected_rows();
+	//echo mysql_affected_rows();
 	if($almguardados>0){
 		print $almguardados;
 	}
@@ -123,7 +142,7 @@ function registrarAlumnos($correos){
 function obtenerCorreos($csvarray,$cal){
 	$relacionCorreos= array();
 	$aprobado=$cal;
-	echo count($csvarray);
+	//echo count($csvarray);
 	for($i=1;$i<count($csvarray);$i++ ){
 		$email=$csvarray[$i]["correo"];
 		//solo los que tengan 100¿?
@@ -139,8 +158,8 @@ function obtenerCorreos($csvarray,$cal){
 	//print json_encode($relacionCorreos);
 }
 
-$opc= $_POST["opc"];
-switch ($opc) {
+//$opc= $_POST["opc"];
+/*switch ($opc) {
 	case 'cargarcsv':
 	cargarcsv();
 		# code...
@@ -149,6 +168,6 @@ switch ($opc) {
 	default:
 		# code...
 		break;
-}
+}*/
 
  ?>

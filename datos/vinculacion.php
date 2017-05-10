@@ -1,6 +1,6 @@
 <?php
 require_once('entrar.php');
-require_once('cargarcursomoodle.php');
+//require_once('cargarcursomoodle.php');
 //require_once('documentos.php');
 function muestraSolicitudes(){
 	$pagina 	= $_POST['pagina'];
