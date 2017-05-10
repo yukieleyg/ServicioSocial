@@ -86,6 +86,7 @@ function obtenerAlumnos($correos){
 	$listacorreos=strtoupper(separacomas($correos));
 	//echo $listacorreos;
 	$cn=conexionBD();
+	mysql_query("set names utf8");
 	$qrydatosalm= sprintf("SELECT aluctr,concat(aluapp,' ',aluapm,' ',alunom) as nombre, UPPER(alumai) as correo
 							FROM dalumn
 							WHERE alumai in (%s)",$listacorreos);
@@ -102,7 +103,7 @@ function obtenerAlumnos($correos){
 			$arregloEncontrados[]=array('ncontrol'=>$nc,'nombre'=>$nom,'correo'=>$correo);
 
 	}
-    $pattern = '/[a-z0-9_\-\+]+@[a-z0-9\-]+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
+    $pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
     preg_match_all($pattern, $listacorreos, $noencontrados);
 	$arrayJSON = array('respuesta'=>$respuesta,'alumnos'=>$arregloEncontrados,'noencontrados'=>$noencontrados[0]);
 	//print json_encode($arrayJSON); 
