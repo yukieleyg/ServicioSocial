@@ -71,7 +71,7 @@
   			</div>
   		</div>
   	</li>
-  	<li>
+  	<!--li>
   		<div class="collapsible-header" id="badgehoras"><i class="material-icons">query_builder</i><span class="left">Horas Acreditadas</span></div>
   		<div class="collapsible-body">
 		<div id="info_programa_horas">
@@ -82,49 +82,122 @@
 </div>
 
   		</div>
-  	</li>
+  	</li-->
   	<li>
   		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">folder</i><span class="left">Control de Expediente</span></div>
   		<div class="collapsible-body">
   		<br>
-				<div id="controlexpediente1" class="col-sm-6 container" style="text-align:left;">
-					<input type="checkbox" id="solicitud" class="docsinentregar" disabled/>
-					<label for="solicitud">Solicitud</label>
+			<div id="controlexpediente1" class="container" style="text-align:left;">
+				<table  class="striped">
+  					<thead>
+			          <tr>
+			          	  <th></th>
+			              <th>Documento</th>
+			              <th>Link</th>
+			              <th>Estado</th>
+			              <th></th>
+			              <th></th>
+			          </tr>
+			        </thead>
+						<tr>
+							<td><input type="checkbox" id="solicitud" class="inputVisible" disabled/></td>
+							<td>Solicitud</td>
+							<td><a href="#" id="isolicitud" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="cursoin" class="inputVisible" disabled/></td>
+							<td>Curso Inducción</td>
+							<td></td>
+							<td></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="cartaap" class="inputVisible" disabled/></td>
+							<td>Carta Aprobación</td>
+							<td><a href="#" id="icartaap" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="plantra" class="inputVisible" disabled/></td>
+							<td>Plan de trabajo</td>
+							<td><a href="#" id="iplantra" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>							
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>							
+						</tr>
+  				</table>
+				<br>
+				<hr>
+				<table>
+					<tr>
+						<th></th>
+						<th>No.de Reporte</th>
+						<th>Link</th>
+						<th></th>
+						<th></th>
+						<th>Estado</th>
+					</tr>
+					<tr>
+						<th><input type="checkbox" id="repouno" class="" disabled/></th>
+						<th>1</th>
+						<th><a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></th>
+						<th></th>
+						<th></th>
+						<th></th>
+					</tr>
+				</table>
+
+  				<!--
+					<input type="checkbox" id="solicitud" class="" disabled/>
+					<label>Solicitud</label>
 					<a href="#" id="isolicitud" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
-					<input type="checkbox" id="cursoin" class="docsinentregar" disabled/>
+					<input type="checkbox" id="cursoin" class="" disabled/>
 					<label for="cursoin">Curso Inducción</label>
 					<a href="#" id="icursoin" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
-					<!--se trata de la carta de ap´rpbacion o de aceptacion¿?-->
+					se trata de la carta de ap´rpbacion o de aceptacion¿?
 					<br>
-					<input type="checkbox" id="cartaap" class="docsinentregar" disabled/>
+					<input type="checkbox" id="cartaap" class="" disabled/>
 					<label for="cartaap">Carta Aprobación</label>
 					<a href="#" id="icartaap" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
-					<input type="checkbox" id="plantra" class="docsinentregar" disabled/>
+					<input type="checkbox" id="plantra" class="" disabled/>
 					<label for="plantra">Plan de trabajo</label>
 					<a href="#" id="iplantra" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					<label for="repbim">Reportes bimestrales</label><br>
-					<input type="checkbox" id="repouno" class="docsinentregar" disabled/>
+					<input type="checkbox" id="repouno" class="" disabled/>
 					<label for="repouno">1</label>
 					<a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
-
-					<input type="checkbox" id="repodos" class="docsinentregar" disabled/>
+					<br>
+					<input type="checkbox" id="repodos" class="" disabled/>
 					<label for="repodos">2</label>
 					<a href="#" id="irepodos" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
-
-					<input type="checkbox" id="repotres" class="docsinentregar" disabled/>
+					<br>
+					<input type="checkbox" id="repotres" class="" disabled/>
 					<label for="repotres">3</label><br>
 					<a href="#" id="irepotres" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
-					<input type="checkbox" id="repfin" class="docsinentregar" disabled />
+					<input type="checkbox" id="repfin" class="" disabled />
 					<label for="repfin">Reporte final</label>
 					<a href="#" id="irepfin" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 					<br>
 					
 						<div class="input-field col s6" style="margin-left: -2.3%;">
-							<input type="checkbox" id="cartaterm" class="docsinentregar" disabled/>
+							<input type="checkbox" id="cartaterm" class="" disabled/>
 							<label for="cartaterm">Carta de terminación</label>
 							<a href="#" id="icartaterm" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 						</div>
@@ -134,14 +207,14 @@
 						</div>
 					
 						<div class="input-field col s6" style="margin-left: -2.3%;">
-							<input type="checkbox" id="constanciaof" class="docsinentregar" disabled/>
+							<input type="checkbox" id="constanciaof" class="" disabled/>
 							<label for="constanciaof">Constancia oficial</label>
 							<a href="#" id="iconstanciaof" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a>
 						</div>
 						<div class="input-field inline col s6">
 							<label for="constanciaoffecha">Fecha</label>
 							<input type="date" id="constanciaoffech" class="datepicker" disabled  />
-						</div>
+						</div>-->
 					
 				<br>
 				</div>
