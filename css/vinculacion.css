@@ -16,24 +16,35 @@
 #txtbuscaTarjeta:focus{
 	width: 20%;
 }
-.docpendiente[type="checkbox"]:disabled + label:before{
+.docpendiente[type="checkbox"]:disabled{
   background: #ffc107;
   border-bottom: 2px solid #ffc107;
   border-right: 2px solid #ffc107;
   border-top: 2px solid #ffc107;
   border-left: 2px solid #ffc107;
 }
-.docrevisado[type="checkbox"]:disabled + label:before{
+.docrevisado[type="checkbox"]:disabled{
   background: green;
   border-bottom: 2px solid green;
   border-right: 2px solid green;
   border-top: 2px solid green;
   border-left: 2px solid green;
 }
-.docsinentregar[type="checkbox"]:disabled + label:before{
-  background: red;
-  border-bottom: 2px solid red;
-  border-right: 2px solid red;
-  border-top: 2px solid red;
-  border-left: 2px solid red;
+.docsinentregar[type="checkbox"]:disabled{
+  background: white;
+  border-bottom: 2px solid gray;
+  border-right: 2px solid gray;
+  border-top: 2px solid gray;
+  border-left: 2px solid gray;
+  position: inherit;
+  visibility: inherit;
+}
+
+.inputVisible[type="checkbox"]:not(:checked){
+	position: inherit;
+    visibility: inherit;
+}
+.inputVisible[type="checkbox"]:checked{
+	position: inherit;
+    visibility: inherit;
 }
