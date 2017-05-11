@@ -1288,6 +1288,8 @@ var admin = function (){
 	}
 	var muestraRegAlumnos	=	function(){
 		$('#opcVinculacion>div').hide();
+		$("#tblcandidatos").html("");
+		$("#ulpagregalm").html("");
 		$("#registroAlumnos").show();
 		$("#load").show("slow");
 		var parametros ="opc=registroAlumnos";
@@ -1298,7 +1300,7 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 			 if(data.respuesta==true){
-			 	$("#tblcandidatos").html("");
+			 	
 				$("#tblcandidatos").append(data.tabla);
 				$("#load").hide("slow");
 				$("#registroAlumnos").show();
@@ -1346,7 +1348,7 @@ var admin = function (){
 			 	$(this).addClass('active');
 			 	$("#tblcandidatos").html("");
 				$("#tblcandidatos").append(data.candidatos);
-				$("#load").hide("slow");
+				
 				$("#registroAlumnos").show();
 				$("#ulpagregalm").html("");
 				if(pagina==1){
@@ -1368,6 +1370,7 @@ var admin = function (){
 				}else{
 					$("#ulpagregalm").append('<li class="" id="btnpagcandidatos" value='+(pagina+1)+'><a href="#!"><i class="material-icons">chevron_right</i></a></li>');	
 				}
+				$("#load").hide("slow");
 			 }			 
 			}
 		});
@@ -1771,6 +1774,92 @@ var admin = function (){
 
 		});
 	}
+
+	var infoarchivo =function(){
+		if($("#txtcargacsv").val()==""){
+			$.alert({type: 'red', title: 'No se ha seleccionado un archivo', content: 'Seleccione un archivo CSV.',});
+			return;
+		}
+		$.confirm({
+			icon: 'fa fa-warning',
+		    title: 'Aviso',
+		    content: 'Recuerde que solo se registrarán alumnos con Total del curso (Real) 100.',
+		    type: 'blue',
+		    typeAnimated: true,
+		    buttons: {
+		        tryAgain: {
+		            text: 'Continuar',
+		            btnClass: 'btn-blue',
+		            action: function (){
+		            	subirarchivo();
+		            }
+		        },
+		        close: {
+		        	text: 'Cancelar',
+		        	action: function () {
+		        	}
+		        }
+		        
+		    }
+		});
+	}
+	var subirarchivo =function(){
+		var ruta=$("#txtcargacsv").val();
+		$("#tblalmNOencontrados").html("");
+		$("#tblalmencontrados").html("");
+		var tablaencontrados="";
+		var tablaNOencontrados="";
+		var cuerpoCorreo='Pasa a la oficina de servicio social a actualizar tu informacion';
+		if(ruta==""){
+			$.alert({type: 'red', title: 'No se ha seleccionado un archivo', content: 'Seleccione un archivo CSV.',});
+			return;
+		}
+		
+		var formData = new FormData();
+		formData.append('file', $('#fileToUpload')[0].files[0]);
+
+		$.ajax({
+		   url : '../datos/cargarcursomoodle.php',
+		   type : 'POST',
+		   dataType: 'json',
+		   data : formData,
+		   processData: false,  // tell jQuery not to process the data
+		   contentType: false,  // tell jQuery not to set contentType
+		   success : function(data) {
+		       if(data.respuesta== true){
+					$("#correosEn").val(data.alumnos);
+					
+					if(data.alumnos.length>0){
+						tablaencontrados+="<tr><th>No. Control</th><th>Nombre</th><th>Correo</th></tr>";
+						$.each(data.alumnos, function( i, value ) {
+							tablaencontrados+="<tr><td>"+value['ncontrol']+"</td><td>"+value['nombre']+"</td><td>"+value['correo']+"</td></tr>";
+						});
+						$("#tblalmencontrados").append(tablaencontrados);
+						$("#tabEncontrados").addClass("active");
+					}
+					if(data.noencontrados.length>0){
+						tablaNOencontrados+="<thead><tr><th>Correos</th></tr></thead>";
+						$.each(data.noencontrados, function( i, almcorreo ) {
+							tablaNOencontrados+="<tr><td><a href='mailto:"+almcorreo+"?Subject=Actualiza tus datos&Body="+cuerpoCorreo+"'>"+almcorreo+"</a></td></tr>";
+						});
+						$("#tblalmNOencontrados").append(tablaNOencontrados);
+						$("#tabNOencontrados").addClass("active");
+					}
+					
+					//$("#almnoencontrados").addClass("active");
+					//$("#tblalmencontrados").append(tablaencontrados);
+  					$(".collapsible").collapsible({accordion: false});
+  					if(tablaencontrados!=""){
+  						//$("#btnRegAlm").show();
+  					}
+				}else{
+					$.alert({type: 'orange', title: 'Aviso', content: data.mensaje,});
+				}
+				$('#frmcurso').trigger("reset");
+		   }
+		});
+	}
+
 	var clearFiltroAlu = function(){
 		$("#filtroAlumnos").attr('disabled',false);		
 		$("#opcionAlumnos").attr('disabled',false);
@@ -1807,6 +1896,11 @@ var admin = function (){
 
 		});
 
+	}
+
+	var mostrarcargacsv =function(){
+		$('#opcVinculacion>div').hide();
+		$("#registroAlumnosSubirCurso").show("slow");
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -1874,7 +1968,9 @@ var admin = function (){
 	$("#paginacionAlumnos").on("click", "#btnNextFA",nextMuestraAlumnosF);
 	$("#btnClearFiltroAlu").on("click",clearFiltroAlu);
 	$("#frmRegistroAlumnos").on("click","#btnpagcandidatos",pagAlmReg);
+	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
+	$("#btnsubmitcurso").on("click",infoarchivo);
 
 }
 $(document).on("ready",admin);

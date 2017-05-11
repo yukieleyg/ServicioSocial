@@ -37,9 +37,12 @@
 								if(data.creditos){
 									alert("alumno");
 									//programacion para cuando el alumno pueda a entrar al sistema
+									//insertar alumno pero con curso 0
+									alumnoAlta(usuario);
+									tomoCurso(usuario);	
 									break;
 								}else{
-									alert("No cuentas con los créditos suficientes");
+									$.alert("No cuentas con los créditos suficientes");
 								}break;
 								
 						}
@@ -50,6 +53,32 @@
 			});
 		}
 		
+	}
+	var alumnoAlta =function(alumno){
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: 'opc=altaAlumnoUsuario&alumno='+alumno,
+			success: function(data){
+				$.alert(data.mensaje);
+			}
+		});
+	}
+	var tomoCurso= function(alumno){
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: 'opc=tomoCursoMoodle&alumno='+alumno,
+			success: function(data){
+				if(data.respuesta){
+					//que hacer cuando entre el alumno
+				}else{
+					$.alert(data.mensaje);
+				}				
+			}
+		});
 	}
 	var muestraClave = function(){
 		var val = $("#mostrarClave").find("i");

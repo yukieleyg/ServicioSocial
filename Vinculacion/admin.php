@@ -18,6 +18,8 @@
 						<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownRegistro' data-hover="true" id="menuRegistro" style="color:black;"><i class="material-icons right">business</i>Registro<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownRegistro">
 							<li><a id="menuregistroAlumnos" style="color:black;" >Alumnos</a></li>
+							<li><a id="menusubirCSV" style="color:black;" ><i class="material-icons">file_upload</i>Cargar curso</a></li>
+							<li class="divider"></li>
 							<li><a id="menuregistroEmpresas"  style="color:black;">Empresas</a></li>
 							<li><a id="menuregistroProgramas"  style="color:black;">Programas</a></li>
 						</ul>
@@ -49,6 +51,9 @@
 	</div>
 	<div id="registroAlumnos" class="card">
 		<?php include 'divRegistroAlumnos.php' ?>
+	</div>
+	<div id="registroAlumnosSubirCurso" class="card">
+		<?php include 'divSubirCurso.php' ?>
 	</div>
 	<div id="registroEmpresas" class="card">
 		<?php include 'divRegistroEmpresa.php' ?>

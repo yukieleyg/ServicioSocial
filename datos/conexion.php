@@ -1,6 +1,7 @@
 <?php 
 //noMBRE DE BD SERVICIOSOCIAL
 $GLOBALS['bdss'] = "serviciosocial";
+$GLOBALS['sie']	 =	"sieapibd";
 function conexionBD(){
 	/*$cn= mysql_connect("itculiacan.edu.mx","sieapibduser","B5fa4x_7*.*");*/
 	$cn = mysql_connect("localhost","root","");

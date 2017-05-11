@@ -49,10 +49,19 @@
   	</div>
 	
 	<h5>Registro de alumnos</h5>
-	<form action="javascript:void(0);" method= "POST" id="frmRegistroAlumnos">
-		<ul>
-			<li>ver candidatos 70 creditos, periodo actual, estatus 1(no egresado ni baja), curso moodle</li>
-		</ul>
+	<!--<section id="alumnoscursomoodle">
+		<div class="file-field input-field">
+	      <div class="btn">
+	        <span>File</span>
+	        <input type="file" accept=".csv">
+	      </div>
+	      <div class="file-path-wrapper">
+	        <input class="file-path validate" type="text" id="txtcargacsv">
+	        <a class="waves-effect waves-light btn" id="matchemails">MATCH</a>
+	      </div>
+	    </div>
+	</section>-->
+	<form action="javascript:void(0);" method= "POST" id="frmRegistroAlumnos">   
 		<div class="progress" id="load" style="display: none;">
 			<div class="indeterminate"></div>
 		</div>
@@ -68,5 +77,6 @@
 		</div>
 
 	</form>
+	
 	<br>
 </div>

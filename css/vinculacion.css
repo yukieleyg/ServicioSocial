@@ -1,5 +1,8 @@
-#registroAlumnos,#cambioClave,#listadoResultados,#listadoAlumnos,#detallesPrograma, #listadoSolicitudes,#detallesSolicitudA, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas,#frmdatosExpediente, #controlexpediente1, #registroEmpresas, #registroProgramas{
+#registroAlumnosSubirCurso,#registroAlumnos,#cambioClave,#listadoResultados,#listadoAlumnos,#detallesPrograma, #listadoSolicitudes,#detallesSolicitudA, #listadoProgramas, #tarjetaControl,#datosAlm,#info_programa_horas,#frmdatosExpediente, #controlexpediente1, #registroEmpresas, #registroProgramas{
 	display: none;
+}
+#btnRegAlm{
+  display: none;
 }
 #barra{
 	background-color: gray;

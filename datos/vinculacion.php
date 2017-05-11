@@ -1,5 +1,6 @@
 <?php
 require_once('entrar.php');
+//require_once('cargarcursomoodle.php');
 //require_once('documentos.php');
 function muestraSolicitudes(){
 	$pagina 	= $_POST['pagina'];
@@ -1555,6 +1556,20 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
 		print json_encode($arrayJSON);
 	}
+	function tomoCursoMoodle(){
+		$respuesta=false;
+		$mensaje="Asegúrate de que hayas aprobado el curso de preparación.";
+		$alumno=$_POST['alumno'];
+		$qryCurso=sprintf("SELECT cveusuario,curso FROM usuarios WHERE (cveusuario=%s AND tipousuario=3 AND curso=1) limit 1",$alumno);
+		$res=mysql_query($qryCurso,conexionLocal());
+		if($row = mysql_fetch_array($res)){
+			$respuesta=true;
+			$mensaje="";
+		}
+		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
+		print json_encode($arrayJSON);
+
+	}
 	function altaAlumnoUsuario(){
 		/*AGREGAR ALUMNO A USUARIOS--->
 		CONECTAR A SIE OBTENER CONTRASEÑA
@@ -2001,6 +2016,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'mostrarResultadosFiltro':
 			mostrarResultadosFiltro();
+			break;
+		case 'tomoCursoMoodle':
+			tomoCursoMoodle();
 			break;
 		default:
 		# code...

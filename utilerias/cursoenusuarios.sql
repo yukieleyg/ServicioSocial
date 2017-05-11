@@ -1,0 +1,1 @@
+ALTER TABLE `usuarios` ADD `curso` TINYINT(1) NOT NULL DEFAULT '0' ;
