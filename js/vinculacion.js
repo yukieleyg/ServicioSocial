@@ -1902,6 +1902,10 @@ var admin = function (){
 		$('#opcVinculacion>div').hide();
 		$("#registroAlumnosSubirCurso").show("slow");
 	}
+
+	var calificarreporte=function(){
+		$("#modalcalificarreporte").openModal();
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1971,6 +1975,7 @@ var admin = function (){
 	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
 	$("#btnsubmitcurso").on("click",infoarchivo);
+	$("#btnmodalcalificar").on("click",calificarreporte);
 
 }
 $(document).on("ready",admin);
