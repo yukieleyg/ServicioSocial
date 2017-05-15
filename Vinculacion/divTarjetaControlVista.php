@@ -1,5 +1,5 @@
 <div class="container" id="tarjetacontrol">
-	<h5>Tarjeta de control</h5>
+	<h5>Expediente</h5><!--Tarjeta de control-->
 	<br>
 	<div class="row">
 		<div class="search-wrapper card" id="divbuscar" style="float:right;">
@@ -131,36 +131,68 @@
 							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
 							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>							
 						</tr>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>							
-						</tr>
   				</table>
 				<br>
 				<hr>
+
 				<a href="#" id="btnmodalcalificar" class="waves-effect waves-light btn-large">MODAL CALIFICAR</a>
-				<table>
+
+				<table class="striped">
+
 					<tr>
 						<th></th>
 						<th>No.de Reporte</th>
 						<th>Link</th>
-						<th></th>
-						<th></th>
+						<th>Calif. Empresa</th>
+						<th>Calif. Total</th>
 						<th>Estado</th>
 					</tr>
 					<tr>
-						<th><input type="checkbox" id="repouno" class="" disabled/></th>
-						<th>1</th>
-						<th><a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></th>
-						<th></th>
-						<th></th>
-						<th></th>
+						<td><input type="checkbox" id="repouno" class="inputVisible" disabled/></td>
+						<td>1</td>
+						<td><a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="repodos" class="inputVisible" disabled/></td>
+						<td>2</td>
+						<td><a href="#" id="irepodos" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="repotres" class="inputVisible" disabled/></td>
+						<td>3</td>
+						<td><a href="#" id="irepotres" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td></td>
+						<td></td>
+						<td></td>
 					</tr>
 				</table>
-
+				<br>
+				<table class="striped">
+					<tr>
+						<th></th>
+						<th>Documento</th>
+						<th>Link</th>
+						<th>Fecha</th>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="cartaterm" class="inputVisible" disabled/></td>
+						<td>Carta de terminación</td>
+						<td><a href="#" id="icartaterm" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><input type="date" id="cartatermfecha" class="datepicker" disabled  /></td>
+					</tr>
+					<tr>
+						<td><input type="checkbox" id="constanciaof" class="inputVisible" disabled/></td>
+						<td>Constancia oficial</td>
+						<td><a href="#" id="iconstanciaof" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><input type="date" id="constanciaoffech" class="datepicker" disabled  /></td>
+					</tr>
+				</table>
   				<!--
 					<input type="checkbox" id="solicitud" class="" disabled/>
 					<label>Solicitud</label>
