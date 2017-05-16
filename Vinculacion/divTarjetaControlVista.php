@@ -1,4 +1,4 @@
-<div class="container" id="tarjetacontrol">
+<div class="container" id="tarjetacontrol"><br>
 	<h5>Expediente</h5><!--Tarjeta de control-->
 	<br>
 	<div class="row">
@@ -102,34 +102,34 @@
 						<tr>
 							<td><input type="checkbox" id="solicitud" class="inputVisible" disabled/></td>
 							<td>Solicitud</td>
-							<td><a href="#" id="isolicitud" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="cursoin" class="inputVisible" disabled/></td>
 							<td>Curso Inducción</td>
 							<td></td>
 							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="cartaap" class="inputVisible" disabled/></td>
 							<td>Carta Aprobación</td>
-							<td><a href="#" id="icartaap" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="plantra" class="inputVisible" disabled/></td>
 							<td>Plan de trabajo</td>
-							<td><a href="#" id="iplantra" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><a href="#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '' disabled><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '' disabled><i class= 'material-icons'>close</i></a></td>							
+							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>							
 						</tr>
   				</table>
 				<br>
@@ -150,7 +150,7 @@
 					<tr>
 						<td><input type="checkbox" id="repouno" class="inputVisible" disabled/></td>
 						<td>1</td>
-						<td><a href="#" id="irepouno" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><a href="#" id="irepouno" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -158,7 +158,7 @@
 					<tr>
 						<td><input type="checkbox" id="repodos" class="inputVisible" disabled/></td>
 						<td>2</td>
-						<td><a href="#" id="irepodos" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><a href="#" id="irepodos" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -166,7 +166,7 @@
 					<tr>
 						<td><input type="checkbox" id="repotres" class="inputVisible" disabled/></td>
 						<td>3</td>
-						<td><a href="#" id="irepotres" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><a href="#" id="irepotres" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -183,13 +183,13 @@
 					<tr>
 						<td><input type="checkbox" id="cartaterm" class="inputVisible" disabled/></td>
 						<td>Carta de terminación</td>
-						<td><a href="#" id="icartaterm" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><a href="#" id="icartaterm" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="cartatermfecha" class="datepicker" disabled  /></td>
 					</tr>
 					<tr>
 						<td><input type="checkbox" id="constanciaof" class="inputVisible" disabled/></td>
 						<td>Constancia oficial</td>
-						<td><a href="#" id="iconstanciaof" style="display: none;" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><a href="#" id="iconstanciaof" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="constanciaoffech" class="datepicker" disabled  /></td>
 					</tr>
 				</table>
