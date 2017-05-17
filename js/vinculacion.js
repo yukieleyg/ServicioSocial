@@ -553,18 +553,21 @@ var admin = function (){
 						  		break;
 						  	case '2': 
 						  	$("#cartaap").prop("checked", true);
+						  	$("#icartaapEmpty").hide();
 						  	$("#icartaap").show();
-						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');		  	
 						  	console.log("Esta es una cartaA");
 						  		break;
 						  	case '3': 
 						  	$("#plantra").prop("checked",true);
+						  	$("#iplantraEmpty").hide();
 						  	$("#iplantra").show();
 						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
 						  	console.log("Esta es un plantrabajo");
 						  		break;
 						  	case '7': 
 						  	$("#cartaterm").prop("checked",true);
+						  	$("#icartatermEmpty").hide();
 						  	$("#icartaterm").show();
 						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
 						  	console.log("Esta es una cartaterminacion");
@@ -603,6 +606,7 @@ var admin = function (){
 						  switch(i){	
 						  	case '1': 
 						  	$("#repouno").prop("checked",true);
+						  	$("#irepounoEmpty").hide();
 						  	$("#irepouno").show();
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#")						  	
@@ -610,12 +614,14 @@ var admin = function (){
 						  		break;
 						  	case '2': 
 						  	$("#repodos").prop("checked",true);
+						  	$("#irepodosEmpty").hide();
 						  	$("#irepodos").show();
 						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
 						  	console.log("Esta es un reportedos");
 						  		break;
 						  	case '3': 
 							$("#repotres").prop("checked",true);
+						  	$("#irepotresEmpty").hide();
 						  	$("#irepotres").show();
 							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
 						  	console.log("Esta es un reportetres");
@@ -1941,7 +1947,6 @@ var admin = function (){
 		$("#modalcalificarreporte").openModal();
 	}
 	var btncalificarreporte=function(){
-		alert("btn");
 		var claveexpediente= $("#cveexpediente").val();
 		calificarreporte();
 	}
