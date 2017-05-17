@@ -1,4 +1,4 @@
-<div class="container" id="tarjetacontrol"><br>
+<div class="container" id="tarjetacontrol"><br><br>
 	<h5>Expediente</h5><!--Tarjeta de control-->
 	<br>
 	<div class="row">
@@ -88,7 +88,9 @@
   		<div class="collapsible-body">
   		<br>
 			<div id="controlexpediente1" class="container" style="text-align:left;">
-				<table  class="striped">
+				<input type="checkbox" id="cursoin" disabled/>
+				<label>Curso de Inducción</label><br>
+				<table  class="striped" id="tablaDocs">
   					<thead>
 			          <tr>
 			          	  <th></th>
@@ -102,32 +104,24 @@
 						<tr>
 							<td><input type="checkbox" id="solicitud" class="inputVisible" disabled/></td>
 							<td>Solicitud</td>
-							<td><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="cursoin" class="inputVisible" disabled/></td>
-							<td>Curso Inducción</td>
-							<td></td>
-							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
+							<td><i class="material-icons" class="ligadoEmpty" id="isolicitudEmpty">layers_clear</i><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><input id="estadoCartaAp" type="text" value="Sin Subir" style="color:black" disabled></td>
+							<td><button name= 'aceptarSolicitud' id='aceptarSolicitud' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazarSolicitud' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="cartaap" class="inputVisible" disabled/></td>
 							<td>Carta Aprobación</td>
-							<td><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td></td>
-							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
+							<td><i class="material-icons" class="ligadoEmpty" id="icartaapEmpty">layers_clear</i><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><input id="estadoCartaAp" type="text" value="Sin Subir" style="color:black" disabled></td>
+							<td><button name= 'aceptarCartaApr' id='aceptarCartaApr' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazarCartaApr' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="plantra" class="inputVisible" disabled/></td>
 							<td>Plan de trabajo</td>
-							<td><a href="#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td></td>
+							<td><i class="material-icons" class="ligadoEmpty" id="iplantraEmpty">layers_clear</i><a href="!#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><input id="estadoPlanTra" type="text" value="Sin Subir" style="color:black" disabled></td>
 							<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = ''><i class= 'material-icons'>done_all</i></button></td>
 							<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = ''><i class= 'material-icons'>close</i></a></td>							
 						</tr>
@@ -144,28 +138,28 @@
 						<th>Estado</th>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repouno" class="inputVisible" disabled/></td>
+						<td><input type="checkbox" id="repouno" class="inputVisible"/></td>
 						<td>1</td>
-						<td><a href="#" id="irepouno" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons" class="ligadoEmpty" id="irepounoEmpty">layers_clear</i><a href="#" id="irepouno" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						<td><input id="estadoRepUno" type="text" value="Pendiente" style="color:black" disabled></td>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repodos" class="inputVisible" disabled/></td>
+						<td><input type="checkbox" id="repodos" class="inputVisible"/></td>
 						<td>2</td>
-						<td><a href="#" id="irepodos" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons" class="ligadoEmpty" id="irepodosEmpty">layers_clear</i><a href="#" id="irepodos" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						<td><input id="estadoRepDos" type="text" value="Pendiente" style="color:black" disabled></td>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repotres" class="inputVisible" disabled/></td>
+						<td><input type="checkbox" id="repotres" class="inputVisible"/></td>
 						<td>3</td>
-						<td><a href="#" id="irepotres" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons" class="ligadoEmpty" id="irepotresEmpty">layers_clear</i><a href="#" id="irepotres" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
 						<td></td>
-						<td></td>
+						<td><input id="estadoRepTres" type="text" value="Pendiente" style="color:black" disabled></td>
 					</tr>
 				</table>
 				<br>
@@ -179,13 +173,13 @@
 					<tr>
 						<td><input type="checkbox" id="cartaterm" class="inputVisible" disabled/></td>
 						<td>Carta de terminación</td>
-						<td><a href="#" id="icartaterm" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons" class="ligadoEmpty" id="icartatermEmpty">layers_clear</i><a href="#" id="icartaterm" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="cartatermfecha" class="datepicker" disabled  /></td>
 					</tr>
 					<tr>
 						<td><input type="checkbox" id="constanciaof" class="inputVisible" disabled/></td>
 						<td>Constancia oficial</td>
-						<td><a href="#" id="iconstanciaof" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons" class="ligadoEmpty" id="iconstanciaofEmpty">layers_clear</i><a href="#" id="iconstanciaof" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="constanciaoffech" class="datepicker" disabled  /></td>
 					</tr>
 				</table>
