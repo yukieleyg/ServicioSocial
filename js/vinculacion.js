@@ -549,20 +549,70 @@ var admin = function (){
 						$.each(data.documentos, function( i, value ) {
 							//opcion por tipo de documento
 						  switch(i){
-						  	case '1': console.log("Esta es una solicitud");
+						  	case '1': 
+						  		console.log("Esta es una solicitud");
+						  		switch(value.revisado){
+							  		case '0':
+							  			estado = 'Pendiente';
+							  			$("#estadoSolicitud").attr("value",estado);
+							  			break;
+							  		case '1': 
+							  			estado = 'Aceptado';
+							  			$("#estadoSolicitud").attr("value",estado);
+							  			break;
+							  		case '2':
+							  			estado = 'Rechazado';
+							  			$("#estadoSolicitud").attr("value",estado);
+							  			break;
+						  		}		
+
 						  		break;
 						  	case '2': 
 						  	$("#cartaap").prop("checked", true);
 						  	$("#icartaapEmpty").hide();
 						  	$("#icartaap").show();
-						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');		  	
-						  	console.log("Esta es una cartaA");
+						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	var estado ='';
+						  	switch(value.revisado){
+						  		case '0': 
+						  			estado = 'Sin revisar';
+						  			$("#estadoCartaAp").attr("value",estado);
+						  			$("#aceptarCartaApr").attr('disabled',false);
+									$("#rechazarCartaApr").attr('disabled',false);
+						  			break;
+						  		case '1': 
+						  			estado = 'Aceptado';
+						  			$("#estadoCartaAp").attr("value",estado);
+						  			break;
+						  		case '2':
+						  			estado = 'Rechazado';
+						  			$("#estadoCartaAp").attr("value",estado);
+						  			break;
+						  	}	
+						  	console.log("Esta es una carta");
 						  		break;
 						  	case '3': 
 						  	$("#plantra").prop("checked",true);
 						  	$("#iplantraEmpty").hide();
 						  	$("#iplantra").show();
-						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	var estado ='';
+						  	switch(value.revisado){
+						  		case '0': 
+						  			estado = 'Sin revisar';
+						  			$("#estadoPlanTra").attr("value",estado);
+						  			$("#aceptarPlanTra").attr('disabled',false);
+						  			$("#rechazarPlanTra").attr('disabled',false);
+						  			break;
+						  		case '1': 
+						  			estado = 'Aceptado';
+						  			$("#estadoPlanTra").attr("value",estado);
+						  			break;
+						  		case '2':
+						  			estado = 'Rechazado';
+						  			$("#estadoPlanTra").attr("value",estado);
+						  			break;
+						  	}							  	
 						  	console.log("Esta es un plantrabajo");
 						  		break;
 						  	case '7': 
@@ -609,21 +659,69 @@ var admin = function (){
 						  	$("#irepounoEmpty").hide();
 						  	$("#irepouno").show();
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	$("#")						  	
+						  	$("#")
+						  	var estado ='';
+						  	switch(value.estado){
+						  		case '0': 
+						  			estado = 'Sin revisar';
+						  			$("#estadoRepUno").attr("value",estado);
+						  			break;
+						  		case '1': 
+						  			estado = 'Aceptado';
+						  			$("#estadoRepUno").attr("value",estado);
+						  			break;
+						  		case '2':
+						  			estado = 'Rechazado';
+						  			$("#estadoRepUno").attr("value",estado);
+						  			break;
+						  	}
+						  	$("#calEmpRU").attr("value",value.calificacion);						  							  	
 						  	console.log("Esta es un reporteuno");
 						  		break;
 						  	case '2': 
 						  	$("#repodos").prop("checked",true);
 						  	$("#irepodosEmpty").hide();
 						  	$("#irepodos").show();
-						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	var estado ='';
+						  	switch(value.estado){
+						  		case '0': 
+						  			estado = 'Sin revisar';
+						  			$("#estadoRepDos").attr("value",estado);
+						  			break;
+						  		case '1': 
+						  			estado = 'Aceptado';
+						  			$("#estadoRepDos").attr("value",estado);
+						  			break;
+						  		case '2':
+						  			estado = 'Rechazado';
+						  			$("#estadoRepDos").attr("value",estado);
+						  			break;
+						  	}
+						  	$("#calEmpRD").attr("value",value.calificacion);						  							  	
 						  	console.log("Esta es un reportedos");
 						  		break;
 						  	case '3': 
 							$("#repotres").prop("checked",true);
 						  	$("#irepotresEmpty").hide();
 						  	$("#irepotres").show();
-							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+							var estado ='';
+						  	switch(value.estado){
+						  		case '0': 
+						  			estado = 'Sin revisar';
+						  			$("#estadoRepTres").attr("value",estado);
+						  			break;
+						  		case '1': 
+						  			estado = 'Aceptado';
+						  			$("#estadoRepTres").attr("value",estado);
+						  			break;
+						  		case '2':
+						  			estado = 'Rechazado';
+						  			$("#estadoRepTres").attr("value",estado);
+						  			break;
+						  	}
+						  	$("#calEmpRT").attr("value",value.calificacion);						  	
 						  	console.log("Esta es un reportetres");
 						  		break;
 						  }
