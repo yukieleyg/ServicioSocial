@@ -3,19 +3,19 @@
 		<div class="container">
 			<div class="modal-content">
 				<h4>Evaluación bimestral</h4>
-				<input id="ncontrol" name="ncontrol" type="hidden">
+				<input type="hidden" name="cvereporte" id="cvereporte">
 
 				<table>
 					<tr disabled>
 						<td class="right">CALIFICACIÓN EMPRESA</td>
-						<td></td>
+						<td><input id="txtcalempresa" name="txtcalempresa" type="number" min="1" max="65" class="validate"></td>
 					</tr>
 					<tr>
 						<td>
 							1. Entrega en tiempo y forma los reportes o informes solicitados
 						</td>
 						<td>
-							<input id="txttiempoforma" name="txttiempoforma" type="number" min="1" max="25">
+							<input id="txttiempoforma" name="txttiempoforma" type="number" min="1" max="25" class="validate">
 						</td>
 					</tr>
 					<tr>
@@ -23,7 +23,7 @@
 							2. Mostró responsabilidad y compromiso con su Servicio Social
 						</td>
 						<td>
-							<input id="txtresponsabilidad" name="txtresponsabilidad" type="number" min="1" max="10">
+							<input id="txtresponsabilidad" name="txtresponsabilidad" type="number" min="1" max="10" class="validate"> 
 						</td>
 					</tr>
 					<tr>
@@ -35,6 +35,7 @@
 				<div class="row">
 						<span class="col s9"><b class="left">NIVEL DE DESEMPEÑO</b></span>
 						<select name="" id="" class="col s3">
+						<option value="" slected>Seleccione..</option>
 							<option value="">EXCELENTE</option>
 							<option value="">NOTABLE</option>
 							<option value="">BUENO</option>

@@ -135,9 +135,8 @@
 				<br>
 				<hr>
 
-				<a href="#" id="btnmodalcalificar" class="waves-effect waves-light btn-large">MODAL CALIFICAR</a>
-
-				<table class="striped">
+				<table class="striped" id="tblreportes">
+				<input type="hidden" id="cveexpediente">
 
 					<tr>
 						<th></th>
@@ -152,7 +151,7 @@
 						<td>1</td>
 						<td><a href="#" id="irepouno" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
-						<td></td>
+						<td class="center"><button id="btnmodalcalificar"><i class="material-icons">grade</i></button></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -160,7 +159,7 @@
 						<td>2</td>
 						<td><a href="#" id="irepodos" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
-						<td></td>
+						<td class="center"><button id="btnmodalcalificar"><i class="material-icons">grade</i></button></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -168,7 +167,7 @@
 						<td>3</td>
 						<td><a href="#" id="irepotres" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td></td>
-						<td></td>
+						<td class="center"><button id="btnmodalcalificar"><i class="material-icons">grade</i></button></td>
 						<td></td>
 					</tr>
 				</table>
