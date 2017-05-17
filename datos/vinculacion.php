@@ -569,17 +569,16 @@ function llenaDptoProgramas(){
 		$nocontrol	= "'".$_POST["ncontrol"]."'";
 		$mensaje	="No se encuentra expediente";
 		$cn 		= conexionLocal();
+		$cveexp="";
 		$qryvalida	= sprintf("SELECT 	e.cveexpediente,
 									  	d.archivo AS 'ruta',
 									  	d.cvedocumento,
 									  	d.tipo,
-									  	d.revisado 
+									  	d.revisado,
+									  	d.calificacion
 							    FROM expedientes e 
 							    INNER JOIN documentos d 
 							    on d.cvedocumento in (e.cartaacep,
-							    					e.reporteuno,
-							    					e.reportedos,
-							    					e.reportetres,
 							    					e.plantrabajo,
 							    					e.cartatermina)
 							    WHERE cveusuario_1=%s",$nocontrol);
@@ -588,16 +587,63 @@ function llenaDptoProgramas(){
 		$arraytipodoc=Array();
 		/*TIPOS: 1-Solicitud	2-Carta Aceptacion 3-Plan de Trabajo 4-ReporteUno 5-ReporteDos 6-ReporteTres 7-Carta de Terminacion*/
 		while($row = mysql_fetch_array($res)){
+			$cveexp=$row["cveexpediente"];
 			$tipodoc=intval($row["tipo"]);
 			$ruta=$row["ruta"];
+			$cvedcto=$row["cvedocumento"];
+			$revisado=$row["revisado"];
+			$califdoc=$row["calificacion"];
 			 	$arraytipodoc['tipo']=$tipodoc;
 				$arraytipodoc['ruta']=$ruta;
+				$arraytipodoc['cvedoc']=$cvedcto;
+				$arraytipodoc['calificacion']=$califdoc;
+				$arraytipodoc["revisado"]=$revisado;
 			$arrayExp[$tipodoc]=$arraytipodoc;
 			$respuesta=true;
 		}
 		$arrayJSON=Array('respuesta'=>$respuesta,
-						'documentos'=>$arrayExp);
+						'documentos'=>$arrayExp,'cveexpediente'=>$cveexp);
 		print json_encode($arrayJSON);
+	}
+	function reportesExpediente(){
+		$respuesta=false;
+		$nocontrol="'".$_POST["ncontrol"]."'";
+		$cn= conexionLocal();
+		$cveexp="";
+		$qryvalida=sprintf("SELECT 	e.cveexpediente,
+									  	r.archivo AS 'ruta',
+									  	r.cvereporte,
+									  	r.noreporte,
+									  	r.calificacion,
+                                        r.estado
+							    FROM expedientes e 
+							    INNER JOIN reportes r
+							    on r.cvereporte in (e.reporteuno,
+							    					e.reportedos,
+							    					e.reportetres)
+							    WHERE cveusuario_1=%s",$nocontrol);
+		$res= 		mysql_query($qryvalida);
+		$arrayExpRep=array();
+		$arraytiporep=Array();
+
+		while($row = mysql_fetch_array($res)){
+			$cveexp=$row["cveexpediente"];
+			$rutareporte	=$row["ruta"];
+			$noreporte		=$row["noreporte"];
+			$califreporte	=$row['calificacion'];
+			$cvereporte		=$row["cvereporte"];
+			$estadorep 		=$row['estado'];
+				$arraytiporep['cvereporte']		=$cvereporte;
+				$arraytiporep['ruta']			=$rutareporte;
+			 	$arraytiporep["calificacion"]	=$califreporte;
+			 	$arraytiporep["estado"]			=$estadorep;
+			$arrayExpRep[$noreporte]=$arraytiporep;
+			$respuesta=true;
+		}
+		$arrayJSON=Array('respuesta'=>$respuesta,
+						'reportes'=>$arrayExpRep,'cveexpediente'=>$cveexp);
+		print json_encode($arrayJSON);
+
 	}
 
 	function detallesSolicitud(){
@@ -1941,6 +1987,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'documentosExpediente':
 			documentosExpediente();
+			break;
+		case 'reportesExpediente':
+			reportesExpediente();
 			break;
 		case 'modificarSolicitud':
 			modificarSolicitud();

@@ -544,7 +544,10 @@ var admin = function (){
 						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
+					alert(data.cveexpediente);
+						$("#cveexpediente").val(data.cveexpediente);
 						$.each(data.documentos, function( i, value ) {
+							//opcion por tipo de documento
 						  switch(i){
 						  	case '1': console.log("Esta es una solicitud");
 						  		break;
@@ -560,24 +563,6 @@ var admin = function (){
 						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
 						  	console.log("Esta es un plantrabajo");
 						  		break;
-						  	case '4': 
-						  	$("#repouno").prop("checked",true);
-						  	$("#irepouno").show();
-						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
-						  	console.log("Esta es un reporteuno");
-						  		break;
-						  	case '5': 
-						  	$("#repodos").prop("checked",true);
-						  	$("#irepodos").show();
-						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
-						  	console.log("Esta es un reportedos");
-						  		break;
-						  	case '6': 
-							$("#repotres").prop("checked",true);
-						  	$("#irepotres").show();
-							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
-						  	console.log("Esta es un reportetres");
-						  		break;
 						  	case '7': 
 						  	$("#cartaterm").prop("checked",true);
 						  	$("#icartaterm").show();
@@ -586,8 +571,57 @@ var admin = function (){
 						  		break;
 						  }
 						});
-
+						reportesExpediente(ncontrol);
 						$("#controlexpediente1").show("slow");
+					}
+				}
+			});
+	}
+	var reportesExpediente=function(nocontrol){
+		var ncontrol = $("#txtbuscaTarjeta").val();
+		if(ncontrol==""){
+			Materialize.toast('Ingresa el No. de Control', 4000);
+			collapseAll();
+			return;
+		}
+		var parametros ="opc=reportesExpediente"+"&ncontrol="+ncontrol;
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/vinculacion.php",
+				data: parametros,
+
+				success: function(data){
+					if(data.respuesta==false){
+						collapseAll();
+						Materialize.toast('No hay reportes entregados', 4000);
+					}else{
+					alert(data.cveexpediente);
+						$("#cveexpediente").val(data.cveexpediente);
+						$.each(data.reportes, function( i, value ) {
+							//opcion por numero de reporte
+						  switch(i){	
+						  	case '1': 
+						  	$("#repouno").prop("checked",true);
+						  	$("#irepouno").show();
+						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	$("#")						  	
+						  	console.log("Esta es un reporteuno");
+						  		break;
+						  	case '2': 
+						  	$("#repodos").prop("checked",true);
+						  	$("#irepodos").show();
+						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportedos");
+						  		break;
+						  	case '3': 
+							$("#repotres").prop("checked",true);
+						  	$("#irepotres").show();
+							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	console.log("Esta es un reportetres");
+						  		break;
+						  }
+						});
 					}
 				}
 			});
@@ -1906,6 +1940,11 @@ var admin = function (){
 	var calificarreporte=function(){
 		$("#modalcalificarreporte").openModal();
 	}
+	var btncalificarreporte=function(){
+		alert("btn");
+		var claveexpediente= $("#cveexpediente").val();
+		calificarreporte();
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -1975,7 +2014,7 @@ var admin = function (){
 	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
 	$("#btnsubmitcurso").on("click",infoarchivo);
-	$("#btnmodalcalificar").on("click",calificarreporte);
+	$("#tblreportes").on("click","#btnmodalcalificar",btncalificarreporte);
 
 }
 $(document).on("ready",admin);
