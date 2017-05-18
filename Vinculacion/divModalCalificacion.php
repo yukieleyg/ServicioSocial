@@ -28,7 +28,7 @@
 					</tr>
 					<tr>
 						<td class="right">CALIFICACIÓN FINAL</td>
-						<th border="1" id="txtcalififinal" class="cals"></th>
+						<th border="1" id="txtcalififinal"></th>
 					</tr>
 					
 				</table>

@@ -24,7 +24,7 @@
 							<li><a id="menuregistroProgramas"  style="color:black;">Programas</a></li>
 						</ul>
 					
-						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">class</i>Expediente</a><!--Tarjeta de control-->
+						<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="menuTarjeta"><i class="material-icons right">folder</i>Expediente</a><!--Tarjeta de control-->
 
 						<a  class="waves-effect waves-teal btn-flat text-darken-1" id="muestraResultados"><i class="material-icons right">toc</i>Resultados</a>
 
