@@ -546,48 +546,32 @@ var admin = function (){
 					}else{
 						$("#cveexpediente").val(data.cveexpediente);
 						$.each(data.documentos, function( i, value ) {
+							//estado de revision del documento
+							var estado ='';
+							switch(value.revisado){
+							  		case '0':
+							  			estado = 'Pendiente';
+							  			break;
+							  		case '1': 
+							  			estado = 'Aceptado';
+							  			break;
+							  		case '2':
+							  			estado = 'Rechazado';
+							  			break;
+						  		}	
+
 							//opcion por tipo de documento
 						  switch(i){
 						  	case '1': 
 						  		console.log("Esta es una solicitud");
-						  		switch(value.revisado){
-							  		case '0':
-							  			estado = 'Pendiente';
-							  			$("#estadoSolicitud").attr("value",estado);
-							  			break;
-							  		case '1': 
-							  			estado = 'Aceptado';
-							  			$("#estadoSolicitud").attr("value",estado);
-							  			break;
-							  		case '2':
-							  			estado = 'Rechazado';
-							  			$("#estadoSolicitud").attr("value",estado);
-							  			break;
-						  		}		
-
+						  		$("#estadoSolicitud").val(estado);	
 						  		break;
 						  	case '2': 
 						  	$("#cartaap").prop("checked", true);
 						  	$("#icartaapEmpty").hide();
 						  	$("#icartaap").show();
 						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	var estado ='';
-						  	switch(value.revisado){
-						  		case '0': 
-						  			estado = 'Sin revisar';
-						  			$("#estadoCartaAp").attr("value",estado);
-						  			$("#aceptarCartaApr").attr('disabled',false);
-									$("#rechazarCartaApr").attr('disabled',false);
-						  			break;
-						  		case '1': 
-						  			estado = 'Aceptado';
-						  			$("#estadoCartaAp").attr("value",estado);
-						  			break;
-						  		case '2':
-						  			estado = 'Rechazado';
-						  			$("#estadoCartaAp").attr("value",estado);
-						  			break;
-						  	}	
+						  	$("#estadoCartaAp").val(estado);					
 						  	console.log("Esta es una carta");
 						  		break;
 						  	case '3': 
@@ -595,23 +579,7 @@ var admin = function (){
 						  	$("#iplantraEmpty").hide();
 						  	$("#iplantra").show();
 						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	var estado ='';
-						  	switch(value.revisado){
-						  		case '0': 
-						  			estado = 'Sin revisar';
-						  			$("#estadoPlanTra").attr("value",estado);
-						  			$("#aceptarPlanTra").attr('disabled',false);
-						  			$("#rechazarPlanTra").attr('disabled',false);
-						  			break;
-						  		case '1': 
-						  			estado = 'Aceptado';
-						  			$("#estadoPlanTra").attr("value",estado);
-						  			break;
-						  		case '2':
-						  			estado = 'Rechazado';
-						  			$("#estadoPlanTra").attr("value",estado);
-						  			break;
-						  	}							  	
+							$("#estadoPlanTra").val(estado);  	
 						  	console.log("Esta es un plantrabajo");
 						  		break;
 						  	case '7': 
@@ -672,8 +640,8 @@ var admin = function (){
 						  	$("#irepouno").show();
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#btnmc1").val(value.cvereporte);						  	
-							$("#estadoRepUno").attr("value",estado);
-						  	$("#calEmpR1").attr("value",value.calificacion);						  							  	
+							$("#estadoRepUno").val(estado);
+						  	$("#calEmpR1").val(value.calificacion);				  							  	
 						  	console.log("Esta es un reporteuno");
 						  		break;
 						  	case '2': 
@@ -682,8 +650,8 @@ var admin = function (){
 						  	$("#irepodos").show();
 						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#btnmc2").val(value.cvereporte);									  	
-						  	$("#estadoRepDos").attr("value",estado);
-						  	$("#calEmpR2").attr("value",value.calificacion);						  							  	
+						  	$("#estadoRepDos").val(estado);
+						  	$("#calEmpR2").val(value.calificacion);						  							  	
 						  	console.log("Esta es un reportedos");
 						  		break;
 						  	case '3': 
@@ -692,8 +660,8 @@ var admin = function (){
 						  	$("#irepotres").show();
 							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 							$("#btnmc3").val(value.cvereporte);									  	
-							$("#estadoRepTres").attr("value",estado);
-						  	$("#calEmpR3").attr("value",value.calificacion);						  	
+							$("#estadoRepTres").val(estado);
+						  	$("#calEmpR3").val(value.calificacion);						  	
 						  	console.log("Esta es un reportetres");
 						  		break;
 						  }
