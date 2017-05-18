@@ -15,7 +15,7 @@
 							1. Entrega en tiempo y forma los reportes o informes solicitados
 						</td>
 						<td>
-							<input id="txttiempoforma" name="txttiempoforma" type="number" min="1" max="25" class="validate">
+							<input id="txttiempoforma" name="txttiempoforma" type="number" min="1" max="25" class="validate cals" value=0>
 						</td>
 					</tr>
 					<tr>
@@ -23,18 +23,18 @@
 							2. Mostró responsabilidad y compromiso con su Servicio Social
 						</td>
 						<td>
-							<input id="txtresponsabilidad" name="txtresponsabilidad" type="number" min="1" max="10" class="validate"> 
+							<input id="txtresponsabilidad" name="txtresponsabilidad" type="number" min="1" max="10" class="validate cals" value=0> 
 						</td>
 					</tr>
 					<tr>
 						<td class="right">CALIFICACIÓN FINAL</td>
-						<td border="1"></td>
+						<th border="1" id="txtcalififinal" class="cals"></th>
 					</tr>
 					
 				</table>
 				<div class="row">
 						<span class="col s9"><b class="left">NIVEL DE DESEMPEÑO</b></span>
-						<select name="" id="" class="col s3">
+						<select name="" id="selniveldes" class="col s3">
 						<option value="" slected>Seleccione..</option>
 							<option value="">EXCELENTE</option>
 							<option value="">NOTABLE</option>
@@ -47,7 +47,7 @@
 		</div>
 		<div class="modal-footer">
 			<a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
-			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat btn" id="btncalificarmodal">Callificar</a>	      	
+			<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat btn" id="btncalificarmodal">Calificar</a>	      	
 		</div>
 	</div>
 </div>

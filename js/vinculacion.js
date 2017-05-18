@@ -544,7 +544,6 @@ var admin = function (){
 						collapseAll();
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
-					alert(data.cveexpediente);
 						$("#cveexpediente").val(data.cveexpediente);
 						$.each(data.documentos, function( i, value ) {
 							//opcion por tipo de documento
@@ -574,7 +573,6 @@ var admin = function (){
 						  		break;
 						  }
 						});
-						reportesExpediente(ncontrol);
 						$("#controlexpediente1").show("slow");
 					}
 				}
@@ -582,6 +580,7 @@ var admin = function (){
 	}
 	var reportesExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
+		
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
 			collapseAll();
@@ -599,9 +598,9 @@ var admin = function (){
 						collapseAll();
 						Materialize.toast('No hay reportes entregados', 4000);
 					}else{
-					alert(data.cveexpediente);
 						$("#cveexpediente").val(data.cveexpediente);
 						$.each(data.reportes, function( i, value ) {
+							alert(value.cvereporte);
 							//opcion por numero de reporte
 						  switch(i){	
 						  	case '1': 
@@ -609,21 +608,23 @@ var admin = function (){
 						  	$("#irepounoEmpty").hide();
 						  	$("#irepouno").show();
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	$("#")						  	
+						  	$("#btnmc1").val(value.cvereporte);						  	
 						  	console.log("Esta es un reporteuno");
 						  		break;
 						  	case '2': 
 						  	$("#repodos").prop("checked",true);
 						  	$("#irepodosEmpty").hide();
 						  	$("#irepodos").show();
-						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	$("#btnmc2").val(value.cvereporte);									  	
 						  	console.log("Esta es un reportedos");
 						  		break;
 						  	case '3': 
 							$("#repotres").prop("checked",true);
 						  	$("#irepotresEmpty").hide();
 						  	$("#irepotres").show();
-							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+							$("#btnmc1").val(value.cvereporte);									  	
 						  	console.log("Esta es un reportetres");
 						  		break;
 						  }
@@ -722,6 +723,7 @@ var admin = function (){
 	var llenarTarjeta=function(){
 		//fn para llenar los badges de la tarjeta
 		documentosExpediente();
+		reportesExpediente();
 		buscarTarjeta();
 		$(".collapsible-header").addClass("active");
   		$(".collapsible").collapsible({accordion: false});
@@ -1943,12 +1945,42 @@ var admin = function (){
 		$("#registroAlumnosSubirCurso").show("slow");
 	}
 
-	var calificarreporte=function(){
+	var calificarreporte=function(cvereporte, calificacion){
+		$("#txtcalempresa").val(calificacion);
+		$("#txtcalififinal").val(calificacion);
+		$(".cals").val("0");
+		$("#selniveldes").prop('selectedIndex',0);;
+		$("#selniveldes").material_select();
 		$("#modalcalificarreporte").openModal();
 	}
 	var btncalificarreporte=function(){
+		var btnid=$(this).val();
+		var cvereporte=$("#btnmc"+btnid+"").val();
+		var califEmmpresa=$("#calEmpR"+btnid+"").val();
 		var claveexpediente= $("#cveexpediente").val();
-		calificarreporte();
+		calificarreporte(cvereporte, califEmmpresa);
+	}
+	var cambiaCalifFinal=function(){
+		if(parseInt($("#txttiempoforma").val())>25) $("#txttiempoforma").val("25");
+		if(parseInt($("#txtresponsabilidad").val())>10) $("#txtresponsabilidad").val("10");
+		var suma=parseInt($("#txttiempoforma").val())+parseInt($("#txtresponsabilidad").val())+parseInt($("#txtcalempresa").val());
+		alert(suma);
+		$("#txtcalififinal").html(suma);
+		var index=0;		
+			if(suma > 94){
+				index=1;
+			}else if(suma > 84 && suma < 95) {
+				index=2;
+			}else if(suma > 74 && suma < 85){
+				index=3;
+			}else if(suma > 69 && suma < 75){
+				index=4;
+			}else if(suma <70){
+				index=5;
+			}
+
+		$("#selniveldes").prop('selectedIndex',index);;
+		$("#selniveldes").material_select();
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -2019,7 +2051,10 @@ var admin = function (){
 	$("#menusubirCSV").on("click",mostrarcargacsv)
 	$("#listadoResultadosC").on("click","#btnFiltroResultados",filtroResultadosSem);
 	$("#btnsubmitcurso").on("click",infoarchivo);
+	
 	$("#tblreportes").on("click","#btnmodalcalificar",btncalificarreporte);
+	$("#txttiempoforma").on("change",cambiaCalifFinal);
+	$("#txtresponsabilidad").on("change",cambiaCalifFinal);
 
 }
 $(document).on("ready",admin);
