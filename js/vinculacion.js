@@ -2041,7 +2041,6 @@ var admin = function (){
 		$("#selniveldes").prop('selectedIndex',index);;
 		$("#selniveldes").material_select();
 	}
-<<<<<<< HEAD
 	var actualizarCalifReporte=function(){
 		var cvereporte		=$("#cvereporte").val();
 		var califVincRep	=$("#txtcalVinc").val();
@@ -2066,7 +2065,7 @@ var admin = function (){
 			}
 
 		});
-=======
+
 	var aceptarDocumentos = function(){
 		var doc = $(this).val();
 		var parametros = "opc=aceptarDocumentos"+"&doc="+doc;
@@ -2103,7 +2102,7 @@ var admin = function (){
 			}
 		});
 
->>>>>>> 164a5220d56b49b3bcaaedda5c359a583dd4da07
+
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
