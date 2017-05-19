@@ -25,6 +25,7 @@
 						<td>
 							<input id="txtresponsabilidad" name="txtresponsabilidad" type="number" min="1" max="10" class="validate cals" value=0> 
 						</td>
+						<input type="hidden" id="txtcalVinc">
 					</tr>
 					<tr>
 						<td class="right">CALIFICACIÓN FINAL</td>
@@ -42,7 +43,13 @@
 							<option value="">SUFUCIENTE</option>
 							<option value="">INSUFICIENTE</option>
 						</select></td>
-				</div>	
+				</div>
+				<div class="row">
+		        <div class="input-field col s12">
+		          <input id="observacionesreportes" name="observacionesreportes" type="text">
+		          <label for="observacionesreportes" class="active">Observaciones</label>
+		        </div>
+	        </div>	
 			</div>
 		</div>
 		<div class="modal-footer">
