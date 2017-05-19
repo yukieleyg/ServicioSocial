@@ -1968,6 +1968,26 @@ function llenaDptoProgramas(){
 		}
 		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
 			print json_encode($arrayJSON);
+		}
+
+	function aceptarDocumentos(){
+			$cvedoc 			= $_POST['doc'];
+		    $cn 				= conexionLocal();
+			$qryDoc 			= sprintf("SELECT * FROM documentos WHERE cvedocumento =%s",$cvedoc);
+			var_dump($cvedoc);
+			$resDoc 			= mysql_query($qryDoc);
+			$rowDoc				= mysql_fetch_array($resDoc);
+			$cveExpediente 		= $rowDoc['cveexpediente_1'];
+			$estado 			= 1;
+			$qryUpdate 			= sprintf("UPDATE documentos SET revisado = %s WHERE cvedocumento =%s",$estado,$cvedoc);
+			$resUpdate 			= mysql_query($qryUpdate);
+			$respuesta 			= false;
+			if(mysql_affected_rows()>0){
+				$respuesta = true;
+			}
+			$arrayJSON 	= array('respuesta' => $respuesta, 'cveExpediente' => $cveExpediente);
+			print json_encode($arrayJSON);
+
 	}
 	$opc= $_POST["opc"];
 	switch ($opc){
@@ -2091,8 +2111,13 @@ function llenaDptoProgramas(){
 		case 'tomoCursoMoodle':
 			tomoCursoMoodle();
 			break;
+<<<<<<< HEAD
 		case 'calificarReporte':
 			calificarReporte();
+=======
+		case 'aceptarDocumentos':
+			aceptarDocumentos();
+>>>>>>> 164a5220d56b49b3bcaaedda5c359a583dd4da07
 			break;
 		default:
 		# code...

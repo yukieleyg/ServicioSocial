@@ -578,7 +578,13 @@ var admin = function (){
 						  	$("#icartaapEmpty").hide();
 						  	$("#icartaap").show();
 						  	$("#icartaap").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	$("#estadoCartaAp").val(estado);					
+						  	$("#estadoCartaAp").val(estado);
+						  	if(estado=='Pendiente'){
+						  		$("#aceptarCartaApr").attr('disabled',false);
+						  		$("#rechazarCartaApr").attr('disabled',false);
+						  	}
+						  	$("#aceptarCartaApr").val(value.cvedoc);
+							$("#rechazarCartaApr").val(value.cvedoc);	
 						  	console.log("Esta es una carta");
 						  		break;
 						  	case '3': 
@@ -586,14 +592,20 @@ var admin = function (){
 						  	$("#iplantraEmpty").hide();
 						  	$("#iplantra").show();
 						  	$("#iplantra").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-							$("#estadoPlanTra").val(estado);  	
+							$("#estadoPlanTra").val(estado); 
+							if(estado=='Pendiente'){
+						  		$("#aceptarPlanTra").attr('disabled',false);
+						  		$("#rechazarPlanTra").attr('disabled',false);
+						  	} 
+						  	$("#aceptarPlanTra").val(value.cvedoc);
+							$("#rechazarPlanTra").val(value.cvedoc);	
 						  	console.log("Esta es un plantrabajo");
 						  		break;
 						  	case '7': 
 						  	$("#cartaterm").prop("checked",true);
 						  	$("#icartatermEmpty").hide();
 						  	$("#icartaterm").show();
-						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');						  	
+						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	console.log("Esta es una cartaterminacion");
 						  		break;
 						  }
@@ -2029,6 +2041,7 @@ var admin = function (){
 		$("#selniveldes").prop('selectedIndex',index);;
 		$("#selniveldes").material_select();
 	}
+<<<<<<< HEAD
 	var actualizarCalifReporte=function(){
 		var cvereporte		=$("#cvereporte").val();
 		var califVincRep	=$("#txtcalVinc").val();
@@ -2053,6 +2066,44 @@ var admin = function (){
 			}
 
 		});
+=======
+	var aceptarDocumentos = function(){
+		var doc = $(this).val();
+		var parametros = "opc=aceptarDocumentos"+"&doc="+doc;
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Esta seguro que desea aceptar el documento ?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url: "../datos/vinculacion.php",
+							data: parametros,
+							success: function(data){
+								if(data.respuesta== true){
+									$.alert("El documento ha sido aceptado");
+									console.log(data.respuesta+"holi");
+								}else{
+									$.alert("El documento no ha podido ser aceptada");
+								}
+							}
+
+
+						});
+					}
+				},
+				cancel: function () {
+					$.alert("La solicitud no fue modificada");
+				}
+			}
+		});
+
+>>>>>>> 164a5220d56b49b3bcaaedda5c359a583dd4da07
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -2128,6 +2179,10 @@ var admin = function (){
 	$("#txttiempoforma").on("change",cambiaCalifFinal);
 	$("#txtresponsabilidad").on("change",cambiaCalifFinal);
 	$("#btncalificarmodal").on("click",actualizarCalifReporte);
+	$("#aceptarCartaApr").on("click",aceptarDocumentos);
+	//$("#rechazarCartaApr").on("click",rechazarDocumentos);
+	$("#aceptarPlanTra").on("click",aceptarDocumentos);
+	//$("#rechazarPlanTra").on("click",rechazarDocumentos);
 
 }
 $(document).on("ready",admin);
