@@ -2076,7 +2076,28 @@ var admin = function (){
 
 	}
 	var rechazarDocumentos = function(){
+		var cvedoc = $(this).val();
+		$("#btnEnviaObs").val(cvedoc);
 		$("#modalrechazardocumento").openModal();
+	}
+	var guardarObservaciones = function(){
+		var obs = $("#observacionesDoc").val();
+		var doc = $("#btnEnviaObs").val();
+		var parametros="opc=guardarObservaciones"+"&doc="+doc+"&obs="+obs;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta== true){
+					$.alert("Se han enviado las observaciones");				
+				}else{
+					$.alert("ERROR");
+				}
+			}
+
+		});
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -2155,6 +2176,7 @@ var admin = function (){
 	$("#rechazarCartaApr").on("click",rechazarDocumentos);
 	$("#aceptarPlanTra").on("click",aceptarDocumentos);
 	$("#rechazarPlanTra").on("click",rechazarDocumentos);
+	$("#btnEnviaObs").on("click",guardarObservaciones);
 
 
 }

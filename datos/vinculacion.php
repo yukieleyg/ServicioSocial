@@ -1965,6 +1965,18 @@ function llenaDptoProgramas(){
 			print json_encode($arrayJSON);
 
 	}
+	function guardarObservaciones(){
+		$doc 	= $_POST['doc']; 
+		$obs 	= $_POST['obs'];
+		$cn  	= conexionLocal();
+		$qryObs = sprintf("UPDATE documentos SET observaciones =%s WHERE cvedocumento=%s",$obs, $doc);
+		$resObs = mysql_query($qryObs);
+		$respuesta =  false;
+		if(mysql_affected_rows()>0){
+			$respuesta = true;
+		}
+
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -2090,6 +2102,8 @@ function llenaDptoProgramas(){
 		case 'aceptarDocumentos':
 			aceptarDocumentos();
 			break;
+		case 'guardarObservaciones':
+			guardarObservaciones();
 		default:
 		# code...
 		break;
