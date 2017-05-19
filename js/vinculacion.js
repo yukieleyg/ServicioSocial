@@ -545,6 +545,13 @@ var admin = function (){
 						Materialize.toast('No se encontró el expediente', 4000);
 					}else{
 						$("#cveexpediente").val(data.cveexpediente);
+						if(data.cvesolicitud!=""){
+								$("#solicitud").prop("checked",true);
+								$("#isolicitudEmpty").hide();
+								$("#isolicitud").show();
+								$("#isolicitud").attr("href", '../datos/descargarArchivos.php?solicitud='+data.cvesolicitud);
+						}
+					
 						$.each(data.documentos, function( i, value ) {
 							//estado de revision del documento
 							var estado ='';
@@ -1983,16 +1990,17 @@ var admin = function (){
 	}
 
 	var calificarreporte=function(cvereporte, calificacion){
+		$("#cvereporte").val(cvereporte);
 		$("#txtcalempresa").val(calificacion);
-		$("#txtcalififinal").val(calificacion);
+		$("#txtcalififinal").html(calificacion);
 		$(".cals").val("0");
-		$("#txtcalififinal").html("");
 		$("#selniveldes").prop('selectedIndex',0);;
 		$("#selniveldes").material_select();
 		$("#modalcalificarreporte").openModal();
 	}
 	var btncalificarreporte=function(){
 		var btnid=$(this).val();
+		$("#numreporte").val(btnid);
 		var cvereporte=$("#btnmc"+btnid+"").val();
 		var califEmmpresa=$("#calEmpR"+btnid+"").val();
 		var claveexpediente= $("#cveexpediente").val();
@@ -2001,24 +2009,50 @@ var admin = function (){
 	var cambiaCalifFinal=function(){
 		if(parseInt($("#txttiempoforma").val())>25) $("#txttiempoforma").val("25");
 		if(parseInt($("#txtresponsabilidad").val())>10) $("#txtresponsabilidad").val("10");
-		var suma=parseInt($("#txttiempoforma").val())+parseInt($("#txtresponsabilidad").val())+parseInt($("#txtcalempresa").val());
-		alert(suma);
-		$("#txtcalififinal").html(suma);
+		var sumaV=parseInt($("#txttiempoforma").val())+parseInt($("#txtresponsabilidad").val());
+		var sumaT=sumaV+parseInt($("#txtcalempresa").val());
+		$("#txtcalVinc").val(sumaV);
+		$("#txtcalififinal").html(sumaT);
 		var index=0;		
-			if(suma > 94){
+			if(sumaT > 94){
 				index=1;
-			}else if(suma > 84 && suma < 95) {
+			}else if(sumaT > 84 && sumaT < 95) {
 				index=2;
-			}else if(suma > 74 && suma < 85){
+			}else if(sumaT > 74 && sumaT < 85){
 				index=3;
-			}else if(suma > 69 && suma < 75){
+			}else if(sumaT > 69 && sumaT < 75){
 				index=4;
-			}else if(suma <70){
+			}else if(sumaT <70){
 				index=5;
 			}
 
 		$("#selniveldes").prop('selectedIndex',index);;
 		$("#selniveldes").material_select();
+	}
+	var actualizarCalifReporte=function(){
+		var cvereporte		=$("#cvereporte").val();
+		var califVincRep	=$("#txtcalVinc").val();
+		var observaciones 	=$("#observacionesreportes").val();
+		var parametros ="opc=calificarReporte"+"&cvereporte="+cvereporte+"&calificacion="+califVincRep+"&observaciones="+observaciones;
+		$.ajax({
+			type:"POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta==true){
+					var nrep=$("#numreporte").val();
+					console.log(nrep);
+					$("#calTotal"+nrep+"").html($("#txtcalififinal").html());
+					$("#btnmodalcalificar[value='"+nrep+"']").attr("disabled",true).hide();
+				}
+			},
+			complete: function(){
+				$("#observacionesreportes").val("");
+				//limpiar inputs
+			}
+
+		});
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -2093,6 +2127,7 @@ var admin = function (){
 	$("#tblreportes").on("click","#btnmodalcalificar",btncalificarreporte);
 	$("#txttiempoforma").on("change",cambiaCalifFinal);
 	$("#txtresponsabilidad").on("change",cambiaCalifFinal);
+	$("#btncalificarmodal").on("click",actualizarCalifReporte);
 
 }
 $(document).on("ready",admin);

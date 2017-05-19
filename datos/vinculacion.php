@@ -570,8 +570,10 @@ function llenaDptoProgramas(){
 		$mensaje	="No se encuentra expediente";
 		$cn 		= conexionLocal();
 		$cveexp="";
+		$cvesol="";
 		$qryvalida	= sprintf("SELECT 	e.cveexpediente,
 									  	d.archivo AS 'ruta',
+									  	e.cvesolicitud,
 									  	d.cvedocumento,
 									  	d.tipo,
 									  	d.revisado,
@@ -588,6 +590,7 @@ function llenaDptoProgramas(){
 		/*TIPOS: 1-Solicitud	2-Carta Aceptacion 3-Plan de Trabajo 4-ReporteUno 5-ReporteDos 6-ReporteTres 7-Carta de Terminacion*/
 		while($row = mysql_fetch_array($res)){
 			$cveexp=$row["cveexpediente"];
+			$cvesol=$row["cvesolicitud"];
 			$tipodoc=intval($row["tipo"]);
 			$ruta=$row["ruta"];
 			$cvedcto=$row["cvedocumento"];
@@ -602,7 +605,7 @@ function llenaDptoProgramas(){
 			$respuesta=true;
 		}
 		$arrayJSON=Array('respuesta'=>$respuesta,
-						'documentos'=>$arrayExp,'cveexpediente'=>$cveexp);
+						'documentos'=>$arrayExp,'cveexpediente'=>$cveexp,'cvesolicitud'=>$cvesol);
 		print json_encode($arrayJSON);
 	}
 	function reportesExpediente(){
@@ -1947,6 +1950,25 @@ function llenaDptoProgramas(){
 		$arrayJSON = array('respuesta' => $respuesta, 'ul'=> $ul);
 		print json_encode($arrayJSON);
 	}
+	function calificarReporte(){
+		$respuesta=false;
+		$mensaje="No se ha encontrado el reporte";
+		$cn=conexionLocal();
+		$cvereporte=$_POST["cvereporte"];
+		$calificacionVinc=$_POST["calificacion"];
+		$observaciones=$_POST["observaciones"];
+		$qryreporte=sprintf("UPDATE reportes 
+							 SET calificacionV = %d, observaciones=%s 
+							 WHERE cvereporte = %s",$calificacionVinc,"'".$observaciones."'",$cvereporte);
+
+		mysql_query($qryreporte);
+		if(mysql_affected_rows()>0){
+			$respuesta=true;
+			$mensaje="Se ha revisado el reporte";
+		}
+		$arrayJSON = array('respuesta'=>$respuesta, 'mensaje'=>$mensaje);
+			print json_encode($arrayJSON);
+	}
 	$opc= $_POST["opc"];
 	switch ($opc){
 		case 'muestraSolicitudes':
@@ -2068,6 +2090,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'tomoCursoMoodle':
 			tomoCursoMoodle();
+			break;
+		case 'calificarReporte':
+			calificarReporte();
 			break;
 		default:
 		# code...
