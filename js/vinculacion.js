@@ -2075,6 +2075,9 @@ var admin = function (){
 		});
 
 	}
+	var rechazarDocumentos = function(){
+		$("#modalrechazardocumento").openModal();
+	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -2149,9 +2152,9 @@ var admin = function (){
 	$("#txttiempoforma").on("change",cambiaCalifFinal);
 	$("#txtresponsabilidad").on("change",cambiaCalifFinal);
 	$("#aceptarCartaApr").on("click",aceptarDocumentos);
-	//$("#rechazarCartaApr").on("click",rechazarDocumentos);
+	$("#rechazarCartaApr").on("click",rechazarDocumentos);
 	$("#aceptarPlanTra").on("click",aceptarDocumentos);
-	//$("#rechazarPlanTra").on("click",rechazarDocumentos);
+	$("#rechazarPlanTra").on("click",rechazarDocumentos);
 
 
 }

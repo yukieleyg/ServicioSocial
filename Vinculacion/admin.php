@@ -49,6 +49,7 @@
 	<div id="tarjetaControl" class="card">
 		<?php include 'divTarjetaControlVista.php'; ?>
 		<?php include 'divModalCalificacion.php'; ?>
+		<?php include 'divModalRechazarDocumentos.php' ?>
 	</div>
 	<div id="registroAlumnos" class="card">
 		<?php include 'divRegistroAlumnos.php' ?>
