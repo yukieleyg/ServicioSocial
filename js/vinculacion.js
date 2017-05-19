@@ -2065,7 +2065,7 @@ var admin = function (){
 			}
 
 		});
-
+}
 	var aceptarDocumentos = function(){
 		var doc = $(this).val();
 		var parametros = "opc=aceptarDocumentos"+"&doc="+doc;
