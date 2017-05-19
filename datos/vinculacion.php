@@ -1951,7 +1951,6 @@ function llenaDptoProgramas(){
 			$cvedoc 			= $_POST['doc'];
 		    $cn 				= conexionLocal();
 			$qryDoc 			= sprintf("SELECT * FROM documentos WHERE cvedocumento =%s",$cvedoc);
-			var_dump($cvedoc);
 			$resDoc 			= mysql_query($qryDoc);
 			$rowDoc				= mysql_fetch_array($resDoc);
 			$cveExpediente 		= $rowDoc['cveexpediente_1'];

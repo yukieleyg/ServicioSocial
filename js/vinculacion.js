@@ -575,6 +575,9 @@ var admin = function (){
 						  	if(estado=='Pendiente'){
 						  		$("#aceptarCartaApr").attr('disabled',false);
 						  		$("#rechazarCartaApr").attr('disabled',false);
+						  	}else{
+						  		$("#aceptarCartaApr").attr('disabled',true);
+						  		$("#rechazarCartaApr").attr('disabled',true);
 						  	}
 						  	$("#aceptarCartaApr").val(value.cvedoc);
 							$("#rechazarCartaApr").val(value.cvedoc);	
@@ -589,6 +592,9 @@ var admin = function (){
 							if(estado=='Pendiente'){
 						  		$("#aceptarPlanTra").attr('disabled',false);
 						  		$("#rechazarPlanTra").attr('disabled',false);
+						  	}else{
+						  		$("#aceptarPlanTra").attr('disabled',true);
+						  		$("#rechazarPlanTra").attr('disabled',true);
 						  	} 
 						  	$("#aceptarPlanTra").val(value.cvedoc);
 							$("#rechazarPlanTra").val(value.cvedoc);	
@@ -2052,7 +2058,7 @@ var admin = function (){
 							success: function(data){
 								if(data.respuesta== true){
 									$.alert("El documento ha sido aceptado");
-									console.log(data.respuesta+"holi");
+									llenarTarjeta();									
 								}else{
 									$.alert("El documento no ha podido ser aceptada");
 								}
