@@ -2111,13 +2111,11 @@ function llenaDptoProgramas(){
 		case 'tomoCursoMoodle':
 			tomoCursoMoodle();
 			break;
-<<<<<<< HEAD
 		case 'calificarReporte':
 			calificarReporte();
-=======
+			break;
 		case 'aceptarDocumentos':
 			aceptarDocumentos();
->>>>>>> 164a5220d56b49b3bcaaedda5c359a583dd4da07
 			break;
 		default:
 		# code...
