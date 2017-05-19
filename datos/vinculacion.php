@@ -1967,14 +1967,19 @@ function llenaDptoProgramas(){
 	}
 	function guardarObservaciones(){
 		$doc 	= $_POST['doc']; 
-		$obs 	= $_POST['obs'];
+		$obs 	= "'".$_POST['obs']."'";
 		$cn  	= conexionLocal();
 		$qryObs = sprintf("UPDATE documentos SET observaciones =%s WHERE cvedocumento=%s",$obs, $doc);
 		$resObs = mysql_query($qryObs);
+		$estado = '2';
+		$qryRech = sprintf("UPDATE documentos SET revisado =%s WHERE cvedocumento=%s",$estado, $doc);
+		$resRech = mysql_query($qryRech);
 		$respuesta =  false;
 		if(mysql_affected_rows()>0){
 			$respuesta = true;
 		}
+		$arrayJSON 	= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
 
 	}
 	$opc= $_POST["opc"];

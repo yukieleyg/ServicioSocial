@@ -2078,7 +2078,9 @@ var admin = function (){
 	var rechazarDocumentos = function(){
 		var cvedoc = $(this).val();
 		$("#btnEnviaObs").val(cvedoc);
+		$("#observacionesDoc").val('');
 		$("#modalrechazardocumento").openModal();
+
 	}
 	var guardarObservaciones = function(){
 		var obs = $("#observacionesDoc").val();
@@ -2091,7 +2093,7 @@ var admin = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta== true){
-					$.alert("Se han enviado las observaciones");				
+					$.alert("Se han enviado las observaciones");
 				}else{
 					$.alert("ERROR");
 				}
