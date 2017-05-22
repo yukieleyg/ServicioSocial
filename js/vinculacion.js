@@ -2144,6 +2144,7 @@ var admin = function (){
 			success: function(data){
 				if(data.respuesta== true){
 					$.alert("Se han enviado las observaciones");
+					llenarTarjeta();
 				}else{
 					$.alert("ERROR");
 				}
