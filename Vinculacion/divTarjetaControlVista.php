@@ -86,10 +86,10 @@
   	<li>
   		<div class="collapsible-header" id="badgeexpediente"><i class="material-icons">folder</i><span class="left">Control de Expediente</span></div>
   		<div class="collapsible-body">
-  		<br>
+  		<br><br>
 			<div id="controlexpediente1" class="container" style="text-align:left;">
 				<input type="checkbox" id="cursoin" disabled/>
-				<label>Curso de Inducción</label><br>
+				<label>Curso de Inducción</label><br><br>
 				<table  class="striped" id="tablaDocs">
   					<thead>
 			          <tr>

@@ -575,6 +575,9 @@ var admin = function (){
 						  	if(estado=='Pendiente'){
 						  		$("#aceptarCartaApr").attr('disabled',false);
 						  		$("#rechazarCartaApr").attr('disabled',false);
+						  	}else{
+						  		$("#aceptarCartaApr").attr('disabled',true);
+						  		$("#rechazarCartaApr").attr('disabled',true);
 						  	}
 						  	$("#aceptarCartaApr").val(value.cvedoc);
 							$("#rechazarCartaApr").val(value.cvedoc);	
@@ -588,6 +591,9 @@ var admin = function (){
 							if(estado=='Pendiente'){
 						  		$("#aceptarPlanTra").attr('disabled',false);
 						  		$("#rechazarPlanTra").attr('disabled',false);
+						  	}else{
+						  		$("#aceptarPlanTra").attr('disabled',true);
+						  		$("#rechazarPlanTra").attr('disabled',true);
 						  	} 
 						  	$("#aceptarPlanTra").val(value.cvedoc);
 							$("#rechazarPlanTra").val(value.cvedoc);	
@@ -608,7 +614,7 @@ var admin = function (){
 	var reportesExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
 		$("#btnmodalcalificar").show();
-		$("#calTotal1","#calTotal2","#calTotal3").attr('type','hidden');
+		$("#calTotal1","#calTotal2","#calTotal3").attr('type','hidden').val("");
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
 			collapseAll();
@@ -665,6 +671,7 @@ var admin = function (){
 						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#btnmc2").val(value.cvereporte);									  	
 						  	$("#estadoRepDos").val(estado);
+						  	if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
 						  	$("#calEmpR2").val(value.califEmp);						  							  	
 						  		break;
 						  	case '3': 
@@ -674,6 +681,7 @@ var admin = function (){
 							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 							$("#btnmc3").val(value.cvereporte);									  	
 							$("#estadoRepTres").val(estado);
+							if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
 						  	$("#calEmpR3").val(value.califEmp);						  	
 						  		break;
 						  }
@@ -2081,7 +2089,7 @@ var admin = function (){
 							success: function(data){
 								if(data.respuesta== true){
 									$.alert("El documento ha sido aceptado");
-									console.log(data.respuesta+"holi");
+									llenarTarjeta();									
 								}else{
 									$.alert("El documento no ha podido ser aceptada");
 								}
@@ -2099,6 +2107,7 @@ var admin = function (){
 
 
 	}
+
 	var cambiaestadoreporte=function(){
 		index=$(this).val();
 		switch(index){
@@ -2114,8 +2123,35 @@ var admin = function (){
 		}
 			
 			$("select").material_select();
-		
 	}
+
+	var rechazarDocumentos = function(){
+		var cvedoc = $(this).val();
+		$("#btnEnviaObs").val(cvedoc);
+		$("#observacionesDoc").val('');
+		$("#modalrechazardocumento").openModal();
+
+	}
+	var guardarObservaciones = function(){
+		var obs = $("#observacionesDoc").val();
+		var doc = $("#btnEnviaObs").val();
+		var parametros="opc=guardarObservaciones"+"&doc="+doc+"&obs="+obs;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta== true){
+					$.alert("Se han enviado las observaciones");
+				}else{
+					$.alert("ERROR");
+				}
+			}
+
+		});
+	}
+
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
 	$("#tablaSolicitudes").on("click","#rechazar",rechazarSolicitudes);
@@ -2192,9 +2228,10 @@ var admin = function (){
 	$("#btncalificarmodal").on("click",actualizarCalifReporte);
 	$("#selestadorep").on("change",cambiaestadoreporte);
 	$("#aceptarCartaApr").on("click",aceptarDocumentos);
-	//$("#rechazarCartaApr").on("click",rechazarDocumentos);
+	$("#rechazarCartaApr").on("click",rechazarDocumentos);
 	$("#aceptarPlanTra").on("click",aceptarDocumentos);
-	//$("#rechazarPlanTra").on("click",rechazarDocumentos);
+	$("#rechazarPlanTra").on("click",rechazarDocumentos);
+	$("#btnEnviaObs").on("click",guardarObservaciones);
 
 }
 $(document).on("ready",admin);

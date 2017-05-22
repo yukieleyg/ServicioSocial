@@ -1980,7 +1980,6 @@ function llenaDptoProgramas(){
 			$cvedoc 			= $_POST['doc'];
 		    $cn 				= conexionLocal();
 			$qryDoc 			= sprintf("SELECT * FROM documentos WHERE cvedocumento =%s",$cvedoc);
-			var_dump($cvedoc);
 			$resDoc 			= mysql_query($qryDoc);
 			$rowDoc				= mysql_fetch_array($resDoc);
 			$cveExpediente 		= $rowDoc['cveexpediente_1'];
@@ -1993,6 +1992,23 @@ function llenaDptoProgramas(){
 			}
 			$arrayJSON 	= array('respuesta' => $respuesta, 'cveExpediente' => $cveExpediente);
 			print json_encode($arrayJSON);
+
+	}
+	function guardarObservaciones(){
+		$doc 	= $_POST['doc']; 
+		$obs 	= "'".$_POST['obs']."'";
+		$cn  	= conexionLocal();
+		$qryObs = sprintf("UPDATE documentos SET observaciones =%s WHERE cvedocumento=%s",$obs, $doc);
+		$resObs = mysql_query($qryObs);
+		$estado = '2';
+		$qryRech = sprintf("UPDATE documentos SET revisado =%s WHERE cvedocumento=%s",$estado, $doc);
+		$resRech = mysql_query($qryRech);
+		$respuesta =  false;
+		if(mysql_affected_rows()>0){
+			$respuesta = true;
+		}
+		$arrayJSON 	= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
 
 	}
 	$opc= $_POST["opc"];
@@ -2123,6 +2139,8 @@ function llenaDptoProgramas(){
 		case 'aceptarDocumentos':
 			aceptarDocumentos();
 			break;
+		case 'guardarObservaciones':
+			guardarObservaciones();
 		default:
 		# code...
 		break;
