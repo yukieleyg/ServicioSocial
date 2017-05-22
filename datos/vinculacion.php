@@ -618,6 +618,8 @@ function llenaDptoProgramas(){
 									  	r.cvereporte,
 									  	r.noreporte,
 									  	r.calificacion,
+									  	(r.calificacion+r.calificacionV) as calTot,
+									  	r.calificacionV,
                                         r.estado
 							    FROM expedientes e 
 							    INNER JOIN reportes r
@@ -633,12 +635,16 @@ function llenaDptoProgramas(){
 			$cveexp=$row["cveexpediente"];
 			$rutareporte	=$row["ruta"];
 			$noreporte		=$row["noreporte"];
-			$califreporte	=$row['calificacion'];
+			$califEmp		=$row['calificacion'];
+			$califVinc 		=$row['calificacionV'];
+			$califTotal		=$row['calTot'];
 			$cvereporte		=$row["cvereporte"];
 			$estadorep 		=$row['estado'];
 				$arraytiporep['cvereporte']		=$cvereporte;
 				$arraytiporep['ruta']			=$rutareporte;
-			 	$arraytiporep["calificacion"]	=$califreporte;
+			 	$arraytiporep["califEmp"]		=$califEmp;
+			 	$arraytiporep["califVinc"] 		=$califVinc;
+			 	$arraytiporep["califTotal"]		=$califTotal;
 			 	$arraytiporep["estado"]			=$estadorep;
 			$arrayExpRep[$noreporte]=$arraytiporep;
 			$respuesta=true;
@@ -1956,11 +1962,11 @@ function llenaDptoProgramas(){
 		$cn=conexionLocal();
 		$cvereporte=$_POST["cvereporte"];
 		$calificacionVinc=$_POST["calificacion"];
-		$observaciones=$_POST["observaciones"];
+		$observaciones="'".$_POST["observaciones"]."'";
+		$estadorep="'".$_POST["estado"]."'";
 		$qryreporte=sprintf("UPDATE reportes 
-							 SET calificacionV = %d, observaciones=%s 
-							 WHERE cvereporte = %s",$calificacionVinc,"'".$observaciones."'",$cvereporte);
-
+							 SET calificacionV = %d, observaciones=%s, estado=%s 
+							 WHERE cvereporte = %s",$calificacionVinc,$observaciones,$estadorep,$cvereporte);
 		mysql_query($qryreporte);
 		if(mysql_affected_rows()>0){
 			$respuesta=true;

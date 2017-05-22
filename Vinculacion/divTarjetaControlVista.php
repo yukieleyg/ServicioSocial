@@ -142,28 +142,76 @@
 						<th>Estado</th>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repouno" class="inputVisible" disabled/></td>
+						<td>
+							<input type="checkbox" id="repouno" class="inputVisible" disabled/>
+						</td>
 						<td>1</td>
-						<td><i class="material-icons" class="ligadoEmpty" id="irepounoEmpty">layers_clear</i><a href="#" id="irepouno" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
-						<td><input id="calEmpR1" type="number" style="color:black" disabled></td>
-						<td class="center" id="calTotal1"><input type="hidden" id="btnmc1" class="modalhidden"><button id="btnmodalcalificar" value="1" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons">edit</i></button></td>
-						<td><input id="estadoRepUno" type="text" value="Pendiente" style="color:black" disabled></td>
+						<td>
+							<i class="material-icons" class="ligadoEmpty" id="irepounoEmpty">layers_clear</i>
+							<a href="#" id="irepouno" target=_blank class="ligadoc" >
+								<i class="material-icons">open_in_new</i>
+							</a>
+						</td>
+						<td>	
+							<input id="calEmpR1" type="number" style="color:black" disabled>
+						</td>
+						<td class="center">
+							<input type="hidden" id="calTotal1"><input type="hidden" id="btnmc1" class="modalhidden">
+							<button id="btnmodalcalificar" value="1" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+								<i class="material-icons">edit</i>
+							</button>
+						</td>
+						<td>
+							<input id="estadoRepUno" type="text" value="Pendiente" style="color:black" disabled>
+						</td>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repodos" class="inputVisible" disabled/></td>
+						<td>
+							<input type="checkbox" id="repodos" class="inputVisible" disabled/>
+						</td>
 						<td>2</td>
-						<td><i class="material-icons" class="ligadoEmpty" id="irepodosEmpty">layers_clear</i><a href="#" id="irepodos" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
-						<td><input id="calEmpR2" type="number" style="color:black" disabled></td>
-						<td class="center" id="calTotal2"><input type="hidden" id="btnmc2" class="modalhidden"><button id="btnmodalcalificar" value="2" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons">edit</i></button></td>
-						<td><input id="estadoRepDos" type="text" value="Pendiente" style="color:black" disabled></td>
+						<td>
+							<i class="material-icons" class="ligadoEmpty" id="irepodosEmpty">layers_clear</i>
+							<a href="#" id="irepodos" target=_blank class="ligadoc" >
+								<i class="material-icons">open_in_new</i>
+							</a>
+						</td>
+						<td>
+							<input id="calEmpR2" type="number" style="color:black" disabled>
+						</td>
+						<td class="center">
+							<input type="hidden" id="calTotal2"><input type="hidden" id="btnmc2" class="modalhidden">
+							<button id="btnmodalcalificar" value="2" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+								<i class="material-icons">edit</i>
+							</button>
+						</td>
+						<td>
+							<input id="estadoRepDos" type="text" value="Pendiente" style="color:black" disabled>
+						</td>
 					</tr>
 					<tr>
-						<td><input type="checkbox" id="repotres" class="inputVisible" disabled/></td>
+						<td>
+							<input type="checkbox" id="repotres" class="inputVisible" disabled/>
+						</td>
 						<td>3</td>
-						<td><i class="material-icons" class="ligadoEmpty" id="irepotresEmpty">layers_clear</i><a href="#" id="irepotres" target=_blank class="ligadoc" ><i class="material-icons">open_in_new</i></a></td>
-						<td><input id="calEmpR3" type="number" style="color:black" disabled></td>
-						<td class="center" id="calTotal3"><input type="hidden" id="btnmc3" class="modalhidden"><button id="btnmodalcalificar" value="3" class="btn-floating btn-small waves-effect waves-light blue"><i class="material-icons">edit</i></button></td>
-						<td><input id="estadoRepTres" type="text" value="Pendiente" style="color:black" disabled></td>
+						<td>
+							<i class="material-icons" class="ligadoEmpty" id="irepotresEmpty">layers_clear</i>
+							<a href="#" id="irepotres" target=_blank class="ligadoc" >
+								<i class="material-icons">open_in_new</i>
+							</a>
+						</td>
+						<td>
+							<input id="calEmpR3" type="number" style="color:black" disabled>
+						</td>
+						<td class="center">
+							<input type="hidden" id="calTotal3"><input type="hidden" id="btnmc3" class="modalhidden">
+							<button id="btnmodalcalificar" value="3" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+								<i class="material-icons">edit</i>
+							</button>
+						</td>
+						<td>
+							<input id="estadoRepTres" type="text" value="Pendiente" style="color:black" disabled>
+						</td>
 					</tr>
 				</table>
 				<br>

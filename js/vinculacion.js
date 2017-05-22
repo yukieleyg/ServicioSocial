@@ -514,12 +514,6 @@ var admin = function (){
 	}
 	var documentosExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
-		/*$("#icartaap").attr("href", "");
-		$("#iplantra").attr("href", "");
-		$("#irepouno").attr("href", "");
-		$("#irepodos").attr("href", "");
-		$("#irepotres").attr("href", "");
-		$("#icartaterm").attr("href", "");*/
 		$(".ligadoc").attr("href","").hide();
 
 		$(':input','#controlexpediente1')
@@ -570,7 +564,6 @@ var admin = function (){
 							//opcion por tipo de documento
 						  switch(i){
 						  	case '1': 
-						  		console.log("Esta es una solicitud");
 						  		$("#estadoSolicitud").val(estado);	
 						  		break;
 						  	case '2': 
@@ -585,7 +578,6 @@ var admin = function (){
 						  	}
 						  	$("#aceptarCartaApr").val(value.cvedoc);
 							$("#rechazarCartaApr").val(value.cvedoc);	
-						  	console.log("Esta es una carta");
 						  		break;
 						  	case '3': 
 						  	$("#plantra").prop("checked",true);
@@ -599,14 +591,12 @@ var admin = function (){
 						  	} 
 						  	$("#aceptarPlanTra").val(value.cvedoc);
 							$("#rechazarPlanTra").val(value.cvedoc);	
-						  	console.log("Esta es un plantrabajo");
 						  		break;
 						  	case '7': 
 						  	$("#cartaterm").prop("checked",true);
 						  	$("#icartatermEmpty").hide();
 						  	$("#icartaterm").show();
 						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-						  	console.log("Esta es una cartaterminacion");
 						  		break;
 						  }
 						});
@@ -617,7 +607,8 @@ var admin = function (){
 	}
 	var reportesExpediente=function(nocontrol){
 		var ncontrol = $("#txtbuscaTarjeta").val();
-		
+		$("#btnmodalcalificar").show();
+		$("#calTotal1","#calTotal2","#calTotal3").attr('type','hidden');
 		if(ncontrol==""){
 			Materialize.toast('Ingresa el No. de Control', 4000);
 			collapseAll();
@@ -637,7 +628,11 @@ var admin = function (){
 					}else{
 						$("#cveexpediente").val(data.cveexpediente);
 						$.each(data.reportes, function( i, value ) {
-							
+							if(parseInt(value.califVinc)>0 && estado!=0){
+								$("#calTotal"+i+"").val(value.califTotal);
+								$("#btnmodalcalificar[value='"+i+"']").hide();
+								$("#calTotal"+i+"").attr('type','text').css("width","50%");				
+							}
 							//estado del reporte
 							var estado ='';
 						  	switch(value.estado){
@@ -660,8 +655,8 @@ var admin = function (){
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#btnmc1").val(value.cvereporte);						  	
 							$("#estadoRepUno").val(estado);
-						  	$("#calEmpR1").val(value.calificacion);				  							  	
-						  	console.log("Esta es un reporteuno");
+							if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
+						  	$("#calEmpR1").val(value.califEmp);				  							  	
 						  		break;
 						  	case '2': 
 						  	$("#repodos").prop("checked",true);
@@ -670,8 +665,7 @@ var admin = function (){
 						  	$("#irepodos").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 						  	$("#btnmc2").val(value.cvereporte);									  	
 						  	$("#estadoRepDos").val(estado);
-						  	$("#calEmpR2").val(value.calificacion);						  							  	
-						  	console.log("Esta es un reportedos");
+						  	$("#calEmpR2").val(value.califEmp);						  							  	
 						  		break;
 						  	case '3': 
 							$("#repotres").prop("checked",true);
@@ -680,8 +674,7 @@ var admin = function (){
 							$("#irepotres").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
 							$("#btnmc3").val(value.cvereporte);									  	
 							$("#estadoRepTres").val(estado);
-						  	$("#calEmpR3").val(value.calificacion);						  	
-						  	console.log("Esta es un reportetres");
+						  	$("#calEmpR3").val(value.califEmp);						  	
 						  		break;
 						  }
 						});
@@ -2005,9 +1998,9 @@ var admin = function (){
 		$("#cvereporte").val(cvereporte);
 		$("#txtcalempresa").val(calificacion);
 		$("#txtcalififinal").html(calificacion);
-		$(".cals").val("0");
-		$("#selniveldes").prop('selectedIndex',0);;
-		$("#selniveldes").material_select();
+		$(".cals").not("#observacionesreportes").val("0");
+		$("#selniveldes,#selestadorep").prop('selectedIndex',0);
+		$("#selniveldes,#selestadorep").material_select();
 		$("#modalcalificarreporte").openModal();
 	}
 	var btncalificarreporte=function(){
@@ -2044,8 +2037,9 @@ var admin = function (){
 	var actualizarCalifReporte=function(){
 		var cvereporte		=$("#cvereporte").val();
 		var califVincRep	=$("#txtcalVinc").val();
+		var estadorep 		=$("#selestadorep").val();
 		var observaciones 	=$("#observacionesreportes").val();
-		var parametros ="opc=calificarReporte"+"&cvereporte="+cvereporte+"&calificacion="+califVincRep+"&observaciones="+observaciones;
+		var parametros ="opc=calificarReporte"+"&cvereporte="+cvereporte+"&calificacion="+califVincRep+"&observaciones="+observaciones+"&estado="+estadorep;
 		$.ajax({
 			type:"POST",
 			dataType: "json",
@@ -2061,6 +2055,7 @@ var admin = function (){
 			},
 			complete: function(){
 				$("#observacionesreportes").val("");
+				llenarTarjeta();
 				//limpiar inputs
 			}
 
@@ -2103,6 +2098,23 @@ var admin = function (){
 		});
 
 
+	}
+	var cambiaestadoreporte=function(){
+		index=$(this).val();
+		switch(index){
+			case '0':
+			$(".cals").attr("disabled",true);
+			break;
+			case '1':
+			$(".cals").removeAttr("disabled");
+			break;
+			case '2':
+			$(".cals").removeAttr("disabled");
+			break;
+		}
+			
+			$("select").material_select();
+		
 	}
 	$("#muestraSolicitudes").on("click",alumnosSolicitudes);
 	$("#tablaSolicitudes").on("click","#aceptar",aceptarSolicitudes);
@@ -2178,6 +2190,7 @@ var admin = function (){
 	$("#txttiempoforma").on("change",cambiaCalifFinal);
 	$("#txtresponsabilidad").on("change",cambiaCalifFinal);
 	$("#btncalificarmodal").on("click",actualizarCalifReporte);
+	$("#selestadorep").on("change",cambiaestadoreporte);
 	$("#aceptarCartaApr").on("click",aceptarDocumentos);
 	//$("#rechazarCartaApr").on("click",rechazarDocumentos);
 	$("#aceptarPlanTra").on("click",aceptarDocumentos);
