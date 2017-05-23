@@ -18,7 +18,7 @@
 					<table>
 						<tr disabled>
 							<td class="right">CALIFICACIÓN EMPRESA</td>
-							<td><input id="txtcalempresa" name="txtcalempresa" type="number" min="1" max="65" class="validate" disabled></td>
+							<td><input id="txtcalempresa" name="txtcalempresa" type="number" min="1" max="65" class="validate" style="color:black;" disabled></td>
 						</tr>
 						<tr>
 							<td>

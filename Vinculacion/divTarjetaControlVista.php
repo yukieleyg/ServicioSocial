@@ -105,7 +105,7 @@
 							<td><input type="checkbox" id="solicitud" class="inputVisible" disabled/></td>
 							<td>Solicitud</td>
 							<td><i class="material-icons" class="ligadoEmpty" id="isolicitudEmpty">layers_clear</i><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td><input id="estadoSolicitud" type="text" value="Sin Subir" style="color:black" disabled></td>
+							<td><input id="estadoSolicitud" type="text" value="Sin Subir" style="color:black;" disabled></td>
 							<td><button name= 'aceptarSolicitud' id='aceptarSolicitud' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
 							<td><button id='rechazarSolicitud' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
 						</tr>
@@ -113,7 +113,7 @@
 							<td><input type="checkbox" id="cartaap" class="inputVisible" disabled/></td>
 							<td>Carta Aprobación</td>
 							<td><i class="material-icons" class="ligadoEmpty" id="icartaapEmpty">layers_clear</i><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td><input id="estadoCartaAp" type="text" value="Sin Subir" style="color:black" disabled></td>
+							<td><input id="estadoCartaAp" type="text" value="Sin Subir" style="color:black;" disabled></td>
 							<td><button name= 'aceptarCartaApr' id='aceptarCartaApr' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
 							<td><button id='rechazarCartaApr' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
 						</tr>
@@ -121,7 +121,7 @@
 							<td><input type="checkbox" id="plantra" class="inputVisible" disabled/></td>
 							<td>Plan de trabajo</td>
 							<td><i class="material-icons" class="ligadoEmpty" id="iplantraEmpty">layers_clear</i><a href="!#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
-							<td><input id="estadoPlanTra" type="text" value="Sin Subir" style="color:black" disabled></td>
+							<td><input id="estadoPlanTra" type="text" value="Sin Subir" style="color:black;" disabled></td>
 							<td><button name='aceptarPlanTra'id='aceptarPlanTra' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
 							<td><button id='rechazarPlanTra' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>							
 						</tr>
@@ -153,7 +153,7 @@
 							</a>
 						</td>
 						<td>	
-							<input id="calEmpR1" type="number" style="color:black" disabled>
+							<input id="calEmpR1" type="number" style="color:black;" disabled>
 						</td>
 						<td class="center">
 							<input type="hidden" id="calTotal1"><input type="hidden" id="btnmc1" class="modalhidden">
@@ -162,7 +162,7 @@
 							</button>
 						</td>
 						<td>
-							<input id="estadoRepUno" type="text" value="Pendiente" style="color:black" disabled>
+							<input id="estadoRepUno" type="text" value="Pendiente" style="color:black;" disabled>
 						</td>
 					</tr>
 					<tr>
@@ -177,7 +177,7 @@
 							</a>
 						</td>
 						<td>
-							<input id="calEmpR2" type="number" style="color:black" disabled>
+							<input id="calEmpR2" type="number" style="color:black;" disabled>
 						</td>
 						<td class="center">
 							<input type="hidden" id="calTotal2"><input type="hidden" id="btnmc2" class="modalhidden">
@@ -186,7 +186,7 @@
 							</button>
 						</td>
 						<td>
-							<input id="estadoRepDos" type="text" value="Pendiente" style="color:black" disabled>
+							<input id="estadoRepDos" type="text" value="Pendiente" style="color:black;" disabled>
 						</td>
 					</tr>
 					<tr>
@@ -201,7 +201,7 @@
 							</a>
 						</td>
 						<td>
-							<input id="calEmpR3" type="number" style="color:black" disabled>
+							<input id="calEmpR3" type="number" style="color:black;" disabled>
 						</td>
 						<td class="center">
 							<input type="hidden" id="calTotal3"><input type="hidden" id="btnmc3" class="modalhidden">
@@ -210,7 +210,7 @@
 							</button>
 						</td>
 						<td>
-							<input id="estadoRepTres" type="text" value="Pendiente" style="color:black" disabled>
+							<input id="estadoRepTres" type="text" value="Pendiente" style="color:black;" disabled>
 						</td>
 					</tr>
 				</table>

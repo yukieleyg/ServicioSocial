@@ -517,6 +517,7 @@ var admin = function (){
 		$(".ligadoc").attr("href","").hide();
 
 		$(':input','#controlexpediente1')
+					.not('#estadoSolicitud')
  					.not(':button, :submit, :reset, :hidden')
  					.val('')
  					.removeAttr('checked')
