@@ -12,7 +12,8 @@
 			<option value="ALTA">ALTA</option>
 			<option value="BAJA">BAJA</option>
 		</select>
-		<input type="submit" class="btn btn-lg btn-block btn-success" value="Registrar">
+		<input type="submit" class="btn btn-lg btn-block btn-success right" value="Registrar">
+		<br>
 	</form>
 	<br>
 </div>

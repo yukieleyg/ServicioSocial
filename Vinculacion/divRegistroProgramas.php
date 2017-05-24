@@ -72,7 +72,8 @@
 			<option value="1" selected>Aceptado</option>
 			<option value="2">Rechazado</option>
 		</select>
-		<input type="submit" class="btn btn-lg btn-block btn-success" value="Registrar">
+		<input type="submit" class="btn btn-lg btn-block btn-success right" value="Registrar">
+		<br>
 	</form>
 	<br>
 	<br>

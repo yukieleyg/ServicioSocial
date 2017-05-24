@@ -1349,6 +1349,7 @@ function llenaDptoProgramas(){
 				break;
 		}
 		$res 		= mysql_query($qryProgramas);
+		var_dump($res);
 		while($renglon 	= mysql_fetch_array($res)){
 			$respuesta 	= true;
 			$cveprograma= $renglon["cveprograma"];
