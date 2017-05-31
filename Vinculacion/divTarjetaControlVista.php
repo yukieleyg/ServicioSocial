@@ -104,26 +104,26 @@
 						<tr>
 							<td><input type="checkbox" id="solicitud" class="inputVisible" disabled/></td>
 							<td>Solicitud</td>
-							<td><i class="material-icons" class="ligadoEmpty" id="isolicitudEmpty">layers_clear</i><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><i class="material-icons ligadoEmpty" id="isolicitudEmpty">layers_clear</i><a href="#" id="isolicitud" target=_blank class="ligadoc"><i class="material-icons ">open_in_new</i></a></td>
 							<td><input id="estadoSolicitud" type="text" value="Sin Subir" style="color:black;" disabled></td>
-							<td><button name= 'aceptarSolicitud' id='aceptarSolicitud' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazarSolicitud' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
+							<td><button name= 'aceptarSolicitud' id='aceptarSolicitud' class='btn-floating btn-small waves-effect waves-light green btnexpselector' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazarSolicitud' class='btn-floating btn-small waves-effect waves-light red btnexpselector' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="cartaap" class="inputVisible" disabled/></td>
 							<td>Carta Aprobación</td>
-							<td><i class="material-icons" class="ligadoEmpty" id="icartaapEmpty">layers_clear</i><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><i class="material-icons ligadoEmpty" id="icartaapEmpty">layers_clear</i><a href="#" id="icartaap" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 							<td><input id="estadoCartaAp" type="text" value="Sin Subir" style="color:black;" disabled></td>
-							<td><button name= 'aceptarCartaApr' id='aceptarCartaApr' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazarCartaApr' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
+							<td><button name= 'aceptarCartaApr' id='aceptarCartaApr' class='btn-floating btn-small waves-effect waves-light green btnmodexpselector' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazarCartaApr' class='btn-floating btn-small waves-effect waves-light red btnexpselector' value = ''disabled ><i class= 'material-icons'>close</i></a></td>
 						</tr>
 						<tr>
 							<td><input type="checkbox" id="plantra" class="inputVisible" disabled/></td>
 							<td>Plan de trabajo</td>
-							<td><i class="material-icons" class="ligadoEmpty" id="iplantraEmpty">layers_clear</i><a href="!#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+							<td><i class="material-icons ligadoEmpty" id="iplantraEmpty">layers_clear</i><a href="!#" id="iplantra" target=_blank class="ligadoc"><i class="material-icons ">open_in_new</i></a></td>
 							<td><input id="estadoPlanTra" type="text" value="Sin Subir" style="color:black;" disabled></td>
-							<td><button name='aceptarPlanTra'id='aceptarPlanTra' class='btn-floating btn-small waves-effect waves-light green' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
-							<td><button id='rechazarPlanTra' class='btn-floating btn-small waves-effect waves-light red' value = ''disabled ><i class= 'material-icons'>close</i></a></td>							
+							<td><button name='aceptarPlanTra'id='aceptarPlanTra' class='btn-floating btn-small waves-effect waves-light green btnexpselector' value = ''disabled ><i class= 'material-icons'>done_all</i></button></td>
+							<td><button id='rechazarPlanTra' class='btn-floating btn-small waves-effect waves-light red btnexpselector' value = ''disabled ><i class= 'material-icons'>close</i></a></td>							
 						</tr>
   				</table>
 				<br>
@@ -147,17 +147,17 @@
 						</td>
 						<td>1</td>
 						<td>
-							<i class="material-icons" class="ligadoEmpty" id="irepounoEmpty">layers_clear</i>
+							<i class="material-icons ligadoEmpty" id="irepounoEmpty">layers_clear</i>
 							<a href="#" id="irepouno" target=_blank class="ligadoc" >
-								<i class="material-icons">open_in_new</i>
+								<i class="material-icons ">open_in_new</i>
 							</a>
 						</td>
 						<td>	
 							<input id="calEmpR1" type="number" style="color:black;" disabled>
 						</td>
 						<td class="center">
-							<input type="hidden" id="calTotal1"><input type="hidden" id="btnmc1" class="modalhidden">
-							<button id="btnmodalcalificar" value="1" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+							<input type="hidden" id="calTotal1"><input type="hidden" id="btnmc1" class="modalhidden"> 
+							<button id="btnmodalcalificar" value="1" class="btn-floating btn-small waves-effect waves-light blue btnexpselector" disabled>
 								<i class="material-icons">edit</i>
 							</button>
 						</td>
@@ -171,9 +171,9 @@
 						</td>
 						<td>2</td>
 						<td>
-							<i class="material-icons" class="ligadoEmpty" id="irepodosEmpty">layers_clear</i>
+							<i class="material-icons ligadoEmpty" id="irepodosEmpty">layers_clear</i>
 							<a href="#" id="irepodos" target=_blank class="ligadoc" >
-								<i class="material-icons">open_in_new</i>
+								<i class="material-icons ">open_in_new</i>
 							</a>
 						</td>
 						<td>
@@ -181,7 +181,7 @@
 						</td>
 						<td class="center">
 							<input type="hidden" id="calTotal2"><input type="hidden" id="btnmc2" class="modalhidden">
-							<button id="btnmodalcalificar" value="2" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+							<button id="btnmodalcalificar" value="2" class="btn-floating btn-small waves-effect waves-light blue btnexpselector" disabled>
 								<i class="material-icons">edit</i>
 							</button>
 						</td>
@@ -195,9 +195,9 @@
 						</td>
 						<td>3</td>
 						<td>
-							<i class="material-icons" class="ligadoEmpty" id="irepotresEmpty">layers_clear</i>
+							<i class="material-icons ligadoEmpty" id="irepotresEmpty">layers_clear</i>
 							<a href="#" id="irepotres" target=_blank class="ligadoc" >
-								<i class="material-icons">open_in_new</i>
+								<i class="material-icons ">open_in_new</i>
 							</a>
 						</td>
 						<td>
@@ -205,7 +205,7 @@
 						</td>
 						<td class="center">
 							<input type="hidden" id="calTotal3"><input type="hidden" id="btnmc3" class="modalhidden">
-							<button id="btnmodalcalificar" value="3" class="btn-floating btn-small waves-effect waves-light blue" disabled>
+							<button id="btnmodalcalificar" value="3" class="btn-floating btn-small waves-effect waves-light blue btnexpselector" disabled>
 								<i class="material-icons">edit</i>
 							</button>
 						</td>
@@ -225,13 +225,13 @@
 					<tr>
 						<td><input type="checkbox" id="cartaterm" class="inputVisible" disabled/></td>
 						<td>Carta de terminación</td>
-						<td><i class="material-icons" class="ligadoEmpty" id="icartatermEmpty">layers_clear</i><a href="#" id="icartaterm" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons ligadoEmpty" id="icartatermEmpty">layers_clear</i><a href="#" id="icartaterm" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="cartatermfecha" class="datepicker" disabled  /></td>
 					</tr>
 					<tr>
 						<td><input type="checkbox" id="constanciaof" class="inputVisible" disabled/></td>
 						<td>Constancia oficial</td>
-						<td><i class="material-icons" class="ligadoEmpty" id="iconstanciaofEmpty">layers_clear</i><a href="#" id="iconstanciaof" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
+						<td><i class="material-icons ligadoEmpty" id="iconstanciaofEmpty">layers_clear</i><a href="#" id="iconstanciaof" target=_blank class="ligadoc"><i class="material-icons">open_in_new</i></a></td>
 						<td><input type="date" id="constanciaoffech" class="datepicker" disabled  /></td>
 					</tr>
 				</table>

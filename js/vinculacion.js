@@ -133,7 +133,18 @@ var admin = function (){
 	}
 
 	var muestraTarjeta = function (){
+		$(':input',"#frmdatosExpediente,#controlexpediente1").not(':button, :submit, :reset, :hidden')
+								.val("")
+								.removeAttr('checked')
+								.removeAttr("selected");
+		$("#calTotal1,#calTotal2,#calTotal3").attr('type','hidden');
+		$(".ligadoc").hide();
+		$(".ligadoEmpty").show();
+		$("#aceptarCartaApr").attr('disabled','disabled');
+		$(".btnexpselector").show().attr('disabled','disabled');
+		$("#txtbuscaTarjeta").val("");
 		$('#opcVinculacion>div').hide();
+		collapseAll();
 		$("#tarjetaControl").show("slow");
 	}
 	var verDetallesSolicitud = function() {
@@ -545,6 +556,9 @@ var admin = function (){
 								$("#isolicitudEmpty").hide();
 								$("#isolicitud").show();
 								$("#isolicitud").attr("href", '../datos/descargarArchivos.php?solicitud='+data.cvesolicitud);
+						}
+						if(data.curso==1){
+							$("#cursoin").prop("checked",true);
 						}
 					
 						$.each(data.documentos, function( i, value ) {

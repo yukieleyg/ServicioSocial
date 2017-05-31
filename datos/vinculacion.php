@@ -577,8 +577,11 @@ function llenaDptoProgramas(){
 									  	d.cvedocumento,
 									  	d.tipo,
 									  	d.revisado,
-									  	d.calificacion
+									  	d.calificacion,
+									  	u.curso
 							    FROM expedientes e 
+							    INNER JOIN usuarios u 
+                                on e.cveusuario_1=u.cveusuario
 							    INNER JOIN documentos d 
 							    on d.cvedocumento in (e.cartaacep,
 							    					e.plantrabajo,
@@ -591,6 +594,7 @@ function llenaDptoProgramas(){
 		while($row = mysql_fetch_array($res)){
 			$cveexp=$row["cveexpediente"];
 			$cvesol=$row["cvesolicitud"];
+			$curso=$row["curso"];
 			$tipodoc=intval($row["tipo"]);
 			$ruta=$row["ruta"];
 			$cvedcto=$row["cvedocumento"];
@@ -605,7 +609,7 @@ function llenaDptoProgramas(){
 			$respuesta=true;
 		}
 		$arrayJSON=Array('respuesta'=>$respuesta,
-						'documentos'=>$arrayExp,'cveexpediente'=>$cveexp,'cvesolicitud'=>$cvesol);
+						'documentos'=>$arrayExp,'cveexpediente'=>$cveexp,'cvesolicitud'=>$cvesol, 'curso'=>$curso);
 		print json_encode($arrayJSON);
 	}
 	function reportesExpediente(){
