@@ -621,9 +621,9 @@ function llenaDptoProgramas(){
 									  	r.archivo AS 'ruta',
 									  	r.cvereporte,
 									  	r.noreporte,
-									  	r.calificacion,
-									  	(r.calificacion+r.calificacionV) as calTot,
-									  	r.calificacionV,
+									  	(r.calDc1+r.calDc2+r.calDc3+r.calDc4+r.calDc5+r.calDc6+r.calDc7+r.calDc8+r.calDc9+r.calDc10) AS calificacion,
+									  	(r.calDc1+r.calDc2+r.calDc3+r.calDc4+r.calDc5+r.calDc6+r.calDc7+r.calDc8+r.calDc9+r.calDc10+r.calVc1+r.calVc2) AS calTot,
+									  	(r.calVc1+ r.calVc2) AS calificacionV,
                                         r.estado
 							    FROM expedientes e 
 							    INNER JOIN reportes r
@@ -631,6 +631,7 @@ function llenaDptoProgramas(){
 							    					e.reportedos,
 							    					e.reportetres)
 							    WHERE cveusuario_1=%s",$nocontrol);
+		var_dump($qryvalida);
 		$res= 		mysql_query($qryvalida);
 		$arrayExpRep=array();
 		$arraytiporep=Array();
