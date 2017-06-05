@@ -1338,10 +1338,12 @@ var admin = function (){
 			});
 	}
 	var expedienteAlumno = function(){
-		var nocontrol = $("#expediente").val();
-		$("#txtbuscaTarjeta").val(nocontrol);
+		muestraTarjeta();	
+		$("#txtbuscaTarjeta").val($(this).val());
 		llenarTarjeta();
-		muestraTarjeta();		
+		$(".collapsible-header").addClass("active");
+  		$(".collapsible").collapsible({accordion: false});
+
 	}
 	var filtrarAlumnos = function(){
 		var pagina = 1;
