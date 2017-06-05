@@ -631,7 +631,6 @@ function llenaDptoProgramas(){
 							    					e.reportedos,
 							    					e.reportetres)
 							    WHERE cveusuario_1=%s",$nocontrol);
-		var_dump($qryvalida);
 		$res= 		mysql_query($qryvalida);
 		$arrayExpRep=array();
 		$arraytiporep=Array();

@@ -674,7 +674,8 @@ var admin = function (){
 						  	$("#irepounoEmpty").hide();
 						  	$("#irepouno").show();
 						  	$("#irepouno").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
-							//$("#irepouno").attr("href", '../datos/descargarReporte.php?reporte='+value.ruta); //cvereporte
+							$("#irepouno").attr("href", '../datos/descargarReporte.php?reporte='+value.cvereporte);
+
 						  	$("#btnmc1").val(value.cvereporte);						  	
 							$("#estadoRepUno").val(estado);
 							if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
