@@ -365,6 +365,7 @@ function registrarPrograma(){
 	$progtipo	= "'".$_POST["selprogtipo"]."'";
 	$progcar	= $_POST["selprogcar"];
 	$selprogact	= "'".$_POST["selprogact"]."'";
+	$progactotr = "'".$_POST["tipoOtras"]."'";
 	$progact	= "'".$_POST["txtprogact"]."'";
 	$progresp	= "'".$_POST["txtprogresp"]."'";
 	$progpues	= "'".$_POST["txtprogpues"]."'";
@@ -376,7 +377,7 @@ function registrarPrograma(){
 	$conexion 	= conexionLocal();
 	mysql_query("set NAMES utf8");
 	mysql_query("START TRANSACTION");
-	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progact,$progresp,$progpues,$selprogest,$vigencia);
+	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progactotr,$progact,$progresp,$progpues,$selprogest,$vigencia);
 	$a1 = mysql_query($consulta);
 	$id=mysql_insert_id();
 	foreach($progcar as $selected) {
@@ -1528,6 +1529,7 @@ function llenaDptoProgramas(){
 								INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR
 								INNER JOIN DCARRE C ON C.CARCVE = D.CARCVE 
 								WHERE  A.ALUCTR = %s",$ncontrol);
+		mysql_query("set NAMES utf8");
 		$resBD 		=	mysql_query($qryAlumno);	
 		$cvecarrera	="";
 		$carrera 	="";
@@ -1538,7 +1540,8 @@ function llenaDptoProgramas(){
 			$carrera 	=	$row["CARNCO"];
 			$nombre		=	$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"];			
 		}
-	$cn=conexionLocal();	
+	$cn=conexionLocal();
+	mysql_query("set NAMES utf8");	
 		//echo mysql_errno($cnBD) . ": " . mysql_error($cnBD). "\n";	
 		$qryprogramas=	sprintf("SELECT p.cveprograma, p.nombre, c.carnco 
 								FROM programas p 

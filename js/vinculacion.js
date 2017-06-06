@@ -284,6 +284,9 @@ var admin = function (){
 
 
 	var registroProgramas=function(){
+		if(!$('#tipoOtras').is(':checked')){
+			$("#txttipoOtros").val("-");
+		}
 		var parametros = $("#frmRegistroProgramas").serialize()+"&opc=registrarPrograma"+"&id="+Math.random();
 		var anyInvalid=false;
 		if($("#selprogdep").val()	=== '' ||
