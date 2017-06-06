@@ -1966,12 +1966,13 @@ function llenaDptoProgramas(){
 		$mensaje="No se ha encontrado el reporte";
 		$cn=conexionLocal();
 		$cvereporte=$_POST["cvereporte"];
-		$calificacionVinc=$_POST["calificacion"];
+		$califcriterio1=$_POST["califcriterio1"];
+		$califcriterio2=$_POST["califcriterio2"];
 		$observaciones="'".$_POST["observaciones"]."'";
 		$estadorep="'".$_POST["estado"]."'";
 		$qryreporte=sprintf("UPDATE reportes 
-							 SET calificacionV = %d, observaciones=%s, estado=%s 
-							 WHERE cvereporte = %s",$calificacionVinc,$observaciones,$estadorep,$cvereporte);
+							 SET calVc1 = %d, calVc2=%d, observaciones=%s,  estado=%s 
+							 WHERE cvereporte = %s",$califcriterio1,$califcriterio2,$observaciones,$estadorep,$cvereporte);
 		mysql_query($qryreporte);
 		if(mysql_affected_rows()>0){
 			$respuesta=true;
