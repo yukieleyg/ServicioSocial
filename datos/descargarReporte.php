@@ -39,7 +39,7 @@ require('fpdf.php');
 	$calVc1		= $rowR['calVc1']; 
 	$calVc2		= $rowR['calVc2'];
 	$obs		= $rowR['observaciones'];
-
+	$pdf->Text(70,70,$horas);
 
 
 
@@ -69,6 +69,7 @@ require('fpdf.php');
 	$cve 		= $rowCa["CARCVE"];
 	$periodo	= $rowCa["CALNPE"];
 	$pdf->Text(150,62,$cveusuario);
+	$pdf->Text(60,90,$periodo);
 
 
 	$qryvalida	= sprintf("SELECT CARNCO FROM DCARRE WHERE CARCVE = %s",$cve);
@@ -88,6 +89,10 @@ require('fpdf.php');
 	} elseif($meses==3){
 		$meses = "AGO - DIC";
 	}
+
+	$pdf->Text(75,65,$meses);
+
+	//DATOS ESPECIFICOS DEL PERIODO
 	$qryvalida	= sprintf("SELECT PDOINI FROM DPERIO WHERE PDOCVE=%s",$periodoAct);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
@@ -102,7 +107,7 @@ require('fpdf.php');
 			$mes='0'.$mes;
 		}
 	}
-
+	$pdf->Text(95,65,$año);
 	$finpdo		= $año."-".$mes."-".$dia;
 	$pdf->Output();
 ?>
