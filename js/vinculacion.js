@@ -284,6 +284,9 @@ var admin = function (){
 
 
 	var registroProgramas=function(){
+		if(!$('#tipoOtras').is(':checked')){
+			$("#txttipoOtros").val("-");
+		}
 		var parametros = $("#frmRegistroProgramas").serialize()+"&opc=registrarPrograma"+"&id="+Math.random();
 		var anyInvalid=false;
 		if($("#selprogdep").val()	=== '' ||
@@ -2063,10 +2066,11 @@ var admin = function (){
 	}
 	var actualizarCalifReporte=function(){
 		var cvereporte		=$("#cvereporte").val();
-		var califVincRep	=$("#txtcalVinc").val();
+		var califVincRep1	=$("#txttiempoforma").val();
+		var califVincRep2	=$("#txtresponsabilidad").val();
 		var estadorep 		=$("#selestadorep").val();
 		var observaciones 	=$("#observacionesreportes").val();
-		var parametros ="opc=calificarReporte"+"&cvereporte="+cvereporte+"&calificacion="+califVincRep+"&observaciones="+observaciones+"&estado="+estadorep;
+		var parametros ="opc=calificarReporte"+"&cvereporte="+cvereporte+"&califcriterio1="+califVincRep1+"&califcriterio2="+califVincRep2+"&observaciones="+observaciones+"&estado="+estadorep;
 		$.ajax({
 			type:"POST",
 			dataType: "json",

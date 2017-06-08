@@ -53,7 +53,7 @@
 			</div>
 
 			<div class="col s6"> 
-				<input type="text" name="tipoOtras">
+				<input type="text" name="tipoOtras" id="txttipoOtros">
 			</div>
 		</div>
 		<p><label for="txtprogact">Descripcion de actividades</label></p>
