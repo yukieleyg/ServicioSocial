@@ -40,8 +40,22 @@ require('fpdf.php');
 	$calVc2		= $rowR['calVc2'];
 	$obs		= $rowR['observaciones'];
 	$pdf->Text(70,70,$horas);
-
-
+	$pdf->Text(177,95,$calDc1);
+	$pdf->Text(177,102,$calDc2);
+	$pdf->Text(177,109,$calDc3);
+	$pdf->Text(177,116,$calDc4);
+	$pdf->Text(177,123,$calDc5);
+	$pdf->Text(177,130,$calDc6);
+	$pdf->Text(177,137,$calDc7);
+	$pdf->Text(177,144,$calDc8);
+	$pdf->Text(177,151,$calDc9);
+	$pdf->Text(177,157,$calDc10);
+	$pdf->Text(177,163,$calVc1);
+	$pdf->Text(177,170,$calVc2);
+	
+	$calTotal = ($calDc1+$calDc2+$calDc3+$calDc4+$calDc5+$calDc6+$calDc7+$calDc8+$calDc9+$calDc10+$calVc1+$calVc2);
+	$pdf->Text(177,177,$calTotal);
+	$pdf->Text(50,188,$obs);
 
 	//DATOS DEL EXPEDIENTE
 	$qryvalidaE	= sprintf("SELECT * FROM expedientes WHERE cveexpediente =%s",$expediente);
@@ -56,8 +70,8 @@ require('fpdf.php');
 	$rowP 		 = mysql_fetch_array($resP);
 	$responsable 	= $rowP["nomresp"];	
 	$puesto 		= $rowP["puestoresp"];		 
-	$pdf->Text(65,224,$responsable);
-	$pdf->Text(90,228,$puesto);
+	$pdf->Text(65,211,$responsable);
+	$pdf->Text(90,215,$puesto);
 
 
 
