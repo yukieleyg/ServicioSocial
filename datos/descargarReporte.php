@@ -48,7 +48,26 @@ require('fpdf.php');
 	$resE		= mysql_query($qryvalidaE);
 	$rowE 		= mysql_fetch_array($resE);
 	$cveusuario	= $rowE["cveusuario_1"];
+	$cveprograma = $rowE["cveprograma_1"];
 
+	//DATOS DEL PROGRAMA 
+	$qryprograma = sprintf("SELECT * FROM programas WHERE cveprograma = %s",$cveprograma);
+	$resP 		 = mysql_query($qryprograma);
+	$rowP 		 = mysql_fetch_array($resP);
+	$responsable 	= $rowP["nomresp"];	
+	$puesto 		= $rowP["puestoresp"];		 
+	$pdf->Text(65,224,$responsable);
+	$pdf->Text(90,228,$puesto);
+
+
+
+	//HORAS ACUMULADAS
+	$qryvalidaTH	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1 =%s",$expediente);
+	$resTH			= mysql_query($qryvalidaTH);
+	$rowTH 			= mysql_fetch_array($resTH);
+	$Total_Horas 	= $rowTH['Total_Horas'];
+	$pdf->Text(140,70,$Total_Horas);
+	
 	//DATOS DEL ALUMNO
 	$cn			= conexionBD();
 	$qryvalidaA	= sprintf("SELECT * FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
@@ -69,7 +88,7 @@ require('fpdf.php');
 	$cve 		= $rowCa["CARCVE"];
 	$periodo	= $rowCa["CALNPE"];
 	$pdf->Text(150,62,$cveusuario);
-	$pdf->Text(60,90,$periodo);
+	$pdf->Text(95,73,$periodo);
 
 
 	$qryvalida	= sprintf("SELECT CARNCO FROM DCARRE WHERE CARCVE = %s",$cve);
