@@ -39,16 +39,49 @@ require('fpdf.php');
 	$calVc1		= $rowR['calVc1']; 
 	$calVc2		= $rowR['calVc2'];
 	$obs		= $rowR['observaciones'];
-
-
-
+	$pdf->Text(70,70,$horas);
+	$pdf->Text(177,95,$calDc1);
+	$pdf->Text(177,102,$calDc2);
+	$pdf->Text(177,109,$calDc3);
+	$pdf->Text(177,116,$calDc4);
+	$pdf->Text(177,123,$calDc5);
+	$pdf->Text(177,130,$calDc6);
+	$pdf->Text(177,137,$calDc7);
+	$pdf->Text(177,144,$calDc8);
+	$pdf->Text(177,151,$calDc9);
+	$pdf->Text(177,157,$calDc10);
+	$pdf->Text(177,163,$calVc1);
+	$pdf->Text(177,170,$calVc2);
+	
+	$calTotal = ($calDc1+$calDc2+$calDc3+$calDc4+$calDc5+$calDc6+$calDc7+$calDc8+$calDc9+$calDc10+$calVc1+$calVc2);
+	$pdf->Text(177,177,$calTotal);
+	$pdf->Text(50,188,$obs);
 
 	//DATOS DEL EXPEDIENTE
 	$qryvalidaE	= sprintf("SELECT * FROM expedientes WHERE cveexpediente =%s",$expediente);
 	$resE		= mysql_query($qryvalidaE);
 	$rowE 		= mysql_fetch_array($resE);
 	$cveusuario	= $rowE["cveusuario_1"];
+	$cveprograma = $rowE["cveprograma_1"];
 
+	//DATOS DEL PROGRAMA 
+	$qryprograma = sprintf("SELECT * FROM programas WHERE cveprograma = %s",$cveprograma);
+	$resP 		 = mysql_query($qryprograma);
+	$rowP 		 = mysql_fetch_array($resP);
+	$responsable 	= $rowP["nomresp"];	
+	$puesto 		= $rowP["puestoresp"];		 
+	$pdf->Text(65,211,$responsable);
+	$pdf->Text(90,215,$puesto);
+
+
+
+	//HORAS ACUMULADAS
+	$qryvalidaTH	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1 =%s",$expediente);
+	$resTH			= mysql_query($qryvalidaTH);
+	$rowTH 			= mysql_fetch_array($resTH);
+	$Total_Horas 	= $rowTH['Total_Horas'];
+	$pdf->Text(140,70,$Total_Horas);
+	
 	//DATOS DEL ALUMNO
 	$cn			= conexionBD();
 	$qryvalidaA	= sprintf("SELECT * FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
@@ -69,6 +102,7 @@ require('fpdf.php');
 	$cve 		= $rowCa["CARCVE"];
 	$periodo	= $rowCa["CALNPE"];
 	$pdf->Text(150,62,$cveusuario);
+	$pdf->Text(95,73,$periodo);
 
 
 	$qryvalida	= sprintf("SELECT CARNCO FROM DCARRE WHERE CARCVE = %s",$cve);
@@ -88,6 +122,10 @@ require('fpdf.php');
 	} elseif($meses==3){
 		$meses = "AGO - DIC";
 	}
+
+	$pdf->Text(75,65,$meses);
+
+	//DATOS ESPECIFICOS DEL PERIODO
 	$qryvalida	= sprintf("SELECT PDOINI FROM DPERIO WHERE PDOCVE=%s",$periodoAct);
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
@@ -102,7 +140,7 @@ require('fpdf.php');
 			$mes='0'.$mes;
 		}
 	}
-
+	$pdf->Text(95,65,$año);
 	$finpdo		= $año."-".$mes."-".$dia;
 	$pdf->Output();
 ?>
