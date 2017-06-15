@@ -1987,6 +1987,7 @@ function llenaDptoProgramas(){
 
 	function aceptarDocumentos(){
 			$cvedoc 			= $_POST['doc'];
+
 		    $cn 				= conexionLocal();
 			$qryDoc 			= sprintf("SELECT * FROM documentos WHERE cvedocumento =%s",$cvedoc);
 			$resDoc 			= mysql_query($qryDoc);
@@ -1999,7 +2000,16 @@ function llenaDptoProgramas(){
 			if(mysql_affected_rows()>0){
 				$respuesta = true;
 			}
-			$arrayJSON 	= array('respuesta' => $respuesta, 'cveExpediente' => $cveExpediente);
+			$resExp=false;
+			if(isset($_POST['bcartaT'])){
+				$qryUpdateexp 		= sprintf("UPDATE expedientes SET fechafinal = CURDATE() WHERE cveexpediente =%s",$cveExpediente);
+				$resqryUpExp		=mysql_query($qryUpdateexp);
+				if(mysql_affected_rows()>0){
+					$resExp=true;
+				}
+			}
+			
+			$arrayJSON 	= array('respuesta' => $respuesta,'fechaf'=>$resExp,'cveExpediente' => $cveExpediente);
 			print json_encode($arrayJSON);
 
 	}
@@ -2017,6 +2027,32 @@ function llenaDptoProgramas(){
 			$respuesta = true;
 		}
 		$arrayJSON 	= array('respuesta' => $respuesta);
+		print json_encode($arrayJSON);
+
+	}
+	function obtenerConstancias(){
+		$respuesta	=false;
+		$mensaje	="No se ha encontrado informacion sobre las constancias";
+		$ncontrol	=$_POST["ncontrol"];
+		$cn=conexionLocal();
+		$qry=sprintf("SELECT 	e.cveexpediente,
+									  	e.cartatermina,
+                                        e.fechafinal,
+                                        e.constanciaOf,
+                                        e.fechaconstancia
+							    FROM expedientes e 
+							    WHERE cveusuario_1=%s",$ncontrol);
+		$res=mysql_query($qry,$cn);
+		if($row= mysql_fetch_array($res)){
+			$cveexped	=$row["cveexpediente"];
+			$cartater	=$row["cartatermina"];
+			$fechafin	=$row["fechafinal"];
+			$constaOf	=$row["constanciaOf"];
+			$fechacon	=$row["fechaconstancia"];
+			$respuesta  =true;
+			$mensaje	="";
+		}
+		$arrayJSON=array('respuesta'=>$respuesta,'cveexpediente'=>$cveexped,'cartatermina'=>$cartater,'fechafinalcarta'=>$fechafin,'constanciaof'=>$constaOf,'fechaconst'=>$fechacon);
 		print json_encode($arrayJSON);
 
 	}
@@ -2150,6 +2186,9 @@ function llenaDptoProgramas(){
 			break;
 		case 'guardarObservaciones':
 			guardarObservaciones();
+			break;
+		case 'obtenerConstancias':
+			obtenerConstancias();
 		default:
 		# code...
 		break;

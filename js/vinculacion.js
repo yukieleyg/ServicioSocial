@@ -616,11 +616,22 @@ var admin = function (){
 						  	$("#aceptarPlanTra").val(value.cvedoc);
 							$("#rechazarPlanTra").val(value.cvedoc);	
 						  		break;
-						  	case '7': 
+						  	case '7':
 						  	$("#cartaterm").prop("checked",true);
 						  	$("#icartatermEmpty").hide();
 						  	$("#icartaterm").show();
 						  	$("#icartaterm").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	$("#icartater").attr("href", '../datos/EXPEDIENTES/'+ncontrol+'/'+value.ruta+'');
+						  	$("#estadoCartaterm").val(estado);
+						  	if(estado=='Pendiente'){
+						  		$("#aceptarCartaterm").attr('disabled',false);
+						  		$("#rechazarCartaterm").attr('disabled',false);
+						  	}else{
+						  		$("#aceptarCartaterm").attr('disabled',true);
+						  		$("#rechazarCartaterm").attr('disabled',true);
+						  	} 
+						  	$("#aceptarCartaterm").val(value.cvedoc);
+							$("#rechazarCartaterm").val(value.cvedoc);
 						  		break;
 						  }
 						});
@@ -801,6 +812,7 @@ var admin = function (){
 		//fn para llenar los badges de la tarjeta
 		documentosExpediente();
 		reportesExpediente();
+		constanciasExpedientes();
 		buscarTarjeta();
 		$(".collapsible-header").addClass("active");
   		$(".collapsible").collapsible({accordion: false});
@@ -2094,7 +2106,13 @@ var admin = function (){
 }
 	var aceptarDocumentos = function(){
 		var doc = $(this).val();
+		var fecha;
 		var parametros = "opc=aceptarDocumentos"+"&doc="+doc;
+		if($("#aceptarCartaterm").val()==doc){
+			parametros= "opc=aceptarDocumentos"+"&doc="+doc+"&bcartaT=true";
+		}
+
+		
 		$.confirm({
 			title: 'Confirmación',
 			content: "¿Esta seguro que desea aceptar el documento ?",
@@ -2123,11 +2141,13 @@ var admin = function (){
 					}
 				},
 				cancel: function () {
-					$.alert("La solicitud no fue modificada");
+					$.alert("El estado del documento no fue modificado");
 				}
 			}
 		});
-
+		if(this==$("#aceptarCartaterm")){//es carta de terminacion
+			alert();
+		}
 
 	}
 
@@ -2173,6 +2193,30 @@ var admin = function (){
 				}
 			}
 
+		});
+	}
+
+	var constanciasExpedientes =function(){
+		var ncontrol = $("#txtbuscaTarjeta").val();
+		var parametros="opc=obtenerConstancias&ncontrol="+ncontrol;
+		
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/vinculacion.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta== true){
+					if(data.cartatermina!=null){
+						$("#cartater").prop("checked",true);
+						$("#cartaterfecha").val(data.fechafinalcarta+"");
+						$("#icartaterEmpty").hide();
+						$("#icartater").show();
+					}
+				}else{
+					$.alert("ERROR");
+				}
+			}
 		});
 	}
 
@@ -2255,6 +2299,8 @@ var admin = function (){
 	$("#rechazarCartaApr").on("click",rechazarDocumentos);
 	$("#aceptarPlanTra").on("click",aceptarDocumentos);
 	$("#rechazarPlanTra").on("click",rechazarDocumentos);
+	$("#aceptarCartaterm").on("click",aceptarDocumentos);
+    $("#rechazarCartaterm").on("click",rechazarDocumentos);
 	$("#btnEnviaObs").on("click",guardarObservaciones);
 
 }
