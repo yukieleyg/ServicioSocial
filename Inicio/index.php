@@ -17,13 +17,13 @@
 			<div class="row">
 				<div class="input-field col s11">
 					<i class="material-icons prefix">perm_identity</i>
-					<input type="text" class="validate" id="txtUsuario" placeholder="Usuario" autofocus value="admin">
+					<input type="text" class="validate" id="txtUsuario" placeholder="Usuario" autofocus value="dependencia">
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s11">
 					<i class="material-icons prefix">lock_outline</i>
-					<input type="password" class="validate" id="txtClave" placeholder="Contraseña" value="admin123">
+					<input type="password" class="validate" id="txtClave" placeholder="Contraseña" value="dependencia">
 					<a class="btn-floating btn-small waves-effect waves-light purple darken-1" id="mostrarClave"><i class="material-icons">visibility_off</i></a>
 				</div>
 			</div>
@@ -43,7 +43,9 @@
 	<section id="vinculacion">
 		<?php include '../Vinculacion/admin.php'; ?>
 	</section>
-	
+	<section id="dependencia">
+		<?php include '../Dependencias/dependencia.php'; ?>	
+	</section>
 
 	<script src="../js/eventos.js"></script>
 

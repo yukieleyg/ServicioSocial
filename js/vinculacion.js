@@ -2302,6 +2302,5 @@ var admin = function (){
 	$("#aceptarCartaterm").on("click",aceptarDocumentos);
     $("#rechazarCartaterm").on("click",rechazarDocumentos);
 	$("#btnEnviaObs").on("click",guardarObservaciones);
-
 }
 $(document).on("ready",admin);

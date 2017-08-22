@@ -73,7 +73,7 @@
 		<?php include 'divListadoResultados.php' ?>
 	</div>
 		<div id="cambioClave" class="card">
-		<?php include 'divClave.php' ?>
+		<?php include '../Inicio/divClave.php' ?>
 	</div>
 </section>
 </body>

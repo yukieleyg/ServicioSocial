@@ -1,0 +1,13 @@
+#cambioClaveDep{
+	display:none;
+	margin-top: -15%;
+}
+#barraDependencia{
+	background-color: gray;
+	margin-top:-20%;	
+	margin-left: -7%;
+}
+#divInputsClave{
+	width:50%;
+	margin-left: 25%;
+}

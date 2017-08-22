@@ -32,7 +32,12 @@
 								$("#user").show("slow");
 								break;
 							case '2':
-								alert("dependencia" + data.nombre);break;
+								$(".entradaUsuario").hide("slow");
+								$("#barraDependencia").show("slow");
+								$("#user").html(" ");
+								$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
+								$("#user").show("slow");
+								break;
 							case 3:
 								if(data.creditos){
 									alert("alumno");
