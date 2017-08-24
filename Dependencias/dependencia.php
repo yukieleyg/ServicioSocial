@@ -30,6 +30,9 @@
 	<div id="cambioClaveDep" class="card">
 		<?php include '../Inicio/divClave.php' ?>
 	</div>
+	<div id="misDatos" class ="card">
+		<?php include 'divMisDatos.php' ?>
+	</div>
 </section>
 </body>
 </html>
