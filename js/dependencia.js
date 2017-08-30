@@ -95,15 +95,37 @@ var dependencia = function (){
 						}
 					});
 				}else{
-						$.alert("No haz modifcados los datos");
+						$.alert("No has modifcados los datos");
 				}
 			}
 		});
+	}
+	var funMostrarProgramasVacantes=function(){
+		var parametros = "opc="+"mostrarProgramasVac"+"&usuario="+usuario;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/dependencia.php",
+			data: parametros,
+			success: function(data){
+				if(data.respuesta){
+					$("#tblProgramasVac").html().append();
+
+				}
+			}
+		});
+	}
+
+	var mostrarabrirVacantes=function(){
+		$('#opcDependencia>div').hide();
+		funMostrarProgramasVacantes();
+		$("#solicitarSSVacantes").show("slow");
 	}
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
 $("#btnGuardarDatos").on("click",guardarDatos);
 $("#btnCancelarDatos").on("click",mostrarMisDatos);
+$("#menuabrirVacantes").on("click",mostrarabrirVacantes);
 }
 $(document).on("ready",dependencia);
