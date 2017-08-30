@@ -9,7 +9,11 @@
 <body>
 <nav class="navbar navbar-default left grey lighten-4" id="barraDependencia">	
 				<ul>
-					<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="solicitarSS"><i class="material-icons right">create_new_folder</i>Solicitar SS</a>
+					<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownSolicitarServS' data-hover="true" id="btnMenuSolicitarS" style="color:black;" ><i class="material-icons right">create_new_folder</i>Solicitar SS</a>
+					<ul  class="dropdown-content" id="dropdownSolicitarServS">
+						<li><a id="menuabrirVacantes" style="color:black;" >Abrir vacantes </a></li>
+						<li><a id="menuaperturaPrograma" style="color:black;" >Apertura programa</a></li>
+					</ul>
 		
 					<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownSolicitarSS' data-hover="true" id="menuSeguimiento" style="color:black;"><i class="material-icons right">assignment_turned_in</i>Seguimiento<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownSolicitarSS">
@@ -32,6 +36,12 @@
 	</div>
 	<div id="misDatos" class ="card">
 		<?php include 'divMisDatos.php' ?>
+	</div>
+	<div id="solicitarSSVacantes" class="card">
+		<?php include 'divSolicitarSSVacantes.php' ?>
+	</div>
+	<div id="solicitarSSProgramas" class="card">
+		<?php include 'divSolicitarSSProgramas.php' ?>
 	</div>
 </section>
 </body>
