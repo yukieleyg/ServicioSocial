@@ -101,6 +101,7 @@ var dependencia = function (){
 		});
 	}
 	var funMostrarProgramasVacantes=function(){
+		var usuario 	= $('#txtUsuario').val();//from login
 		var parametros = "opc="+"mostrarProgramasVac"+"&usuario="+usuario;
 		$.ajax({
 			type: "POST",
@@ -109,16 +110,51 @@ var dependencia = function (){
 			data: parametros,
 			success: function(data){
 				if(data.respuesta){
-					$("#tblProgramasVac").html().append();
+					var tablaProgV="<tr><th>PROGRAMA</th><th>VACANTES</th></tr>";
 
+				$.each(data.tablaProgramas, function( i, opc ) {
+					if(opc[1]==0){
+						tablaProgV+="<tr><td>"+opc[0]+"</td>"+
+									"<td class='center red lighten-1'><b>"+opc[1]+"</b></td>";	
+					}else{
+						tablaProgV+="<tr><td>"+opc[0]+"</td>"+
+									"<td class='center'>"+opc[1]+"</td>";	
+					}
+					
+			 	});
+				$("#tblProgramasVac").html("");
+				$("#tblProgramasVac").append(tablaProgV);
 				}
 			}
+		});
+	}
+	var llenarSelectProgVac=function(){
+		var usuario 	= $('#txtUsuario').val();//from login
+		var parametros = "&opc=llenaProgramasVac"+"&usuario="+usuario;
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	$("#selProgramaV").find('option').remove();
+				 	$("#selProgramaV").append('<option value="" disabled selected>Seleccione programa..</option>');
+				 	var opcs="";
+				 	$.each(data.opciones, function(i,opc){
+				 		opcs+='<option value="'+opc[0]+'">'+opc[1]+'</option>';
+				 	});
+				 	$("#selProgramaV").append(opcs).html();
+				 	$('select').material_select();
+				 }			 
+				}
 		});
 	}
 
 	var mostrarabrirVacantes=function(){
 		$('#opcDependencia>div').hide();
 		funMostrarProgramasVacantes();
+		llenarSelectProgVac();
 		$("#solicitarSSVacantes").show("slow");
 	}
 $("#btnCambioClaveDep").on("click",cambioClave);

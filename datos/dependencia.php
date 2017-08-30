@@ -64,6 +64,53 @@ function guardarDatosModif(){
 
 
 }
+function mostrarProgramasVac(){
+	$respuesta 	= false;
+	$mensaje="No se han podido obtener los programas";
+	$cn 		= conexionLocal();
+	$usuario	= "'".$_POST["usuario"]."'";
+	$qryVac 	= sprintf("	SELECT nombre,
+							vacantes
+							FROM programas p
+							INNER JOIN dependencias d on d.cvedependencia=p.cvedependencia
+							WHERE d.cveusuario_1=%s AND p.vigencia=1
+							ORDER BY vacantes ASC",$usuario);
+	$res 		=mysql_query($qryVac);
+	$arreglo=Array();
+	while($row=mysql_fetch_assoc($res)){
+		$programa= $row['nombre'];
+		$vacantes= $row['vacantes'];
+		$respuesta=true;
+		$mensaje="";
+		$arreglo[]=array($programa,$vacantes);
+	}
+	$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje, 'tablaProgramas'=>$arreglo);
+	print json_encode($arrayJSON);
+}
+function llenaProgramasVac(){
+	$respuesta=false;
+	$usuario	= "'".$_POST["usuario"]."'";
+	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
+	$cons=sprintf("SELECT cveprograma, 
+							nombre 
+					FROM programas p
+					INNER JOIN dependencias d on d.cvedependencia=p.cvedependencia
+					WHERE d.cveusuario_1=%s AND p.vigencia=1
+					ORDER BY nombre ASC",$usuario);
+	$opciones=Array();
+	$res=mysql_query($cons);
+	   while ($row = mysql_fetch_assoc($res)) {
+                  $cve = $row['cveprograma'];
+                  $nom = $row['nombre']; 
+                  $opciones[]=array($cve,$nom);
+				$respuesta=true;
+		}
+	$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+	print json_encode($arrayJSON);
+
+}
+
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -73,4 +120,11 @@ switch ($opc){
 		guardarDatos();
 	case 'guardarDatosModif':
 		guardarDatosModif();
+
+	case 'mostrarProgramasVac':
+		mostrarProgramasVac();
+		break;
+	case 'llenaProgramasVac':
+		llenaProgramasVac();
+		break;	
 }
