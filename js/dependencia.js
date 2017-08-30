@@ -86,11 +86,12 @@ var dependencia = function (){
 												$alert("Los datos no han podido ser modificados");
 											}
 										}
-									})
+									});
 								}
 							},
 							cancel: function () {
 								$.alert("Los datos no han sido modificados");
+								mostrarMisDatos();
 							}
 						}
 					});

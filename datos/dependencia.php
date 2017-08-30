@@ -71,6 +71,8 @@ switch ($opc){
 		break;
 	case 'guardarDatos':
 		guardarDatos();
+		break;
 	case 'guardarDatosModif':
 		guardarDatosModif();
+		break;
 }
