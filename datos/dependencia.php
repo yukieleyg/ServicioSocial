@@ -110,6 +110,20 @@ function llenaProgramasVac(){
 	print json_encode($arrayJSON);
 
 }
+function vacanteenPrograma(){
+	$respuesta	=	false;
+	$cveprograma= 	"'".$_POST["cveprograma"]."'";
+	$conexion 	=	conexionLocal();
+	mysql_query("SET NAMES utf8");
+	$qry 		= sprintf("SELECT vacantes FROM programas where cveprograma=%s",$cveprograma);
+	$res=mysql_query($qry);
+	if($row=mysql_fetch_array($res)){
+		$vacante=$row["vacantes"];
+		$respuesta=true;
+	}
+	$arrayJSON=array('respuesta'=>$respuesta,'numvacantes'=>$vacante);
+	print json_encode($arrayJSON);
+}
 
 $opc= $_POST["opc"];
 switch ($opc){
@@ -128,4 +142,7 @@ switch ($opc){
 	case 'llenaProgramasVac':
 		llenaProgramasVac();
 		break;	
+	case 'vacanteenPrograma':
+		vacanteenPrograma();
+		break;
 }
