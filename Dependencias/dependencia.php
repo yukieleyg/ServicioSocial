@@ -5,6 +5,8 @@
 	<link rel="stylesheet" href="../css/dependencia.css">
 	<script src="../js/dependencia.js"></script>
 	<script src="../js/materialInit.js"></script>
+	<script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	<link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 </head>
 <body>
 <nav class="navbar navbar-default left grey lighten-4" id="barraDependencia">	
@@ -17,8 +19,8 @@
 		
 					<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownSolicitarSS' data-hover="true" id="menuSeguimiento" style="color:black;"><i class="material-icons right">assignment_turned_in</i>Seguimiento<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownSolicitarSS">
-							<li><a id="menuregistroAlumnos" style="color:black;" >Alumnos</a></li>
-							<li><a id="menuregistroProgramas"  style="color:black;">Programas</a></li>
+							<li><a id="menuAlumnosSeg" style="color:black;" >Alumnos</a></li>
+							<li><a id="menuProgramasSeg"  style="color:black;">Programas</a></li>
 						</ul>
 					
 					<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="btnMisDatosDep"><i class="material-icons right">contact_mail</i>Mis datos</a>
@@ -42,6 +44,12 @@
 	</div>
 	<div id="solicitarSSProgramas" class="card">
 		<?php include 'divSolicitarSSProgramas.php' ?>
+	</div>
+	<div id="seguimientoAlumnos" class="card">
+		<?php include 'divAlumnosSeg.php' ?>
+	</div>
+	<div id="seguimientoProgramas" class="card">
+		<?php include 'divProgramasSeg.php' ?>
 	</div>
 </section>
 </body>

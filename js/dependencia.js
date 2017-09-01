@@ -158,11 +158,33 @@ var dependencia = function (){
 		llenarSelectProgVac();
 		$("#solicitarSSVacantes").show("slow");
 	}
+	var mostrarAlumnosSeg = function(){
+		var usuario 	= $('#txtUsuario').val();//from login
+		var parametros  = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url: "../datos/dependencia.php",
+			data: parametros,
+			success: function(data){
+				$('#tblAlumnos').DataTable();
+				$('#opcDependencia>div').hide();
+				$("#seguimientoAlumnos").show("slow");
+			}
+		});
+	}
+	/*var mostrarProgramasSeg = function(){
+		$('#opcDependencia>div').hide();
+		$("#").show("slow");
+	}*/
+
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
 $("#btnGuardarDatos").on("click",guardarDatos);
 $("#btnCancelarDatos").on("click",mostrarMisDatos);
 $("#menuabrirVacantes").on("click",mostrarabrirVacantes);
+$("#menuAlumnosSeg").on("click",mostrarAlumnosSeg);
+//$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
 }
 $(document).on("ready",dependencia);

@@ -110,6 +110,23 @@ function llenaProgramasVac(){
 	print json_encode($arrayJSON);
 
 }
+function mostrarAlumnosSeg(){
+	$respuesta	= false;
+	$usuario	= "'".$_POST["usuario"]."'";
+	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
+	$qry 		= sprintf("SELECT cvedependencia FROM dependencias WHERE cveusuario_1 = %s",$usuario);
+	$res 		= mysql_query($qry);
+	$row		= mysql_fetch_array($res);
+	$cvedependencia = $row['cvedependencia'];
+	$qryProgramas = sprintf("SELECT * FROM programas AS p INNER JOIN solicitudes AS s  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s", $cvedependencia);
+	$resProgramas = mysql_query($qryProgramas);
+	$rowProgramas = mysql_fetch_array($resProgramas);
+	var_dump($rowProgramas);
+
+	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta);
+
+}
 
 $opc= $_POST["opc"];
 switch ($opc){
@@ -128,4 +145,7 @@ switch ($opc){
 	case 'llenaProgramasVac':
 		llenaProgramasVac();
 		break;	
+	case 'mostrarAlumnosSeg':
+		mostrarAlumnosSeg();
+		break;
 }
