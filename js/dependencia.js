@@ -167,9 +167,11 @@ var dependencia = function (){
 			url: "../datos/dependencia.php",
 			data: parametros,
 			success: function(data){
-				$('#tblAlumnos').DataTable();
+				$('#tblAlumnos').append(data.tabla);
+				$("#divTablaAlumnos").show("slow");
 				$('#opcDependencia>div').hide();
 				$("#seguimientoAlumnos").show("slow");
+
 			}
 		});
 	}

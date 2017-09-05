@@ -110,6 +110,15 @@ function llenaProgramasVac(){
 	print json_encode($arrayJSON);
 
 }
+function getPeriodoAct(){
+	$respuesta=false;
+	$cn 		= conexionBD();
+	$qryvalida	= sprintf("select PARFOL1 from DPARAM where PARCVE= 'PRDO'");
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$periodoAct	= $row["PARFOL1"];
+	return $periodoAct;
+}
 function mostrarAlumnosSeg(){
 	$respuesta	= false;
 	$usuario	= "'".$_POST["usuario"]."'";
@@ -119,12 +128,30 @@ function mostrarAlumnosSeg(){
 	$res 		= mysql_query($qry);
 	$row		= mysql_fetch_array($res);
 	$cvedependencia = $row['cvedependencia'];
-	$qryProgramas = sprintf("SELECT * FROM programas AS p INNER JOIN solicitudes AS s  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s", $cvedependencia);
+	$pdoAct 		= getPeriodoAct();
+	$qryProgramas = sprintf("SELECT * FROM solicitudes AS s INNER JOIN programas AS p  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s AND pdocve_1 = %s", $cvedependencia, $pdoAct);
+	var_dump($qryProgramas);
 	$resProgramas = mysql_query($qryProgramas);
-	$rowProgramas = mysql_fetch_array($resProgramas);
-	var_dump($rowProgramas);
-
-	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta);
+	$tabla		= "";
+	$tabla		.= "<thead><tr>";
+	$tabla		.= "<th>No. de Control</th>";
+	$tabla		.=	"<th>Nombre</th>";
+	$tabla		.=	"<th>Estado</th>";
+	$tabla		.=	"<th>Programa</th>";
+	$tabla		.=	"<th></th>";
+	$tabla		.=	"</thead></tr>";
+	if($resProgramas==false){
+		$respuesta = false;
+	}else{
+		$respuesta = true;
+		while($row0 = mysql_fetch_array($res0)){
+			$cveusuario  = $row0["cveusuario_1"];
+			$cveprograma = $row0["cveprograma_1"];
+			$cvesolicitud = $row0["cvesolicitud"];
+		}
+	}
+	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta, 'tabla' => $tabla);
+	print json_encode($arrayJSON);
 
 }
 
