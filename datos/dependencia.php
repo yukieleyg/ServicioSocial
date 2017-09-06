@@ -136,6 +136,8 @@ function mostrarAlumnosSeg(){
 	$tabla		.= "<thead><tr>";
 	$tabla		.= "<th>No. de Control</th>";
 	$tabla		.=	"<th>Nombre</th>";
+	$tabla 		.=  "<th>Carrera</th>";
+	$tabla 		.=  "<th>Semestre</th>";
 	$tabla		.=	"<th>Estado</th>";
 	$tabla		.=	"<th>Programa</th>";
 	$tabla		.=	"<th></th>";
@@ -150,12 +152,20 @@ function mostrarAlumnosSeg(){
 		$res1		= mysql_query($qryvalida1);
 		$row1		= mysql_fetch_array($res1);
 		$cn 		= conexionBD();
-		$qryvalida	= sprintf("SELECT ALUCTR, ALUNOM, ALUAPP, ALUAPM FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
+		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE FROM DALUMN AS DA INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR WHERE DA.ALUCTR = %s",$cveusuario);
 		$res		= mysql_query($qryvalida);
 		$row 		= mysql_fetch_array($res);
+		$cvecarrera = $row["CARCVE"];	
+		$semestre	= $row["CALNPE"];
+		$qryCarrera = sprintf("SELECT CARNOM FROM DCARRE WHERE CARCVE = %s",$cvecarrera);
+		$resCarrera = mysql_query($qryCarrera);
+		$rowCarrera = mysql_fetch_array($resCarrera);
+		$nomCarrera = $rowCarrera["CARNOM"];
 		$tabla		.= "<tr>";
 		$tabla		.= "<td>".$row["ALUCTR"]."</td>";
 		$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+		$tabla .= "<th>".$nomCarrera."</th>";
+		$tabla .= "<th>".$semestre."</th>";
 		if($row0["estado"]==0){
 			$tabla		.= "<td>"."PENDIENTE"."</td>";
 		}else if($row0["estado"]==1){
@@ -168,13 +178,11 @@ function mostrarAlumnosSeg(){
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 			
 		}else{
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 
 		}
 
