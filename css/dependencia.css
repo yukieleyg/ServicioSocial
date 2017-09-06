@@ -10,4 +10,16 @@
 #divInputsClave{
 	width:50%;
 	margin-left: 25%;
+
+}
+#seguimientoAlumnos{
+	margin-top: -15%;
+	display: none;
+}
+#divTablaAlumnos{
+	width: 85%;
+}
+#divTablaAlumnos{
+	margin-left: 5%;
+	margin-bottom: 5%;
 }

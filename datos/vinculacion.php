@@ -162,6 +162,7 @@ function obtenerTarjetaAlm(){
 }
 function getPeriodoAct(){
 	$respuesta=false;
+	$cn 		= conexionBD();
 	$qryvalida	= sprintf("select PARFOL1 from DPARAM where PARCVE= 'PRDO'");
 	$res		= mysql_query($qryvalida);
 	$row 		= mysql_fetch_array($res);
