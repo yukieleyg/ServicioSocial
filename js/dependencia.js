@@ -151,7 +151,89 @@ var dependencia = function (){
 				}
 		});
 	}
+var aceptarSolicitudes = function(){
+		var solicitud 	= $(this).val();
+		var parametros	= "opc=aceptarSolicitudes"+"&solicitud="+solicitud;
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Esta seguro que desea aceptar la solicitud ?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url: "../datos/vinculacion.php",
+							data: parametros,
+							success: function(data){
+								if(data.respuesta){
+										var opcion = 	$("#opcionActualSol").val();
+										var pagina =	$("#paginaActualSol").val();
+										if(opcion == 1){
+												funcionFiltrarSolicitudes(pagina);
+										}else{
+												funcionAlumnosSolicitudes(pagina);
+										}
+										Materialize.toast("Solicitud Aceptada",4000);
+								}else{
+									$.alert("Esta solicitud no ha podido ser aceptada");
+								}
+							}
 
+
+						});
+					}
+				},
+				cancel: function () {
+					$.alert("La solicitud no fue modificada");
+				}
+			}
+		});	
+	}
+	var rechazarSolicitudes = function(){
+		var solicitud 	= $(this).val();
+		var parametros	= "opc=rechazarSolicitudes"+"&solicitud="+solicitud;
+		$.confirm({
+				title: 'Confirmación',
+				content: "¿Esta seguro que desea rechazar la solicitud ?",
+				buttons: {
+					aceptar: {
+						text: 'Aceptar',
+						btnClass: 'waves-effect waves-light btn',
+						keys: ['enter', 'shift'],
+						action: function(){
+							$.ajax({
+								type: "POST",
+								dataType: "json",
+								url: "../datos/vinculacion.php",
+								data: parametros,
+
+								success: function(data){
+									if(data.respuesta){
+										Materialize.toast("Solicitud Rechazada",4000);
+										var opcion = 	$("#opcionActualSol").val();
+										var pagina = 	$("#paginaActualSol").val();
+										if(opcion == 1){
+												funcionFiltrarSolicitudes(pagina);
+										}else{
+												funcionAlumnosSolicitudes(pagina);
+										}
+									}else{
+										$alert("Esta solicitud no ha podido ser rechazada");
+									}
+								}
+							})
+						}
+					},
+					cancel: function () {
+						$.alert("La solicitud no fue modificada");
+					}
+				}
+			});	
+	}
 	var mostrarabrirVacantes=function(){
 		$('#opcDependencia>div').hide();
 		funMostrarProgramasVacantes();
@@ -187,6 +269,8 @@ $("#btnGuardarDatos").on("click",guardarDatos);
 $("#btnCancelarDatos").on("click",mostrarMisDatos);
 $("#menuabrirVacantes").on("click",mostrarabrirVacantes);
 $("#menuAlumnosSeg").on("click",mostrarAlumnosSeg);
+$("#tblAlumnos").on("click","#aceptar",aceptarSolicitudes);
+$("#tblAlumnos").on("click","#rechazar",rechazarSolicitudes);
 //$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
 }
 $(document).on("ready",dependencia);

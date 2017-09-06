@@ -168,14 +168,12 @@ function mostrarAlumnosSeg(){
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 			
 		}else{
 			$tabla		.= "<td>".$row1["nombre"]."</td>";
 			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
 			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
-			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
 			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
 
 		}
@@ -183,6 +181,47 @@ function mostrarAlumnosSeg(){
 		$tabla		.= "</tr>";
 	}
 	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta, 'tabla' => $tabla);
+	print json_encode($arrayJSON);
+
+}
+function aceptarSolicitudes (){
+	$respuesta	= false;
+	$solicitud	= "'".$_POST["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("SELECT * FROM solicitudes WHERE cvesolicitud =%s",$solicitud);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$usuario	= $row["cveusuario_1"];
+	$programa 	= $row["cveprograma_1"];
+	$aceptado 	= 1;
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
+	$resU 		= mysql_query($qryvalidaU);
+	if($resU){
+		$respuesta = true;
+		$consulta = sprintf("INSERT INTO  expedientes VALUES (NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
+		$resconsulta= mysql_query($consulta);	
+	}
+	$arrayJSON = array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+
+}
+function rechazarSolicitudes (){
+	$respuesta	= false;
+	$solicitud	= "'".$_POST["solicitud"]."'";
+	$cn 		= conexionLocal();
+	$qryvalida	= sprintf("SELECT * FROM  solicitudes WHERE cvesolicitud =%s",$solicitud);
+	$res		= mysql_query($qryvalida);
+	$row 		= mysql_fetch_array($res);
+	$usuario	= $row["cveusuario_1"];
+	$cnU 		= conexionLocal();
+	$rechazado 	= 2;
+	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$rechazado,$solicitud);	
+	$resU 		= mysql_query($qryvalidaU);
+	if($resU){
+		$respuesta = true;
+	}
+
+	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 
 }
@@ -206,4 +245,9 @@ switch ($opc){
 	case 'mostrarAlumnosSeg':
 		mostrarAlumnosSeg();
 		break;
+	case 'aceptarSolicitudes':
+		aceptarSolicitudes();
+		break;
+	case 'rechazarSolicitudes':
+		rechazarSolicitudes();
 }
