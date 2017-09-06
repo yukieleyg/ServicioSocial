@@ -139,13 +139,13 @@ var dependencia = function (){
 				data: parametros,
 				success: function(data){
 				 if(data.respuesta==true){
-				 	$("#selProgramaV").find('option').remove();
-				 	$("#selProgramaV").append('<option value="" disabled selected>Seleccione programa..</option>');
+				 	$("#selProgramasV").find('option').remove();
+				 	$("#selProgramasV").append('<option value="" disabled selected>Seleccione programa..</option>');
 				 	var opcs="";
 				 	$.each(data.opciones, function(i,opc){
 				 		opcs+='<option value="'+opc[0]+'">'+opc[1]+'</option>';
 				 	});
-				 	$("#selProgramaV").append(opcs).html();
+				 	$("#selProgramasV").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
 				}
@@ -156,11 +156,13 @@ var dependencia = function (){
 		$('#opcDependencia>div').hide();
 		funMostrarProgramasVacantes();
 		llenarSelectProgVac();
+		$("#txtProgVacantes").val("");
 		$("#solicitarSSVacantes").show("slow");
 	}
 
 	var vacanteenPrograma	=	function(){
 		$("#txtProgVacantes").val("");
+		console.log($("#selProgramasV").val());
 		var cveprograma	=	$(this).val();
 		var parametros	= "opc=vacanteenPrograma"+"&cveprograma="+cveprograma;
 		$.ajax({
@@ -177,16 +179,63 @@ var dependencia = function (){
 	}
 
 	var modificarVacantes 	= function(){
-		console.log($("#selProgramaV").val());
-		if($("#selProgramaV").val()==null){
+		console.log($("#selProgramasV").val());
+		if($("#selProgramasV").val()==null){
 			$.alert('Seleccione un programa para modificar');
 		}else{
-			$("#btnModificarVacantes").attr("disabled",true);
-			$("#btnGuardarVac").attr("disabled",false);
-			$("#btnCancelarVac").attr("disabled",false);
+			$("#btnModificarVacantes").addClass("disabled");
+			$("#btnGuardarVac").removeClass("disabled");
+			$("#btnCancelarVac").removeClass("disabled");
 			$('#txtProgVacantes').removeAttr('readonly').focus();
 		}
 		
+	}
+
+	var guardarVacantes	=function(){
+		var programa = $("#selProgramasV").val();
+		var vacantes = $("#txtProgVacantes").val();
+		var parametros	= "opc=guardarPrograma"+"&cveprograma="+programa+"&vacantes="+vacantes;
+		
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Está seguro que desea modificar las vacantes?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url:"../datos/dependencia.php",
+							data: parametros,
+							success: function(data){
+							 if(data.respuesta==true){
+							    mostrarabrirVacantes();
+							 }			 
+							}
+						});
+					}
+				},
+				cancel: function () {
+					cancelarModifVac();		
+				}
+			}
+		});
+		$("#btnGuardarVac").addClass("disabled");
+	    $("#btnCancelarVac").addClass("disabled");
+	    $("#btnModificarVacantes").removeClass("disabled");
+	    $('#txtProgVacantes').attr('readonly',true);
+
+	}
+	var cancelarModifVac =function(){
+		$.alert("Los datos no han sido modificados");
+		$("#btnGuardarVac").addClass("disabled");
+	    $("#btnCancelarVac").addClass("disabled");
+	    $("#btnModificarVacantes").removeClass("disabled");
+	    llenarSelectProgVac();
+	    $('#txtProgVacantes').val("").attr('readonly',true);
 	}
 
 
@@ -196,7 +245,9 @@ $("#btnModificarDatos").on("click", modificarDatos);
 $("#btnGuardarDatos").on("click",guardarDatos);
 $("#btnCancelarDatos").on("click",mostrarMisDatos);
 $("#menuabrirVacantes").on("click",mostrarabrirVacantes);
-$("#selProgramaV").on("change",vacanteenPrograma);
+$("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
+$("#btnGuardarVac").on("click",guardarVacantes);
+$("#btnCancelarVac").on("click",cancelarModifVac);
 }
 $(document).on("ready",dependencia);

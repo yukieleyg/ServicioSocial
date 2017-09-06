@@ -73,7 +73,7 @@ function mostrarProgramasVac(){
 							vacantes
 							FROM programas p
 							INNER JOIN dependencias d on d.cvedependencia=p.cvedependencia
-							WHERE d.cveusuario_1=%s AND p.vigencia=1
+							WHERE d.cveusuario_1=%s AND p.vigencia=1 AND p.estado=1
 							ORDER BY vacantes ASC",$usuario);
 	$res 		=mysql_query($qryVac);
 	$arreglo=Array();
@@ -96,7 +96,7 @@ function llenaProgramasVac(){
 							nombre 
 					FROM programas p
 					INNER JOIN dependencias d on d.cvedependencia=p.cvedependencia
-					WHERE d.cveusuario_1=%s AND p.vigencia=1
+					WHERE d.cveusuario_1=%s AND p.vigencia=1 AND p.estado=1
 					ORDER BY nombre ASC",$usuario);
 	$opciones=Array();
 	$res=mysql_query($cons);
@@ -124,6 +124,22 @@ function vacanteenPrograma(){
 	$arrayJSON=array('respuesta'=>$respuesta,'numvacantes'=>$vacante);
 	print json_encode($arrayJSON);
 }
+function guardarPrograma(){
+	$respuesta	= false;
+	$cveprograma= 	"'".$_POST["cveprograma"]."'";
+	$vacantes 	= "'".$_POST["vacantes"]."'";
+	$cn 		= conexionLocal();
+	$qryvacantes	= sprintf("UPDATE programas SET  vacantes= %s WHERE cveprograma=%s", $vacantes, $cveprograma);
+	$res		= mysql_query($qryvacantes);
+	if(mysql_affected_rows()>0){
+			$respuesta = true;
+		}else{
+			$respuesta = false;
+		}
+
+	$arrayJSON =array('respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+}
 
 $opc= $_POST["opc"];
 switch ($opc){
@@ -144,5 +160,8 @@ switch ($opc){
 		break;	
 	case 'vacanteenPrograma':
 		vacanteenPrograma();
+		break;
+	case 'guardarPrograma':
+		guardarPrograma();
 		break;
 }
