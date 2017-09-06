@@ -129,8 +129,8 @@ function mostrarAlumnosSeg(){
 	$row		= mysql_fetch_array($res);
 	$cvedependencia = $row['cvedependencia'];
 	$pdoAct 		= getPeriodoAct();
-	$qryProgramas = sprintf("SELECT * FROM solicitudes AS s INNER JOIN programas AS p  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s AND pdocve_1 = %s", $cvedependencia, $pdoAct);
-	var_dump($qryProgramas);
+	$conexion 	= conexionLocal();
+	$qryProgramas = sprintf("SELECT s.estado, s.cveusuario_1 , s.cvesolicitud, s.cveprograma_1 FROM solicitudes AS s INNER JOIN programas AS p  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s AND pdocve_1 = %s", $cvedependencia, $pdoAct);
 	$resProgramas = mysql_query($qryProgramas);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -140,21 +140,52 @@ function mostrarAlumnosSeg(){
 	$tabla		.=	"<th>Programa</th>";
 	$tabla		.=	"<th></th>";
 	$tabla		.=	"</thead></tr>";
-	if($resProgramas==false){
-		$respuesta = false;
-	}else{
+	while($row0 = mysql_fetch_array($resProgramas)){
 		$respuesta = true;
-		while($row0 = mysql_fetch_array($res0)){
-			$cveusuario  = $row0["cveusuario_1"];
-			$cveprograma = $row0["cveprograma_1"];
-			$cvesolicitud = $row0["cvesolicitud"];
+		$cveusuario  = $row0["cveusuario_1"];
+		$cveprograma = $row0["cveprograma_1"];
+		$cvesolicitud = $row0["cvesolicitud"];
+		$cn1		= conexionLocal();
+		$qryvalida1	= sprintf("SELECT * FROM programas WHERE cveprograma = %s ",$cveprograma);
+		$res1		= mysql_query($qryvalida1);
+		$row1		= mysql_fetch_array($res1);
+		$cn 		= conexionBD();
+		$qryvalida	= sprintf("SELECT ALUCTR, ALUNOM, ALUAPP, ALUAPM FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
+		$res		= mysql_query($qryvalida);
+		$row 		= mysql_fetch_array($res);
+		$tabla		.= "<tr>";
+		$tabla		.= "<td>".$row["ALUCTR"]."</td>";
+		$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+		if($row0["estado"]==0){
+			$tabla		.= "<td>"."PENDIENTE"."</td>";
+		}else if($row0["estado"]==1){
+			$tabla		.="<td>"."ACEPTADO"."</td>";
+		}else{
+			$tabla		.="<td>"."RECHAZADO"."</td>";
 		}
+
+		if($row0["estado"]!=0){
+			$tabla		.= "<td>".$row1["nombre"]."</td>";
+			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."'><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+			
+		}else{
+			$tabla		.= "<td>".$row1["nombre"]."</td>";
+			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
+			$tabla		.= "<td><button id='descargar' class='btn-floating btn-small waves-effect waves-light blue' value = '".$cvesolicitud."' ><a href='../datos/descargarArchivos.php?solicitud=".$cvesolicitud."' target=_blank><i class = 'material-icons'>file_download</i></a></button></td>";
+			$tabla		.= "<td><button id='detalles' class='btn-floating btn-small waves-effect waves-light yellow' value = '".$cvesolicitud."' ><i class = 'material-icons'>list</i></button></td>";
+
+		}
+
+		$tabla		.= "</tr>";
 	}
 	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta, 'tabla' => $tabla);
 	print json_encode($arrayJSON);
 
 }
-
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
