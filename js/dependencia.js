@@ -342,6 +342,14 @@ var vacanteenPrograma	=	function(){
 	    $('#txtProgVacantes').val("").attr('readonly',true);
 	}
 
+	var mostrarAperturaProg	=function(){
+		$('#opcDependencia>div').hide();
+		$("#selprogdepSS").val($("#txtUsuario").val());
+		var nomdep = $("#txtUsuario").val();
+		$("#selprogdepSS").html("<option>"+nomdep+"</option>").prop({'selectedIndex':1,"disabled":'disabled'}).material_select();
+		$("#solicitarSSProgramas").show("slow");
+	}
+
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
@@ -356,6 +364,7 @@ $("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
 $("#btnGuardarVac").on("click",guardarVacantes);
 $("#btnCancelarVac").on("click",cancelarModifVac);
+$("#menuaperturaPrograma").on("click",mostrarAperturaProg);
 
 }
 $(document).on("ready",dependencia);
