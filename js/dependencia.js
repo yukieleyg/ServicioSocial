@@ -249,6 +249,12 @@ var aceptarSolicitudes = function(){
 			url: "../datos/dependencia.php",
 			data: parametros,
 			success: function(data){
+				$("#filtroSolicitudesDependencia").attr('disabled',false);
+				$("#opcionSolicitudesDP").attr('disabled',false);
+				$("#btnClearFiltroSolDP").attr('disabled',true);
+				$("#btnFiltroSolicitudesDP").attr('disabled',false);
+				$("#opcionSolicitudesDP").material_select();
+				$("#filtroSolicitudesDependencia").material_select();
 				$('#tblAlumnos').html("");
 				$('#tblAlumnos').append(data.tabla);
 				$("#divTablaAlumnos").show("slow");
@@ -342,7 +348,7 @@ $("#tblAlumnos").on("click","#aceptar",aceptarSolicitudes);
 $("#tblAlumnos").on("click","#rechazar",rechazarSolicitudes);
 $("#filtroSolicitudesDependencia").on("change",filtroSolicitudes);
 $("#btnFiltroSolicitudesDP").on("click",filtrarSolicitudes);
-//$("#btnClearFiltroSolDP").on('click',clearFiltros);
+$("#btnClearFiltroSolDP").on('click',mostrarSolicitudesSeg);
 
 
 //$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
