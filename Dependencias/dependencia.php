@@ -19,8 +19,8 @@
 		
 					<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownSolicitarSS' data-hover="true" id="menuSeguimiento" style="color:black;"><i class="material-icons right">assignment_turned_in</i>Seguimiento<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownSolicitarSS">
-							<li><a id="menuAlumnosSeg" style="color:black;" >Solicitudes</a></li>
-							<li><a id="menuProgramasSeg"  style="color:black;">Alumnos</a></li>
+							<li><a id="menuSolicitudesSeg" style="color:black;" >Solicitudes</a></li>
+							<li><a id="menuAlumnosSeg"  style="color:black;">Alumnos</a></li>
 						</ul>
 					
 					<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="btnMisDatosDep"><i class="material-icons right">contact_mail</i>Mis datos</a>
@@ -45,11 +45,11 @@
 	<div id="solicitarSSProgramas" class="card">
 		<?php include 'divSolicitarSSProgramas.php' ?>
 	</div>
+	<div id="seguimientoSolicitudes" class="card">
+		<?php include 'divSolicitudesSeg.php' ?>
+	</div>
 	<div id="seguimientoAlumnos" class="card">
 		<?php include 'divAlumnosSeg.php' ?>
-	</div>
-	<div id="seguimientoProgramas" class="card">
-		<?php include 'divProgramasSeg.php' ?>
 	</div>
 </section>
 </body>

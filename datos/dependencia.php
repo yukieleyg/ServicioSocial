@@ -119,7 +119,7 @@ function getPeriodoAct(){
 	$periodoAct	= $row["PARFOL1"];
 	return $periodoAct;
 }
-function mostrarAlumnosSeg(){
+function mostrarSolicitudesSeg(){
 	$respuesta	= false;
 	$usuario	= "'".$_POST["usuario"]."'";
 	$conexion 	= conexionLocal();
@@ -233,6 +233,29 @@ function rechazarSolicitudes (){
 	print json_encode($arrayJSON);
 
 }
+function consultaFiltroSolicitudesDP(){
+	$usuario	= "'".$_POST["usuario"]."'";
+	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
+	$qry 		= sprintf("SELECT cvedependencia FROM dependencias WHERE cveusuario_1 = %s",$usuario);
+	$res 		= mysql_query($qry);
+	$row		= mysql_fetch_array($res);
+	$cvedependencia = $row['cvedependencia'];
+	$cn 			= conexionLocal();
+	$qryvalida 		= sprintf("SELECT * FROM programas where cvedependencia = %s",$cvedependencia);
+	$res 			= mysql_query($qryvalida);
+	$opciones 		= "";
+	$respuesta 		= false;
+	while($row = mysql_fetch_array($res)){
+			$cve 		= $row['cveprograma'];
+			$nom 		= $row['nombre'];
+			$opciones 	.= '<option value="'.$cve.'">'.$nom.'</option>';
+			$respuesta   = true;
+	}
+	$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta);
+	print json_encode($arrayJSON);
+
+}
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -250,12 +273,15 @@ switch ($opc){
 	case 'llenaProgramasVac':
 		llenaProgramasVac();
 		break;	
-	case 'mostrarAlumnosSeg':
-		mostrarAlumnosSeg();
+	case 'mostrarSolicitudesSeg':
+		mostrarSolicitudesSeg();
 		break;
 	case 'aceptarSolicitudes':
 		aceptarSolicitudes();
 		break;
 	case 'rechazarSolicitudes':
 		rechazarSolicitudes();
+		break;
+	case 'consultaFiltroSolicitudesDP':
+		consultaFiltroSolicitudesDP();
 }
