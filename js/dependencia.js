@@ -131,7 +131,7 @@ var dependencia = function (){
 	}
 	var llenarSelectProgVac=function(){
 		var usuario 	= $('#txtUsuario').val();//from login
-		var parametros = "&opc=llenaProgramasVac"+"&usuario="+usuario;
+		var parametros = "opc=llenaProgramasVac"+"&usuario="+usuario;
 		$.ajax({
 				type: "POST",
 				dataType: "json",
@@ -139,13 +139,13 @@ var dependencia = function (){
 				data: parametros,
 				success: function(data){
 				 if(data.respuesta==true){
-				 	$("#selProgramaV").find('option').remove();
-				 	$("#selProgramaV").append('<option value="" disabled selected>Seleccione programa..</option>');
+				 	$("#selProgramasV").find('option').remove();
+				 	$("#selProgramasV").append('<option value="" disabled selected>Seleccione programa..</option>');
 				 	var opcs="";
 				 	$.each(data.opciones, function(i,opc){
 				 		opcs+='<option value="'+opc[0]+'">'+opc[1]+'</option>';
 				 	});
-				 	$("#selProgramaV").append(opcs).html();
+				 	$("#selProgramasV").append(opcs).html();
 				 	$('select').material_select();
 				 }			 
 				}
@@ -238,6 +238,7 @@ var aceptarSolicitudes = function(){
 		$('#opcDependencia>div').hide();
 		funMostrarProgramasVacantes();
 		llenarSelectProgVac();
+		$("#txtProgVacantes").val("");
 		$("#solicitarSSVacantes").show("slow");
 	}
 	var mostrarSolicitudesSeg = function(){
@@ -337,6 +338,84 @@ var aceptarSolicitudes = function(){
 				break;*/
 		}
 	}
+var vacanteenPrograma	=	function(){
+		$("#txtProgVacantes").val("");
+		console.log($("#selProgramasV").val());
+		var cveprograma	=	$(this).val();
+		var parametros	= "opc=vacanteenPrograma"+"&cveprograma="+cveprograma;
+		$.ajax({
+			type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				    $("#txtProgVacantes").val(data.numvacantes);
+				 }			 
+				}
+		});
+	}
+
+	var modificarVacantes 	= function(){
+		console.log($("#selProgramasV").val());
+		if($("#selProgramasV").val()==null){
+			$.alert('Seleccione un programa para modificar');
+		}else{
+			$("#btnModificarVacantes").addClass("disabled");
+			$("#btnGuardarVac").removeClass("disabled");
+			$("#btnCancelarVac").removeClass("disabled");
+			$('#txtProgVacantes').removeAttr('readonly').focus();
+		}
+		
+	}
+
+	var guardarVacantes	=function(){
+		var programa = $("#selProgramasV").val();
+		var vacantes = $("#txtProgVacantes").val();
+		var parametros	= "opc=guardarPrograma"+"&cveprograma="+programa+"&vacantes="+vacantes;
+		
+		$.confirm({
+			title: 'Confirmación',
+			content: "¿Está seguro que desea modificar las vacantes?",
+			buttons: {
+				aceptar: {
+					text: 'Aceptar',
+					btnClass: 'waves-effect waves-light btn',
+					keys: ['enter', 'shift'],
+					action: function(){
+						$.ajax({
+							type: "POST",
+							dataType: "json",
+							url:"../datos/dependencia.php",
+							data: parametros,
+							success: function(data){
+							 if(data.respuesta==true){
+							    mostrarabrirVacantes();
+							 }			 
+							}
+						});
+					}
+				},
+				cancel: function () {
+					cancelarModifVac();		
+				}
+			}
+		});
+		$("#btnGuardarVac").addClass("disabled");
+	    $("#btnCancelarVac").addClass("disabled");
+	    $("#btnModificarVacantes").removeClass("disabled");
+	    $('#txtProgVacantes').attr('readonly',true);
+
+	}
+	var cancelarModifVac =function(){
+		$.alert("Los datos no han sido modificados");
+		$("#btnGuardarVac").addClass("disabled");
+	    $("#btnCancelarVac").addClass("disabled");
+	    $("#btnModificarVacantes").removeClass("disabled");
+	    llenarSelectProgVac();
+	    $('#txtProgVacantes').val("").attr('readonly',true);
+	}
+
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
@@ -352,5 +431,10 @@ $("#btnClearFiltroSolDP").on('click',mostrarSolicitudesSeg);
 
 
 //$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
+$("#selProgramasV").on("change",vacanteenPrograma);
+$("#btnModificarVacantes").on("click", modificarVacantes);
+$("#btnGuardarVac").on("click",guardarVacantes);
+$("#btnCancelarVac").on("click",cancelarModifVac);
+
 }
 $(document).on("ready",dependencia);
