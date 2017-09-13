@@ -256,6 +256,83 @@ function consultaFiltroSolicitudesDP(){
 	print json_encode($arrayJSON);
 
 }
+function filtrarSolicitudesEstado(){	
+	$estado 	= $_POST["estado"];
+	$respuesta	= false;
+	$usuario	= "'".$_POST["usuario"]."'";
+	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
+	$qry 		= sprintf("SELECT cvedependencia FROM dependencias WHERE cveusuario_1 = %s",$usuario);
+	$res 		= mysql_query($qry);
+	$row		= mysql_fetch_array($res);
+	$cvedependencia = $row['cvedependencia'];
+	$pdoAct 		= getPeriodoAct();
+	$conexion 	= conexionLocal();
+	$qryProgramas = sprintf("SELECT s.estado, s.cveusuario_1 , s.cvesolicitud, s.cveprograma_1 FROM solicitudes AS s INNER JOIN programas AS p  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s AND pdocve_1 = %s AND s.estado = %s", $cvedependencia, $pdoAct, $estado);
+	$resProgramas = mysql_query($qryProgramas);
+	$tabla		= "";
+	$tabla		.= "<thead><tr>";
+	$tabla		.= "<th>No. de Control</th>";
+	$tabla		.=	"<th>Nombre</th>";
+	$tabla 		.=  "<th>Carrera</th>";
+	$tabla 		.=  "<th>Semestre</th>";
+	$tabla		.=	"<th>Estado</th>";
+	$tabla		.=	"<th>Programa</th>";
+	$tabla		.=	"<th></th>";
+	$tabla		.=	"</thead></tr>";
+	while($row0 = mysql_fetch_array($resProgramas)){
+		$respuesta = true;
+		$cveusuario  = $row0["cveusuario_1"];
+		$cveprograma = $row0["cveprograma_1"];
+		$cvesolicitud = $row0["cvesolicitud"];
+		$cn1		= conexionLocal();
+		$qryvalida1	= sprintf("SELECT * FROM programas WHERE cveprograma = %s ",$cveprograma);
+		$res1		= mysql_query($qryvalida1);
+		$row1		= mysql_fetch_array($res1);
+		$cn 		= conexionBD();
+		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE FROM DALUMN AS DA INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR WHERE DA.ALUCTR = %s",$cveusuario);
+		$res		= mysql_query($qryvalida);
+		$row 		= mysql_fetch_array($res);
+		$cvecarrera = $row["CARCVE"];	
+		$semestre	= $row["CALNPE"];
+		$qryCarrera = sprintf("SELECT CARNOM FROM DCARRE WHERE CARCVE = %s",$cvecarrera);
+		$resCarrera = mysql_query($qryCarrera);
+		$rowCarrera = mysql_fetch_array($resCarrera);
+		$nomCarrera = $rowCarrera["CARNOM"];
+		$tabla		.= "<tr>";
+		$tabla		.= "<td>".$row["ALUCTR"]."</td>";
+		$tabla		.= "<td>".$row["ALUNOM"]." ".$row["ALUAPP"]." ".$row["ALUAPM"]."</td>";
+		$tabla .= "<th>".$nomCarrera."</th>";
+		$tabla .= "<th>".$semestre."</th>";
+		if($row0["estado"]==0){
+			$tabla		.= "<td>"."PENDIENTE"."</td>";
+		}else if($row0["estado"]==1){
+			$tabla		.="<td>"."ACEPTADO"."</td>";
+		}else{
+			$tabla		.="<td>"."RECHAZADO"."</td>";
+		}
+
+		if($row0["estado"]!=0){
+			$tabla		.= "<td>".$row1["nombre"]."</td>";
+			$tabla 		.= "<td><button name= 'aceptar 'id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' disabled><i class= 'material-icons'>close</i></a></td>";
+			
+		}else{
+			$tabla		.= "<td>".$row1["nombre"]."</td>";
+			$tabla 		.= "<td><button id='aceptar' class='btn-floating btn-small waves-effect waves-light green' value = '".$cvesolicitud."' ><i class= 'material-icons'>done_all</i></button></td>";
+			$tabla		.= "<td><button id='rechazar' class='btn-floating btn-small waves-effect waves-light red' value = '".$cvesolicitud."' ><i class= 'material-icons'>close</i></a></td>";
+
+		}
+
+		$tabla		.= "</tr>";
+	}
+	$arrayJSON = array('cvedependencia' => $cvedependencia, 'respuesta' => $respuesta, 'tabla' => $tabla);
+	print json_encode($arrayJSON);
+
+}
+function filtrarSolicitudesProgramas(){
+
+}
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -284,4 +361,11 @@ switch ($opc){
 		break;
 	case 'consultaFiltroSolicitudesDP':
 		consultaFiltroSolicitudesDP();
-}
+		break;
+	case 'filtrarSolicitudesEstado':
+		filtrarSolicitudesEstado();
+		break;
+	case 'filtrarSolicitudesProgramas':
+		filtrarSolicitudesProgramas();
+		break;
+}?>

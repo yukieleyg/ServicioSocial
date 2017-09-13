@@ -253,8 +253,8 @@ var aceptarSolicitudes = function(){
 				$('#tblAlumnos').append(data.tabla);
 				$("#divTablaAlumnos").show("slow");
 				$('#opcDependencia>div').hide();
+				$("#btnClearFiltroSolDP").attr('disabled',true);
 				$("#seguimientoSolicitudes").show("slow");
-
 			}
 		});
 	}
@@ -290,6 +290,47 @@ var aceptarSolicitudes = function(){
 			break;
 		}
 	}
+	var filtrarSolicitudes = function(){
+		$("#filtroSolicitudesDependencia").attr('disabled',true);
+		$("#opcionSolicitudesDP").attr('disabled',true);
+		$("#btnClearFiltroSolDP").attr('disabled',false);
+		$("#opcionSolicitudesDP").material_select();
+		$("#filtroSolicitudesDependencia").material_select();
+		$("#btnFiltroSolicitudesDP").attr('disabled',true);
+		var usuario 	= $('#txtUsuario').val();//from login
+		var value 		= $("#filtroSolicitudesDependencia").val();
+		var opc 		= $("#opcionSolicitudesDP").val();
+		switch(value){
+			case '0':
+				var parametros	= "opc="+"filtrarSolicitudesEstado"+"&estado="+opc+"&usuario="+usuario; 
+				$.ajax({					
+					type: "POST",
+					dataType: "json",
+					url:"../datos/dependencia.php",
+					data: parametros,
+					success: function(data){
+						$('#tblAlumnos').html("");
+						$('#tblAlumnos').append(data.tabla);
+						$("#divTablaAlumnos").show("slow");
+						$('#opcDependencia>div').hide();
+						$("#seguimientoSolicitudes").show("slow");
+
+					}	
+				});
+				break;
+			/*case '1': 
+				var parametros = "opc="+"filtrarSolicitudesProgramas"+"&programa"+opc;
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url:"../datos/dependencia.php",
+					data: parametros,
+					success: function(data){
+					}	
+				});
+				break;*/
+		}
+	}
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
@@ -300,6 +341,9 @@ $("#menuSolicitudesSeg").on("click",mostrarSolicitudesSeg);
 $("#tblAlumnos").on("click","#aceptar",aceptarSolicitudes);
 $("#tblAlumnos").on("click","#rechazar",rechazarSolicitudes);
 $("#filtroSolicitudesDependencia").on("change",filtroSolicitudes);
+$("#btnFiltroSolicitudesDP").on("click",filtrarSolicitudes);
+//$("#btnClearFiltroSolDP").on('click',clearFiltros);
+
 
 //$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
 }
