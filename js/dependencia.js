@@ -325,17 +325,22 @@ var aceptarSolicitudes = function(){
 					}	
 				});
 				break;
-			/*case '1': 
-				var parametros = "opc="+"filtrarSolicitudesProgramas"+"&programa"+opc;
+			case '1': 
+				var parametros = "opc="+"filtrarSolicitudesProgramas"+"&programa="+opc+"&usuario="+usuario;
 				$.ajax({
 					type: "POST",
 					dataType: "json",
 					url:"../datos/dependencia.php",
 					data: parametros,
 					success: function(data){
+						$('#tblAlumnos').html("");
+						$('#tblAlumnos').append(data.tabla);
+						$("#divTablaAlumnos").show("slow");
+						$('#opcDependencia>div').hide();
+						$("#seguimientoSolicitudes").show("slow");
 					}	
 				});
-				break;*/
+				break;
 		}
 	}
 var vacanteenPrograma	=	function(){
