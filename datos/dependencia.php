@@ -267,6 +267,47 @@ function guardarPrograma(){
 	$arrayJSON =array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);
 }
+function llenaDptosDep(){
+	$respuesta=false;
+	$conexion 	= conexionLocal();
+	$nomdep="'".$_POST["nomdep"]."'";
+	mysql_query("set NAMES utf8");
+	$cons=sprintf("SELECT dp.nomdepartamento, dp.cvedepartamento 
+					FROM departamentos dp
+					INNER JOIN dependencias d on d.cvedependencia=dp.cvedependencia
+					WHERE d.cveusuario_1=%s" , $nomdep);
+	$opciones= array();
+	$res=mysql_query($cons);
+	   while ($row = mysql_fetch_assoc($res)) {
+                  $cve = $row['cvedepartamento'];
+                  $nom = $row['nomdepartamento']; 
+                  $opciones[]=array($cve,$nom);
+				$respuesta=true;
+		}
+	$arrayJSON = array('opciones' => $opciones, 'respuesta' => $respuesta );
+	print json_encode($arrayJSON);
+}
+function llenaTipoProg(){
+		$respuesta=false;
+		$conexion 	= conexionLocal();
+		mysql_query("set NAMES utf8");
+		$cons=	sprintf("SELECT cvetipo, 
+								tipoprograma 
+						FROM tipo_programa");
+		$opc=array();
+		$res=mysql_query($cons);
+		   while ($row = mysql_fetch_array($res)) {
+
+	                  $cve = intval($row['cvetipo']);
+	                  $nom = $row['tipoprograma']; 
+	                  $opc[]	=array($cve,$nom);
+	                  $respuesta=true;
+			}
+		$arrayJSON = array('opciones' => $opc, 'respuesta' => $respuesta );
+		print json_encode($arrayJSON);
+	}
+
+
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -298,5 +339,11 @@ switch ($opc){
 		break;
 	case 'guardarPrograma':
 		guardarPrograma();
+		break;
+	case 'llenaDptosDep':
+		llenaDptosDep();
+		break;
+	case 'llenaTipoProg':
+		llenaTipoProg();
 		break;
 }

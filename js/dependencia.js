@@ -347,7 +347,57 @@ var vacanteenPrograma	=	function(){
 		$("#selprogdepSS").val($("#txtUsuario").val());
 		var nomdep = $("#txtUsuario").val();
 		$("#selprogdepSS").html("<option>"+nomdep+"</option>").prop({'selectedIndex':1,"disabled":'disabled'}).material_select();
+		llenaDptosDep();
+		llenaTipoProg();
 		$("#solicitarSSProgramas").show("slow");
+	}
+
+	var llenaDptosDep = function(){
+		var nomdep = $("#txtUsuario").val();
+		
+		var parametros = "opc=llenaDptosDep"+"&nomdep="+nomdep;
+		
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	$("#selprogdptoSS").find('option').remove();
+				 	$("#selprogdptoSS").append('<option value="" disabled selected>Seleccione departamento..</option>');
+				 	var opcs="";
+				 	$.each(data.opciones, function(i,opc){
+				 		opcs+='<option value="'+opc[0]+'">'+opc[1]+'</option>';
+				 	});
+				 	$("#selprogdptoSS").append(opcs).html();
+				 	$('select').material_select();
+				 }			 
+				}
+		});
+	}
+	var llenaTipoProg=	function(){
+		var nomdep = $("#txtUsuario").val();
+		var parametros = $("#selprogtipoSS").val()+"&opc=llenaTipoProg"+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var opcs=data.opciones;
+				 	$("#selprogtipoSS").find('option').remove();
+				 	$("#selprogtipoSS").append('<option value="" disabled selected>Seleccione un tipo de programa..</option>');
+				 	var opcs="";
+				 	$.each(data.opciones, function(i,opc){
+				 		opcs+='<option value="'+opc[0]+'">'+opc[1]+'</option>';
+				 	});
+				 	$("#selprogtipoSS").append(opcs).html();
+				 	$('#selprogtipoSS').material_select();
+				 }			 
+				}
+		});
 	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
