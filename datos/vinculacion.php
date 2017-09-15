@@ -960,7 +960,7 @@ function llenaDptoProgramas(){
 				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina==$botonesTotal){
+		if($pagina>($botonesTotal/10)){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1193,7 +1193,7 @@ function llenaDptoProgramas(){
 				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina==$botonesTotal){
+		if($pagina>($botonesTotal/10)){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextFA"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1303,7 +1303,7 @@ function llenaDptoProgramas(){
 					$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagFS"><a>'.$numero.'</a></li>  ';	
 				}
 			}
-			if($pagina==$totalBotones){
+			if($pagina>($totalBotones/10)){
 	  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 			}else{
 	  			$botones .= '<li class="waves-effect" id="btnNextFS"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1355,7 +1355,6 @@ function llenaDptoProgramas(){
 				break;
 		}
 		$res 		= mysql_query($qryProgramas);
-		var_dump($res);
 		while($renglon 	= mysql_fetch_array($res)){
 			$respuesta 	= true;
 			$cveprograma= $renglon["cveprograma"];

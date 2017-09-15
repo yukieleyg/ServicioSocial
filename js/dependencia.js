@@ -298,24 +298,28 @@ var aceptarSolicitudes = function(){
 		}
 	}
 	var filtrarSolicitudes = function(){
-		$("#filtroSolicitudesDependencia").attr('disabled',true);
-		$("#opcionSolicitudesDP").attr('disabled',true);
-		$("#btnClearFiltroSolDP").attr('disabled',false);
-		$("#opcionSolicitudesDP").material_select();
-		$("#filtroSolicitudesDependencia").material_select();
-		$("#btnFiltroSolicitudesDP").attr('disabled',true);
+		var pagina 		= $(this).val();
 		var usuario 	= $('#txtUsuario').val();//from login
 		var value 		= $("#filtroSolicitudesDependencia").val();
 		var opc 		= $("#opcionSolicitudesDP").val();
+		var pagina 		= pagina;
 		switch(value){
 			case '0':
-				var parametros	= "opc="+"filtrarSolicitudesEstado"+"&estado="+opc+"&usuario="+usuario; 
+				var parametros	= "opc="+"filtrarSolicitudesEstado"+"&estado="+opc+"&usuario="+usuario+"&pagina="+pagina; 
 				$.ajax({					
 					type: "POST",
 					dataType: "json",
 					url:"../datos/dependencia.php",
 					data: parametros,
 					success: function(data){
+						$("#filtroSolicitudesDependencia").attr('disabled',true);
+						$("#opcionSolicitudesDP").attr('disabled',true);
+						$("#btnClearFiltroSolDP").attr('disabled',false);
+						$("#opcionSolicitudesDP").material_select();
+						$("#filtroSolicitudesDependencia").material_select();
+						$("#btnFiltroSolicitudesDP").attr('disabled',true);
+						$("#paginacionSolicitudesDP").html("");
+						$("#paginacionSolicitudesDP").append(data.botones);
 						$('#tblAlumnos').html("");
 						$('#tblAlumnos').append(data.tabla);
 						$("#divTablaAlumnos").show("slow");
@@ -326,13 +330,21 @@ var aceptarSolicitudes = function(){
 				});
 				break;
 			case '1': 
-				var parametros = "opc="+"filtrarSolicitudesProgramas"+"&programa="+opc+"&usuario="+usuario;
+				var parametros = "opc="+"filtrarSolicitudesProgramas"+"&programa="+opc+"&usuario="+usuario+"&pagina="+pagina;
 				$.ajax({
 					type: "POST",
 					dataType: "json",
 					url:"../datos/dependencia.php",
 					data: parametros,
 					success: function(data){
+						$("#filtroSolicitudesDependencia").attr('disabled',true);
+						$("#opcionSolicitudesDP").attr('disabled',true);
+						$("#btnClearFiltroSolDP").attr('disabled',false);
+						$("#opcionSolicitudesDP").material_select();
+						$("#filtroSolicitudesDependencia").material_select();
+						$("#btnFiltroSolicitudesDP").attr('disabled',true);
+						$("#paginacionSolicitudesDP").html("");
+						$("#paginacionSolicitudesDP").append(data.botones);
 						$('#tblAlumnos').html("");
 						$('#tblAlumnos').append(data.tabla);
 						$("#divTablaAlumnos").show("slow");

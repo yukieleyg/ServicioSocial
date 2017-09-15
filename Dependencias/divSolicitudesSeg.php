@@ -14,7 +14,7 @@
 				<select name="opcionSolicitudesDP" id="opcionSolicitudesDP"></select>
 			</div>
 			<div class="col s2">	
-				<button class="btn" id="btnFiltroSolicitudesDP"><i class="material-icons">search</i></button>
+				<button class="btn" id="btnFiltroSolicitudesDP" value="1"><i class="material-icons">search</i></button>
 			</div>	
 			<div class="col s2 " id="divClearFiltroSolDP">
 				<button class="btn" id="btnClearFiltroSolDP"><i class="material-icons">loop</i></button>
