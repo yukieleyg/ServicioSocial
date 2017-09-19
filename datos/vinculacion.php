@@ -66,7 +66,7 @@ function muestraSolicitudes(){
 		$tabla		.= "</tr>";
 	}
 	$totalBotones = intval($total/10);
-	$restante = $total - $totalBotones;
+	$restante = $total - ($totalBotones*10);
 	if($restante>0){
 		$totalBotones=$totalBotones+1;
 	}

@@ -354,7 +354,7 @@ function filtrarSolicitudesEstado(){
 					$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 				}
 			}
-			if($pagina>($botonesTotal/10)){
+			if($pagina== $botonesTotal or $botonesTotal== 0){
 	  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 			}else{
 	  			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -371,14 +371,13 @@ function filtrarSolicitudesProgramas(){
 	$programa 	= $_POST["programa"];
 	$respuesta	= false;
 	$usuario	= "'".$_POST["usuario"]."'";
+	$pdoAct 		= getPeriodoAct();
 	$conexion 	= conexionLocal();
 	mysql_query("set NAMES utf8");
 	$qry 		= sprintf("SELECT cvedependencia FROM dependencias WHERE cveusuario_1 = %s",$usuario);
 	$res 		= mysql_query($qry);
 	$row		= mysql_fetch_array($res);
 	$cvedependencia = $row['cvedependencia'];
-	$pdoAct 		= getPeriodoAct();
-	$conexion 	= conexionLocal();
 	$qryProgramas = sprintf("SELECT s.estado, s.cveusuario_1 , s.cvesolicitud, s.cveprograma_1, p.nombre FROM solicitudes AS s INNER JOIN programas AS p  on p.cveprograma = s.cveprograma_1 WHERE cvedependencia = %s AND pdocve_1 = %s AND p.cveprograma = %s LIMIT 10 OFFSET %s", $cvedependencia, $pdoAct, $programa, $inicio);
 	$resProgramas = mysql_query($qryProgramas);
 	$tabla		= "";
@@ -396,6 +395,7 @@ function filtrarSolicitudesProgramas(){
 		$cveusuario  = $row0["cveusuario_1"];
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
+		$cn 		= conexionBD();
 		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE FROM DALUMN AS DA INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR WHERE DA.ALUCTR = %s",$cveusuario);
 		$res		= mysql_query($qryvalida);
 		$row 		= mysql_fetch_array($res);
@@ -438,7 +438,8 @@ function filtrarSolicitudesProgramas(){
 	$rowCount 			= mysql_fetch_array($resProgramasCount);
 	$total 				= $rowCount['TOTAL'];
 	$botonesTotal 		= intval($total/10);
-	$restante 			= $total - $botonesTotal;
+	$restante 			= $total - ($botonesTotal*10);
+	//var_dump($botonesTotal);
 	if($restante>0){
 			$botonesTotal = $botonesTotal+1;
 		}		
@@ -459,7 +460,7 @@ function filtrarSolicitudesProgramas(){
 				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina>($botonesTotal/10)){
+		if($pagina==$botonesTotal or $botonesTotal== 0){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';

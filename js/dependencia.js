@@ -445,6 +445,8 @@ $("#tblAlumnos").on("click","#rechazar",rechazarSolicitudes);
 $("#filtroSolicitudesDependencia").on("change",filtroSolicitudes);
 $("#btnFiltroSolicitudesDP").on("click",filtrarSolicitudes);
 $("#btnClearFiltroSolDP").on('click',mostrarSolicitudesSeg);
+$("#paginacionSolicitudesDP").on("click","#btnPag",filtrarSolicitudes);
+
 
 
 //$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
