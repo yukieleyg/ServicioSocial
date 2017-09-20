@@ -446,6 +446,8 @@ $("#filtroSolicitudesDependencia").on("change",filtroSolicitudes);
 $("#btnFiltroSolicitudesDP").on("click",filtrarSolicitudes);
 $("#btnClearFiltroSolDP").on('click',mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnPag",filtrarSolicitudes);
+$("#paginacionSolicitudesDP").on("click","#btnNextN",filtrarSolicitudes);
+$("#paginacionSolicitudesDP").on("click","#btnPreviousN",filtrarSolicitudes);
 
 
 
