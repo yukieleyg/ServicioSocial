@@ -250,6 +250,7 @@ var aceptarSolicitudes = function(){
 			url: "../datos/dependencia.php",
 			data: parametros,
 			success: function(data){
+				$("#paginacionSolicitudesDP").html("");
 				$("#filtroSolicitudesDependencia").attr('disabled',false);
 				$("#opcionSolicitudesDP").attr('disabled',false);
 				$("#btnClearFiltroSolDP").attr('disabled',true);
