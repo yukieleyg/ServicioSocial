@@ -67,6 +67,8 @@ function muestraSolicitudes(){
 	}
 	$totalBotones = intval($total/10);
 	$restante = $total - ($totalBotones*10);
+	$previo = $pagina-1;
+	$siguiente =  $pagina+1;
 	if($restante>0){
 		$totalBotones=$totalBotones+1;
 	}
@@ -74,7 +76,7 @@ function muestraSolicitudes(){
 	if($pagina==1){
 	    $botones .= '<li class="disabled" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
 	}else{
-	    $botones .= '<li class="waves-effect" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
+	    $botones .= '<li class="waves-effect" id="btnPreviousSol" value= '.$previo.'><a><i class="material-icons">chevron_left</i></a></li>';
 	}
 	for($i=0;$i<$totalBotones;$i++){
 		$numero = $i+1;
@@ -88,7 +90,7 @@ function muestraSolicitudes(){
     if($pagina==$totalBotones){
 	    $botones.= '<li class="disabled" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
     }else{
-	    $botones.= '<li class="waves-effect" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
+	    $botones.= '<li class="waves-effect" id="btnNextSol" value= '.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
     }
   	$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagSol">';
 	if($totalBotones==1){

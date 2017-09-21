@@ -242,8 +242,12 @@ var aceptarSolicitudes = function(){
 		$("#solicitarSSVacantes").show("slow");
 	}
 	var mostrarSolicitudesSeg = function(){
+		var pagina = $(this).val();
+		if(pagina == ""){
+			pagina 		= $("#valorPagina").val();
+		}
 		var usuario 	= $('#txtUsuario').val();//from login
-		var parametros  = "opc="+"mostrarSolicitudesSeg"+"&usuario="+usuario;
+		var parametros  = "opc="+"mostrarSolicitudesSeg"+"&usuario="+usuario+"&pagina="+pagina;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -251,6 +255,7 @@ var aceptarSolicitudes = function(){
 			data: parametros,
 			success: function(data){
 				$("#paginacionSolicitudesDP").html("");
+				$("#paginacionSolicitudesDP").append(data.botones);
 				$("#filtroSolicitudesDependencia").attr('disabled',false);
 				$("#opcionSolicitudesDP").attr('disabled',false);
 				$("#btnClearFiltroSolDP").attr('disabled',true);
@@ -449,10 +454,11 @@ $("#btnClearFiltroSolDP").on('click',mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnPag",filtrarSolicitudes);
 $("#paginacionSolicitudesDP").on("click","#btnNextN",filtrarSolicitudes);
 $("#paginacionSolicitudesDP").on("click","#btnPreviousN",filtrarSolicitudes);
+$("#paginacionSolicitudesDP").on("click","#btnPagI",mostrarSolicitudesSeg);
+$("#paginacionSolicitudesDP").on("click","#btnNextNI",mostrarSolicitudesSeg);
+$("#paginacionSolicitudesDP").on("click","#btnPreviousNI",mostrarSolicitudesSeg);
 
 
-
-//$("#menuProgramasSeg").on("click",mostrarProgramasSeg);
 $("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
 $("#btnGuardarVac").on("click",guardarVacantes);
