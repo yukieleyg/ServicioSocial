@@ -420,10 +420,30 @@ var vacanteenPrograma	=	function(){
 		$('#opcDependencia>div').hide();
 		$("#selprogdepSS").val($("#txtUsuario").val());
 		var nomdep = $("#txtUsuario").val();
-		$("#selprogdepSS").html("<option>"+nomdep+"</option>").prop({'selectedIndex':1,"disabled":'disabled'}).material_select();
+		obtenerClaveDep();
 		llenaDptosDep();
 		llenaTipoProg();
 		$("#solicitarSSProgramas").show("slow");
+	}
+	var obtenerClaveDep =function(){
+		var nomdep = $("#txtUsuario").val();
+		var parametros="opc=obtenerClaveDep"+"&usuariodep="+nomdep;
+
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var clave=data.clavedep;
+				 	$("#selprogdepSS").val(clave);
+				 	//$("#selprogdepSS").html("<option value='"+clave+"'>"+nomdep+"</option>").prop({'selectedIndex':1}).material_select();
+		
+				 }			 
+				}
+		});
+
 	}
 
 	var llenaDptosDep = function(){
@@ -474,6 +494,49 @@ var vacanteenPrograma	=	function(){
 		});
 	}
 
+	var solicitarApPrograma=function(){
+		if(!$('#sstipoOtras').is(':checked')){
+			$("#txttipoOtros").val("-");
+		}
+		if($("#txtprogvacSS").val()<1){
+			$.alert("Cantidad de vacantes insuficiente");
+			$("#txtprogvacSS").focus();
+			return;
+		}
+		var parametros = $("#frmDepSSProgramas").serialize()+"&opc=solicitarApPrograma"+"&id="+Math.random();
+		var anyInvalid=false;
+		if($("#selprogdepSS").val()	=== '' ||
+		$("#selprogdptoSS").val()	=== '' ||
+		$("#selprogtipoSS").val()	=== '' ||
+		$("#selprogestSS").val()	=== '' ||
+		$("#selprogmodSS").val() === ''){
+			anyInvalid=true;
+		}
+		if (anyInvalid) {
+		    $.alert('Uno o más campos no tienen opcion seleccionada');
+		    return false;
+		}
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+
+				success: function(data){
+				 if(data.respuesta){		 
+ 					$('input:not([type=radio],[type=submit])').not("#txtUsuario").val("");
+ 					$('textarea').val("");
+ 					$('input[type="radio"]').prop('checked', false);
+ 					$("#btnagregardpto").attr('disabled','disabled');
+ 					$('select').prop('selectedIndex',0);
+ 					$('select').material_select();
+				    
+				 }
+				 $.alert(data.mensaje);
+				}
+		});
+	}
+
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
@@ -494,6 +557,7 @@ $("#btnModificarVacantes").on("click", modificarVacantes);
 $("#btnGuardarVac").on("click",guardarVacantes);
 $("#btnCancelarVac").on("click",cancelarModifVac);
 $("#menuaperturaPrograma").on("click",mostrarAperturaProg);
+$("#frmDepSSProgramas").on("submit",solicitarApPrograma);
 
 }
 $(document).on("ready",dependencia);
