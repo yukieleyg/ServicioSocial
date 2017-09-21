@@ -19,8 +19,9 @@
 		
 					<a class='dropdown-button btn grey lighten-4 btn-flat ' href='#' data-beloworigin="true" data-activates='dropdownSolicitarSS' data-hover="true" id="menuSeguimiento" style="color:black;"><i class="material-icons right">assignment_turned_in</i>Seguimiento<b class="caret"></b></a>
 						<ul class="dropdown-content" id="dropdownSolicitarSS">
-							<li><a id="menuSolicitudesSeg" style="color:black;" >Solicitudes</a></li>
+							<li><a id="menuSolicitudesSeg" style="color:black;">Solicitudes</a></li>
 							<li><a id="menuAlumnosSeg"  style="color:black;">Alumnos</a></li>
+							<input type="hidden" value=1 id="valorPagina">
 						</ul>
 					
 					<a class=" waves-effect waves-teal btn-flat text-darken-1" href="#" id="btnMisDatosDep"><i class="material-icons right">contact_mail</i>Mis datos</a>

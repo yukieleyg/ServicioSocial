@@ -23,7 +23,7 @@
 			<div class="col s2">	
 				<button class="btn" id="btnFiltroSolicitudes"><i class="material-icons">search</i></button>
 			</div>	
-			<div class="col s2 "id="divClearFiltroSol">
+			<div class="col s2 " id="divClearFiltroSol">
 				<button class="btn" id="btnClearFiltroSol"><i class="material-icons">loop</i></button>
 			</div>
 	</div>				

@@ -66,7 +66,9 @@ function muestraSolicitudes(){
 		$tabla		.= "</tr>";
 	}
 	$totalBotones = intval($total/10);
-	$restante = $total - $totalBotones;
+	$restante = $total - ($totalBotones*10);
+	$previo = $pagina-1;
+	$siguiente =  $pagina+1;
 	if($restante>0){
 		$totalBotones=$totalBotones+1;
 	}
@@ -74,7 +76,7 @@ function muestraSolicitudes(){
 	if($pagina==1){
 	    $botones .= '<li class="disabled" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
 	}else{
-	    $botones .= '<li class="waves-effect" id="btnPreviousSol"><a><i class="material-icons">chevron_left</i></a></li>';
+	    $botones .= '<li class="waves-effect" id="btnPreviousSol" value= '.$previo.'><a><i class="material-icons">chevron_left</i></a></li>';
 	}
 	for($i=0;$i<$totalBotones;$i++){
 		$numero = $i+1;
@@ -88,7 +90,7 @@ function muestraSolicitudes(){
     if($pagina==$totalBotones){
 	    $botones.= '<li class="disabled" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
     }else{
-	    $botones.= '<li class="waves-effect" id="btnNextSol"><a><i class="material-icons">chevron_right</i></a></li>';
+	    $botones.= '<li class="waves-effect" id="btnNextSol" value= '.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
     }
   	$botones .= '</ul><input type="hidden" value='.$pagina.' id="valorPagSol">';
 	if($totalBotones==1){
@@ -960,7 +962,7 @@ function llenaDptoProgramas(){
 				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina==$botonesTotal){
+		if($pagina>($botonesTotal/10)){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextN"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1193,7 +1195,7 @@ function llenaDptoProgramas(){
 				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina==$botonesTotal){
+		if($pagina>($botonesTotal/10)){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextFA"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1303,7 +1305,7 @@ function llenaDptoProgramas(){
 					$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagFS"><a>'.$numero.'</a></li>  ';	
 				}
 			}
-			if($pagina==$totalBotones){
+			if($pagina>($totalBotones/10)){
 	  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 			}else{
 	  			$botones .= '<li class="waves-effect" id="btnNextFS"><a><i class="material-icons">chevron_right</i></a></li>';
@@ -1355,7 +1357,6 @@ function llenaDptoProgramas(){
 				break;
 		}
 		$res 		= mysql_query($qryProgramas);
-		var_dump($res);
 		while($renglon 	= mysql_fetch_array($res)){
 			$respuesta 	= true;
 			$cveprograma= $renglon["cveprograma"];
