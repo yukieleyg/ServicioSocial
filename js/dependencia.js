@@ -183,14 +183,16 @@ var aceptarSolicitudes = function(){
 							data: parametros,
 							success: function(data){
 								if(data.respuesta){
-										var opcion = 	$("#opcionActualSol").val();
-										var pagina =	$("#paginaActualSol").val();
+										var opcion = 	$("#opcionEstadoSol").val();
 										if(opcion == 1){
-												funcionFiltrarSolicitudes(pagina);
+												Materialize.toast("Solicitud Aceptada, recuerde entregarle la carta de aceptación al alumno.",4500);
+												mostrarSolicitudesSeg();
+												
 										}else{
-												funcionAlumnosSolicitudes(pagina);
+												Materialize.toast("Solicitud Aceptada, recuerde entregarle la carta de aceptación al alumno.",4500);
+												filtrarSolicitudesSeg();
+										
 										}
-										Materialize.toast("Solicitud Aceptada",4000);
 								}else{
 									$.alert("Esta solicitud no ha podido ser aceptada");
 								}
@@ -226,13 +228,14 @@ var aceptarSolicitudes = function(){
 
 								success: function(data){
 									if(data.respuesta){
-										Materialize.toast("Solicitud Rechazada",4000);
-										var opcion = 	$("#opcionActualSol").val();
-										var pagina = 	$("#paginaActualSol").val();
+										var opcion = 	$("#opcionEstadoSol").val();
 										if(opcion == 1){
-												funcionFiltrarSolicitudes(pagina);
+												Materialize.toast("Solicitud Rechazada",4500);
+												filtrarSolicitudes();
 										}else{
-												funcionAlumnosSolicitudes(pagina);
+												Materialize.toast("Solicitud Rechazada",4500);
+												mostrarSolicitudesSeg();
+
 										}
 									}else{
 										$alert("Esta solicitud no ha podido ser rechazada");
@@ -255,9 +258,14 @@ var aceptarSolicitudes = function(){
 		$("#solicitarSSVacantes").show("slow");
 	}
 	var mostrarSolicitudesSeg = function(){
-		var pagina = $(this).val();
+		try{
+			var pagina = $(this).val();
+			$("#valorPagina").val(pagina);
+		}catch(error){
+			var pagina = $("#valorPagina").val();
+		}
 		if(pagina == ""){
-			pagina 		= $("#valorPagina").val();
+			pagina 		= 1;
 		}
 		var usuario 	= $('#txtUsuario').val();//from login
 		var parametros  = "opc="+"mostrarSolicitudesSeg"+"&usuario="+usuario+"&pagina="+pagina;
@@ -317,11 +325,16 @@ var aceptarSolicitudes = function(){
 		}
 	}
 	var filtrarSolicitudes = function(){
-		var pagina 		= $(this).val();
+		try{
+			var pagina = $(this).val();
+			$("#valorPaginaFiltro").val(pagina);
+		}catch(error){
+			var pagina = $("#valorPaginaFiltro").val();
+		}
 		var usuario 	= $('#txtUsuario').val();//from login
 		var value 		= $("#filtroSolicitudesDependencia").val();
 		var opc 		= $("#opcionSolicitudesDP").val();
-		var pagina 		= pagina;
+		//var pagina 		= pagina;
 		switch(value){
 			case '0':
 				var parametros	= "opc="+"filtrarSolicitudesEstado"+"&estado="+opc+"&usuario="+usuario+"&pagina="+pagina; 

@@ -594,6 +594,7 @@ function llenaTipoProg(){
 		$arrayJSON = array('opciones' => $opc, 'respuesta' => $respuesta );
 		print json_encode($arrayJSON);
 	}
+
 function solicitarApPrograma(){
 	$respuesta=false;
 	$msj="No se registró el programa";	
@@ -759,6 +760,5 @@ switch ($opc){
 		agregarDepartamentoDep();
 		break;
 }
-
 ?>
 
