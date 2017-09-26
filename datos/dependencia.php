@@ -594,53 +594,119 @@ function llenaTipoProg(){
 		$arrayJSON = array('opciones' => $opc, 'respuesta' => $respuesta );
 		print json_encode($arrayJSON);
 	}
-	$opc= $_POST["opc"];
-	switch ($opc){
-		case 'mostrarMisDatos':
-			mostrarMisDatos();
-			break;
-		case 'guardarDatos':
-			guardarDatos();
-			break;
-		case 'guardarDatosModif':
-			guardarDatosModif();
-			break;
-		case 'mostrarProgramasVac':
-			mostrarProgramasVac();
-			break;
-		case 'llenaProgramasVac':
-			llenaProgramasVac();
-			break;	
-		case 'mostrarSolicitudesSeg':
-			mostrarSolicitudesSeg();
-			break;
-		case 'aceptarSolicitudes':
-			aceptarSolicitudes();
-			break;
-		case 'rechazarSolicitudes':
-			rechazarSolicitudes();
-			break;
-		case 'consultaFiltroSolicitudesDP':
-			consultaFiltroSolicitudesDP();
-			break;
-		case 'filtrarSolicitudesEstado':
-			filtrarSolicitudesEstado();
-			break;
-		case 'filtrarSolicitudesProgramas':
-			filtrarSolicitudesProgramas();
-			break;
-		case 'vacanteenPrograma':
-			vacanteenPrograma();
-			break;
-		case 'guardarPrograma':
-			guardarPrograma();
-			break;
-		case 'llenaDptosDep':
-			llenaDptosDep();
-			break;
-		case 'llenaTipoProg':
-			llenaTipoProg();
-			break;
+
+function solicitarApPrograma(){
+	$respuesta=false;
+	$msj="No se registró el programa";	
+	$prognom	= strtoupper("'".$_POST["txtprognomSS"]."'");
+	$selprogdep	= "'".$_POST["selprogdepSS"]."'";
+	$progdpto	= "'".$_POST["selprogdptoSS"]."'";
+	$progobj	= "'".$_POST["txtprogobjSS"]."'";
+	$progvac	= "'".$_POST["txtprogvacSS"]."'";
+	$progmod	= "'".$_POST["selprogmodSS"]."'";
+	$progtipo	= "'".$_POST["selprogtipoSS"]."'";
+	$progcar	= 0;
+	$selprogact	= "'".$_POST["selprogactSS"]."'";
+	$progact	= "'".$_POST["txtprogactSS"]."'";
+	$progresp	= "'".$_POST["txtprogrespSS"]."'";
+	$progpues	= "'".$_POST["txtprogpuesSS"]."'";
+	$selprogest	= "'".$_POST["selprogestSS"]."'";
+	$progactotr = "'".$_POST["txttipoOtros"]."'";
+	if($selprogact!="Otros"){
+		$progactotr="'-'";
 	}
+	$vigencia=0;
+	$conexion 	= conexionLocal();
+	mysql_query("set NAMES utf8");
+	mysql_query("START TRANSACTION");
+	$consulta = sprintf("insert into programas values(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",$prognom,$selprogdep,$progdpto,$progobj,$progvac,$progmod,$progtipo,$selprogact,$progactotr,$progact,$progresp,$progpues,$selprogest,$vigencia);
+	$a1 = mysql_query($consulta);
+	$id=mysql_insert_id();
+	    $conscar=sprintf("INSERT into carrera_programa(cvecarpro,cveprograma,cvecarrera)
+					   VALUES (NULL,$id,$progcar)");
+	    $a2 = mysql_query($conscar);
+//si hay comillas simples en alguno de los valores se altera la consulta
+	if ($a1 and $a2) {
+		$respuesta=true;
+	    mysql_query("COMMIT");
+	    $msj="Se ha registrado el programa ".$prognom.'';
+	} else {      
+	    mysql_query("ROLLBACK");
+	}
+	$salidaJSON = array ('respuesta' => $respuesta, 'mensaje'=>$msj);
+		print json_encode($salidaJSON);
+}
+
+function obtenerClaveDep(){
+	$respuesta=false;
+	$msj="no se ha podido obtener el id de la empresa";
+	$usuariodep="'".$_POST["usuariodep"]."'";
+	$cn=conexionLocal();
+	mysql_query("set names utf8");
+	$qryconsulta=sprintf("SELECT cvedependencia FROM dependencias where cveusuario_1=%s", $usuariodep);
+	$res=mysql_query($qryconsulta);
+	if($row=mysql_fetch_array($res)){
+		$clavedep=$row["cvedependencia"];
+		$respuesta=true;
+		$msj="";
+	}
+	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
+	print json_encode($arrayJSON);
+}
+
+$opc= $_POST["opc"];
+switch ($opc){
+	case 'mostrarMisDatos':
+		mostrarMisDatos();
+		break;
+	case 'guardarDatos':
+		guardarDatos();
+		break;
+	case 'guardarDatosModif':
+		guardarDatosModif();
+		break;
+	case 'mostrarProgramasVac':
+		mostrarProgramasVac();
+		break;
+	case 'llenaProgramasVac':
+		llenaProgramasVac();
+		break;	
+	case 'mostrarSolicitudesSeg':
+		mostrarSolicitudesSeg();
+		break;
+	case 'aceptarSolicitudes':
+		aceptarSolicitudes();
+		break;
+	case 'rechazarSolicitudes':
+		rechazarSolicitudes();
+		break;
+	case 'consultaFiltroSolicitudesDP':
+		consultaFiltroSolicitudesDP();
+		break;
+	case 'filtrarSolicitudesEstado':
+		filtrarSolicitudesEstado();
+		break;
+	case 'filtrarSolicitudesProgramas':
+		filtrarSolicitudesProgramas();
+		break;
+	case 'vacanteenPrograma':
+		vacanteenPrograma();
+		break;
+	case 'guardarPrograma':
+		guardarPrograma();
+		break;
+	case 'llenaDptosDep':
+		llenaDptosDep();
+		break;
+	case 'llenaTipoProg':
+		llenaTipoProg();
+		break;
+	case 'solicitarApPrograma':
+		solicitarApPrograma();
+		break;
+	case 'obtenerClaveDep':
+		obtenerClaveDep();
+		break;
+}
 ?>
 

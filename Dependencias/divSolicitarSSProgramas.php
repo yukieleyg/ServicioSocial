@@ -1,5 +1,5 @@
 <div class="container">	
-	<form class="col s12" method= "POST" id="frmDepSSProgramas" name="frmDepSSProgramas">
+	<form class="col s12" method= "POST" id="frmDepSSProgramas" name="frmDepSSProgramas" action="javascript:void(0);">
 	<br>	
 	<h5>Solicitar apertura de Programa</h5>	
 	<br>
@@ -9,22 +9,13 @@
 				<label for="txtprognomSS">Nombre del programa</label>
 			</div>
 		</div>
-    	<div class="row">
-			<div class="input-field">
-				<p><span class="label-select">Dependencia</span></p>
-				<select name="selprogdepSS" id="selprogdepSS">
-					<option value="" selected disabled>Dependencia</option>
-				</select>
-			</div>
-		</div>
-		
+		<input type="hidden" name="selprogdepSS" id="selprogdepSS">
 		<div class="row">
 			<p><span class="label-select">Departamento</span></p>
-		    <select name="selprogdptoSS" id="selprogdptoSS" class="col s11">
+		    <select name="selprogdptoSS" id="selprogdptoSS">
 				<option value="">Seleccione departamento</option>
 			</select>
-			<button class="btn-floating waves-effect waves-light blue right tooltipped" id="btnagregardptoSS" data-position="left" data-delay="50" data-tooltip="Agregar departamento" disabled><i class="material-icons">add</i></button>
-	    </div>
+		 </div>
 	    	<div class="row">
 				<div class="input-field">
 					<textarea placeholder="Objetivos" class="materialize-textarea" name="txtprogobjSS" id="txtprogobjSS" cols="30" rows="3"></textarea>
@@ -41,9 +32,7 @@
 			<div class="input-field">
 				<p><span class="label-select">Modalidad</span></p>
 				<select name="selprogmodSS" id="selprogmodSS">
-					<option value="" selected>Modalidad</option>
-					<option value="Interno">Interno</option>
-					<option value="Externo">Externo</option>
+					<option value="Externo" selected>Externo</option>
 				</select>
 			</div>
 		</div>
@@ -69,10 +58,19 @@
 			<label for="sstipoD">Docentes</label>
 		</p>
 		<p>
-			<input class="with-gap" name="selprogactSS" type="radio" id="sstipoOtras" value="Otros"/>
-			<label for="sstipoOtras" placeholder="Tipo de actividad">Otras</label>
+		<div class="row">
+		<div class="col s3">
+				<p>
+					<input class="with-gap" name="selprogactSS" type="radio" id="sstipoOtras" value="Otros"/>
+					<label for="sstipoOtras" placeholder="Tipo de actividad">Otras</label>
 
-		</p>
+				</p>
+			</div>
+			
+			<div class="col s6"> 
+				<input type="text" name="txttipoOtros" id="txttipoOtros">
+			</div>
+		</div>
 		<br>
     	<div class="row">
 			<div class="input-field">
@@ -102,10 +100,7 @@
 		</div>		
     	<div class="row">
 			<div class="input-field">
-				<p><span class="label-select">Estado</span></p>
-				<select id="selprogestSS" name="selprogestSS" disabled="disabled">
-					<option value="0" selected="">Sin revisar</option>
-				</select>
+				<input type="hidden" value='0' id="selprogestSS" name="selprogestSS">
 			</div>
 		</div>
 		<input type="submit" class="btn btn-lg btn-block btn-success right" value="SOLICITAR">
