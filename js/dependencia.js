@@ -8,6 +8,7 @@ var dependencia = function (){
 	var mostrarMisDatos = function(){
 		var usuario = $('#txtUsuario').val();
 		var parametros = "opc="+"mostrarMisDatos"+"&usuario="+usuario;
+		obtenerDptosDep();
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -26,6 +27,9 @@ var dependencia = function (){
 					$('#telDep').attr('disabled', "disabled"); 
 					$('#titDep').attr('disabled', "disabled"); 
 					$('#pueDep').attr('disabled', "disabled"); 
+					$("#txtdptosDep").removeClass('fake-enabled');
+					$("#btnagregardptoDep").attr('disabled', true);
+					$("#txtdptomodif").val(0);
 					$("#btnModificarDatos").attr("disabled",false);
 					$("#btnGuardarDatos").attr("disabled",true);
 					$("#btnCancelarDatos").attr("disabled",true);
@@ -34,6 +38,7 @@ var dependencia = function (){
 				}
 			}
 		});
+
 	}
 	var modificarDatos = function(){
 		$("#btnModificarDatos").attr("disabled",true);
@@ -44,6 +49,8 @@ var dependencia = function (){
 		$('#telDep').attr('disabled', false);
 		$('#titDep').attr('disabled', false);
 		$('#pueDep').attr('disabled', false);
+		$("#txtdptosDep").addClass('fake-enabled');
+        $("#btnagregardptoDep").attr('disabled', false);
 	}
 	var guardarDatos = function(){
 		var usuario 	= $('#txtUsuario').val();
@@ -75,7 +82,7 @@ var dependencia = function (){
 									$.ajax({
 										type: "POST",
 										dataType: "json",
-										url: "../datos/vinculacion.php",
+										url: "../datos/dependencia.php",
 										data: parametros,
 
 										success: function(data){
@@ -96,7 +103,13 @@ var dependencia = function (){
 						}
 					});
 				}else{
-						$.alert("No has modifcados los datos");
+					if($("#txtdptomodif").val()>0){
+						$.alert("Se han agregado "+$("#txtdptomodif").val()+ "departamentos");
+						mostrarMisDatos();
+					}else{
+							$.alert("No has modifcados los datos");
+						}
+
 				}
 			}
 		});
@@ -443,35 +456,15 @@ var vacanteenPrograma	=	function(){
 		$('#opcDependencia>div').hide();
 		$("#selprogdepSS").val($("#txtUsuario").val());
 		var nomdep = $("#txtUsuario").val();
-		obtenerClaveDep();
+		var clave=$("#userid").val();
+		$("#selprogdepSS").html("<option value='"+clave+"'>"+nomdep+"</option>").prop({'selectedIndex':1}).material_select();
 		llenaDptosDep();
 		llenaTipoProg();
 		$("#solicitarSSProgramas").show("slow");
 	}
-	var obtenerClaveDep =function(){
-		var nomdep = $("#txtUsuario").val();
-		var parametros="opc=obtenerClaveDep"+"&usuariodep="+nomdep;
-
-		$.ajax({
-				type: "POST",
-				dataType: "json",
-				url:"../datos/dependencia.php",
-				data: parametros,
-				success: function(data){
-				 if(data.respuesta==true){
-				 	var clave=data.clavedep;
-				 	$("#selprogdepSS").val(clave);
-				 	//$("#selprogdepSS").html("<option value='"+clave+"'>"+nomdep+"</option>").prop({'selectedIndex':1}).material_select();
-		
-				 }			 
-				}
-		});
-
-	}
-
+	
 	var llenaDptosDep = function(){
-		var nomdep = $("#txtUsuario").val();
-		
+		var nomdep = $("#txtUsuario").val();		
 		var parametros = "opc=llenaDptosDep"+"&nomdep="+nomdep;
 		
 		$.ajax({
@@ -547,7 +540,7 @@ var vacanteenPrograma	=	function(){
 
 				success: function(data){
 				 if(data.respuesta){		 
- 					$('input:not([type=radio],[type=submit])').not("#txtUsuario").val("");
+ 					$('input:not([type=radio],[type=submit])').not("#txtUsuario").not("#userid").val("");
  					$('textarea').val("");
  					$('input[type="radio"]').prop('checked', false);
  					$("#btnagregardpto").attr('disabled','disabled');
@@ -558,6 +551,80 @@ var vacanteenPrograma	=	function(){
 				 $.alert(data.mensaje);
 				}
 		});
+	}
+
+	var obtenerDptosDep=function(){
+		var claved=$("#userid").val();
+		var parametros = "opc=obtenerDptosDep"+"&clavedep="+claved;
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta){		 
+				    $("#txtdptosDep").val(data.departamentos);
+				 }
+				}
+		});
+	}
+
+	var mostrarAgregarDptoDep = function(){
+		$.confirm({
+		    title: 'Agregar departamento',
+		    content:  '' +
+    '<form action="" class="formName">' +
+	    '<div>' +
+		    '<label>Nombre Departamento</label>' +
+		    '<input type="text" placeholder="Nombre Departamento" class="name" id="agdptodep" required />' +
+	    '</div>' +
+    '</form>',
+		    buttons: {
+		        confirm: {
+		            text: 'Agregar',
+		            btnClass: 'btn-blue',
+		            action: function () {
+		                var name = $("#agdptodep").val();
+		                if(!name){
+		                    $.alert('Ingrese el nombre del departamento');
+		                    return false;
+		                }
+		                var dep=$("#userid").val();
+		                agregarDptoDep(name,dep);
+
+		            },
+		            
+		        },
+		        cancel: {
+		        	text: 'Cancelar',
+		        	function () {
+		            //close
+		        	},
+		        }
+		    }
+		});
+	}
+
+	var agregarDptoDep = function(nomdpto,cvedep){
+		var parametros = "opc=agregarDepartamentoDep"+"&dependencia="+cvedep+"&nombre="+nomdpto+"&id="+Math.random();
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta){
+				 	var dptosmod=$("#txtdptomodif").val();
+				 	$("#txtdptomodif").val(Number(dptosmod)+Number(1));
+				 	obtenerDptosDep();
+				 	$.alert('Se ha registrado el departamento: '+nomdpto);
+				 	
+				 }else{
+				 	Materialize.toast(data.mensaje, 4000);
+				 }
+				}
+
+			});
 	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
@@ -586,6 +653,7 @@ $("#btnGuardarVac").on("click",guardarVacantes);
 $("#btnCancelarVac").on("click",cancelarModifVac);
 $("#menuaperturaPrograma").on("click",mostrarAperturaProg);
 $("#frmDepSSProgramas").on("submit",solicitarApPrograma);
+$("#btnagregardptoDep").on("click",mostrarAgregarDptoDep);
 
 }
 $(document).on("ready",dependencia);

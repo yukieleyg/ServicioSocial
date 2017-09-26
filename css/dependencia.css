@@ -23,6 +23,13 @@
 	margin-left: 5%;
 	margin-bottom: 5%;
 }
+textarea.materialize-textarea:disabled.fake-enabled{
+    color: black;
+    overflow-y: auto;
+}
+textarea.materialize-textarea:disabled{
+    overflow-y: auto;
+}
 .label-select{
 	font-size:  0.8em;
 	color: #9e9e9e;

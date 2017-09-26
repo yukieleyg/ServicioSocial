@@ -61,7 +61,7 @@ function guardarDatosModif(){
 			$respuesta = false;
 		}
 	$arrayJSON =array('respuesta' => $respuesta);
-
+	print json_encode($arrayJSON);
 
 }
 function mostrarProgramasVac(){
@@ -644,6 +644,7 @@ function obtenerClaveDep(){
 	mysql_query("set names utf8");
 	$qryconsulta=sprintf("SELECT cvedependencia FROM dependencias where cveusuario_1=%s", $usuariodep);
 	$res=mysql_query($qryconsulta);
+	$clavedep="";
 	if($row=mysql_fetch_array($res)){
 		$clavedep=$row["cvedependencia"];
 		$respuesta=true;
@@ -652,6 +653,51 @@ function obtenerClaveDep(){
 	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
 	print json_encode($arrayJSON);
 }
+
+function obtenerDptosDep(){
+	$respuesta	=false;	
+	$msj 		="no se han podiso obtener los departamentos de la dependencia";
+	$cvedep 	="'".$_POST["clavedep"]."'";
+	$cn 	=conexionLocal();
+	mysql_query("SET NAMES utf8");
+	$qrydptos 	=sprintf("SELECT GROUP_CONCAT(nomdepartamento SEPARATOR '\n') AS 'departamentos' 
+						FROM departamentos where cvedependencia=%s",$cvedep);
+	$res 	=mysql_query($qrydptos);
+	if($row=mysql_fetch_array($res)){
+		$dptos 	=$row["departamentos"];
+		$respuesta 	=true;
+		$msj 	="";
+	}
+	$arrayJSON = array('respuesta'=>$respuesta,'mensaje'=>$msj,'departamentos'=>$dptos);
+	print json_encode($arrayJSON);
+}
+
+function agregarDepartamentoDep(){
+		$respuesta 	= 	false;
+		$cn 		=	conexionLocal();
+		$dptonom	=	strtoupper("'".$_POST['nombre']."'");
+		$depcve		=	$_POST['dependencia'];
+		$qryexiste	=	sprintf("SELECT dp.cvedepartamento, d.nomdependencia 
+							FROM departamentos dp 
+							INNER JOIN dependencias d ON dp.cvedependencia=d.cvedependencia
+                            WHERE dp.cvedependencia =%s AND dp.nomdepartamento=%s",$depcve,$dptonom);
+		$resaux		=	mysql_query($qryexiste);
+		if($row= mysql_fetch_array($resaux)){
+			$nombreDep		= $row["nomdependencia"];
+			$mensaje		= "Ya existe un departamento con ese nombre en ".$nombreDep;
+
+		}else{
+			$qryDpto	= sprintf("INSERT INTO departamentos(cvedepartamento,cvedependencia,nomdepartamento)
+										VALUES(NULL,$depcve,$dptonom)");
+			$res 		= mysql_query($qryDpto);
+				if(mysql_affected_rows()>0){
+					$respuesta=true;
+					$mensaje="Se ha agregado el departamento ".$dptonom;
+				}
+		}
+		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
+		print json_encode($arrayJSON); 
+	}
 
 $opc= $_POST["opc"];
 switch ($opc){
@@ -705,6 +751,12 @@ switch ($opc){
 		break;
 	case 'obtenerClaveDep':
 		obtenerClaveDep();
+		break;
+	case 'obtenerDptosDep':
+		obtenerDptosDep();
+		break;
+	case 'agregarDepartamentoDep':
+		agregarDepartamentoDep();
 		break;
 }
 
