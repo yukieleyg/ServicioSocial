@@ -594,56 +594,53 @@ function llenaTipoProg(){
 		$arrayJSON = array('opciones' => $opc, 'respuesta' => $respuesta );
 		print json_encode($arrayJSON);
 	}
-
-
-$opc= $_POST["opc"];
-switch ($opc){
-	case 'mostrarMisDatos':
-		mostrarMisDatos();
-		break;
-	case 'guardarDatos':
-		guardarDatos();
-		break;
-	case 'guardarDatosModif':
-		guardarDatosModif();
-		break;
-	case 'mostrarProgramasVac':
-		mostrarProgramasVac();
-		break;
-	case 'llenaProgramasVac':
-		llenaProgramasVac();
-		break;	
-	case 'mostrarSolicitudesSeg':
-		mostrarSolicitudesSeg();
-		break;
-	case 'aceptarSolicitudes':
-		aceptarSolicitudes();
-		break;
-	case 'rechazarSolicitudes':
-		rechazarSolicitudes();
-		break;
-	case 'consultaFiltroSolicitudesDP':
-		consultaFiltroSolicitudesDP();
-		break;
-	case 'filtrarSolicitudesEstado':
-		filtrarSolicitudesEstado();
-		break;
-	case 'filtrarSolicitudesProgramas':
-		filtrarSolicitudesProgramas();
-		break;
-	case 'vacanteenPrograma':
-		vacanteenPrograma();
-		break;
-	case 'guardarPrograma':
-		guardarPrograma();
-		break;
-	case 'llenaDptosDep':
-		llenaDptosDep();
-		break;
-	case 'llenaTipoProg':
-		llenaTipoProg();
-		break;
-}
-
+	$opc= $_POST["opc"];
+	switch ($opc){
+		case 'mostrarMisDatos':
+			mostrarMisDatos();
+			break;
+		case 'guardarDatos':
+			guardarDatos();
+			break;
+		case 'guardarDatosModif':
+			guardarDatosModif();
+			break;
+		case 'mostrarProgramasVac':
+			mostrarProgramasVac();
+			break;
+		case 'llenaProgramasVac':
+			llenaProgramasVac();
+			break;	
+		case 'mostrarSolicitudesSeg':
+			mostrarSolicitudesSeg();
+			break;
+		case 'aceptarSolicitudes':
+			aceptarSolicitudes();
+			break;
+		case 'rechazarSolicitudes':
+			rechazarSolicitudes();
+			break;
+		case 'consultaFiltroSolicitudesDP':
+			consultaFiltroSolicitudesDP();
+			break;
+		case 'filtrarSolicitudesEstado':
+			filtrarSolicitudesEstado();
+			break;
+		case 'filtrarSolicitudesProgramas':
+			filtrarSolicitudesProgramas();
+			break;
+		case 'vacanteenPrograma':
+			vacanteenPrograma();
+			break;
+		case 'guardarPrograma':
+			guardarPrograma();
+			break;
+		case 'llenaDptosDep':
+			llenaDptosDep();
+			break;
+		case 'llenaTipoProg':
+			llenaTipoProg();
+			break;
+	}
 ?>
 

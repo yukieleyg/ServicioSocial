@@ -17,8 +17,12 @@
 				<button class="btn" id="btnFiltroSolicitudesDP" value="1"><i class="material-icons">search</i></button>
 			</div>	
 			<div class="col s2 " id="divClearFiltroSolDP">
-				<button class="btn" id="btnClearFiltroSolDP"><i class="material-icons">loop</i></button>
+				<button class="btn" id="btnClearFiltroSolDP" value="1"><i class="material-icons">loop</i></button>
 			</div>
+			<input type="hidden" value=1 id="valorPagina">
+			<input type="hidden" value=1 id="valorPaginaFiltro">
+			<input type="hidden" value=1 id= "opcionEstadoSol">
+
 	</div>				
 	<div class="row" id="divTablaAlumnos">	
 		<table id="tblAlumnos">
