@@ -572,6 +572,10 @@ var vacanteenPrograma	=	function(){
 				}
 		});
 	}
+	var mostrarAlumnosSeg = function(){
+		$('#opcDependencia>div').hide();
+		$("#seguimientoAlumnos").show();
+	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
@@ -591,6 +595,7 @@ $("#paginacionSolicitudesDP").on("click","#btnPreviousN",filtrarSolicitudes);
 $("#paginacionSolicitudesDP").on("click","#btnPagI",mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnNextNI",mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnPreviousNI",mostrarSolicitudesSeg);
+$("#menuAlumnosSeg").on("click",mostrarAlumnosSeg);
 
 
 $("#selProgramasV").on("change",vacanteenPrograma);

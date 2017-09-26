@@ -1,4 +1,4 @@
-#cambioClaveDep, #misDatos, #solicitarSSVacantes, #solicitarSSProgramas{
+#cambioClaveDep, #misDatos, #solicitarSSVacantes, #solicitarSSProgramas, #seguimientoAlumnos{
 	display:none;
 	margin-top: -15%;
 }
@@ -27,4 +27,7 @@
 	font-size:  0.8em;
 	color: #9e9e9e;
  	margin-left: .75em;
+}
+#rowFiltroAlumnos{
+	margin-left: 15%
 }
