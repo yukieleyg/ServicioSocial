@@ -215,7 +215,6 @@ var aceptarSolicitudes = function(){
 
 								success: function(data){
 									if(data.respuesta){
-										Materialize.toast("Solicitud Rechazada",4000);
 										var opcion = 	$("#opcionEstadoSol").val();
 										if(opcion == 1){
 												Materialize.toast("Solicitud Rechazada",4500);
