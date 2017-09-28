@@ -750,7 +750,6 @@ function obtenerDptosDep(){
 	$arrayJSON = array('respuesta'=>$respuesta,'mensaje'=>$msj,'departamentos'=>$dptos);
 	print json_encode($arrayJSON);
 }
-
 function agregarDepartamentoDep(){
 		$respuesta 	= 	false;
 		$cn 		=	conexionLocal();
@@ -777,7 +776,6 @@ function agregarDepartamentoDep(){
 		$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
 		print json_encode($arrayJSON); 
 	}
-
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -833,6 +831,7 @@ switch ($opc){
 		break;
 	case 'mostrarAlumnosSeg':
 		mostrarAlumnosSeg();
+		break;
 	case 'obtenerDptosDep':
 		obtenerDptosDep();
 		break;

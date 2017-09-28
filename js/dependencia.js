@@ -581,46 +581,46 @@ var vacanteenPrograma	=	function(){
 			}
 		});
 	}
-var filtrosAlumnosSeg = function(){
-	var usuario 	= $('#txtUsuario').val();//from login
-	var value 		= $("#filtrosAlumnosSeg").val();
-	switch(value){
-		case '0':  
-				opcs="<option value='0'>Captura</option><option value='1'>Finalizado</option>";
+	var filtrosAlumnosSeg = function(){
+		var usuario 	= $('#txtUsuario').val();//from login
+		var value 		= $("#filtrosAlumnosSeg").val();
+		switch(value){
+			case '0':  
+					opcs="<option value='0'>Captura</option><option value='1'>Finalizado</option>";
+					$("#opcionAlumnosSeg").find('option').remove();
+					$("#opcionAlumnosSeg").append(opcs).html();
+					$("#opcionAlumnosSeg").material_select();
+					$("#divOpcionAlumnosSeg").show();
+			break;
+			case '1': 
+				var parametros = "opc=consultaFiltroSolicitudesDP"+"&usuario="+usuario;
+				var opcs= "";
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url:"../datos/dependencia.php",
+					data: parametros,
+					success: function(data){
+					 if(data.respuesta==true){
+					  	opcs=data.opciones;
+					 	$("#opcionAlumnosSeg").find('option').remove();
+					 	$("#opcionAlumnosSeg").append(opcs).html();
+					 	$("#opcionAlumnosSeg").material_select();
+						$("#divOpcionAlumnosSeg").show();
+					 }			 
+					}
+				});
+			break;
+			case '2':
+				opcs="<option value='0'>Uno</option><option value='1'>Dos</option><option value='2'>Tres</option>";
 				$("#opcionAlumnosSeg").find('option').remove();
 				$("#opcionAlumnosSeg").append(opcs).html();
 				$("#opcionAlumnosSeg").material_select();
 				$("#divOpcionAlumnosSeg").show();
-		break;
-		case '1': 
-			var parametros = "opc=consultaFiltroSolicitudesDP"+"&usuario="+usuario;
-			var opcs= "";
-			$.ajax({
-				type: "POST",
-				dataType: "json",
-				url:"../datos/dependencia.php",
-				data: parametros,
-				success: function(data){
-				 if(data.respuesta==true){
-				  	opcs=data.opciones;
-				 	$("#opcionAlumnosSeg").find('option').remove();
-				 	$("#opcionAlumnosSeg").append(opcs).html();
-				 	$("#opcionAlumnosSeg").material_select();
-					$("#divOpcionAlumnosSeg").show();
-				 }			 
-				}
-			});
-		break;
-		case '2':
-			opcs="<option value='0'>Uno</option><option value='1'>Dos</option><option value='2'>Tres</option>";
-			$("#opcionAlumnosSeg").find('option').remove();
-			$("#opcionAlumnosSeg").append(opcs).html();
-			$("#opcionAlumnosSeg").material_select();
-			$("#divOpcionAlumnosSeg").show();
-		break;
-	}
+			break;
+		}
 
-}
+	}
 	var obtenerDptosDep=function(){
 		var claved=$("#userid").val();
 		var parametros = "opc=obtenerDptosDep"+"&clavedep="+claved;
@@ -636,7 +636,6 @@ var filtrosAlumnosSeg = function(){
 				}
 		});
 	}
-
 	var mostrarAgregarDptoDep = function(){
 		$.confirm({
 		    title: 'Agregar departamento',
@@ -672,7 +671,6 @@ var filtrosAlumnosSeg = function(){
 		    }
 		});
 	}
-
 	var agregarDptoDep = function(nomdpto,cvedep){
 		var parametros = "opc=agregarDepartamentoDep"+"&dependencia="+cvedep+"&nombre="+nomdpto+"&id="+Math.random();
 		$.ajax({
@@ -694,7 +692,6 @@ var filtrosAlumnosSeg = function(){
 
 			});
 	}
-
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
