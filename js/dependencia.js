@@ -654,9 +654,56 @@ var vacanteenPrograma	=	function(){
 			 	});
 		$("#txtcalifCRdep").html(sumaTot+"");
 	}
+
+	var confguardarCalificarReporte=function(){
+		$.confirm({
+		    title: 'Calificar alumno',
+		    content: 'Desea guardar las calificaciones?',
+		    buttons: {
+		        confirm: {
+		            text: 'Aceptar',
+		            btnClass: 'btn-blue',
+		            keys: ['enter', 'shift'],
+		            action: function(){
+		            	guardarCalificarReporte();
+		            }
+		        },
+		        cancel: {
+		            text: 'Cancelar',
+		            btnClass: 'btn-red',
+		            keys: ['enter', 'shift'],
+		            action: function(){
+		                $.alert("No se ha guardado la calificación");
+		                return;
+		            }
+		   		 }		    
+		    }
+		});    
+	}
 	var guardarCalificarReporte=function(){
-		$("#txtcalifCRdep").html("0");
-		//limpiar form
+		//falta poner el valor correcto en cvereporteDep
+		var cvereporte=$("#cvereporteDep").val(); 
+		var parametros = $("#frmCalificacionRepDep").serialize()+"&opc=guardarCalificacionRep"+"&reporte="+cvereporte;
+
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta){
+				 	$.alert(data.mensaje);
+				 	//limpiar datos
+				 	$("#txtcalifCRdep").html("0");
+				 	$("#cvereporteDep").val("");	
+				 	$("#frmCalificacionRepDep").find('input').not(":submit").val("");
+
+				 }else{
+				 	Materialize.toast(data.mensaje, 4000);
+				 }
+				}
+
+			});
 	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
@@ -686,8 +733,9 @@ $("#btnCancelarVac").on("click",cancelarModifVac);
 $("#menuaperturaPrograma").on("click",mostrarAperturaProg);
 $("#frmDepSSProgramas").on("submit",solicitarApPrograma);
 $("#btnagregardptoDep").on("click",mostrarAgregarDptoDep);
-$("#frmCalificacionRepDep").on("submit",guardarCalificarReporte);
+$("#frmCalificacionRepDep").on("submit",confguardarCalificarReporte);
 $(".calsDep").on("click",cambiaCalifFinal);
+//nombre del boton de detalles
 $("#btnTEST").on("click",detallesCalifRep);
 }
 $(document).on("ready",dependencia);

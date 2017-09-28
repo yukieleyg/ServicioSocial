@@ -4,7 +4,7 @@
 	<h4>Evaluación bimestral</h4>
 	<div id="calificacionRepDep">						
 	<form class="col s12" action="javascript:void(0);" method="POST" name="frmCalificacionRepDep" id="frmCalificacionRepDep">
-		<input type="hidden" name="cvereporte" id="cvereporte">
+		<input type="hidden" name="cvereporteDep" id="cvereporteDep">
 		<table class="highlight" id="tblCalifReporte"> 
 			<tr>
 				<th>Criterio a evaluar</th>

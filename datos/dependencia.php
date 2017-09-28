@@ -700,6 +700,38 @@ function agregarDepartamentoDep(){
 		print json_encode($arrayJSON); 
 	}
 
+function guardarCalificacionRep(){
+	$respuesta 	= 	false;
+	$cn 		=	conexionLocal();
+	$mensaje 	=   "No se han podido guardar las calificaciones";
+	$cvereporte	=	"'".$_POST['reporte']."'";
+	$calDc1     =   "'".$_POST['txtCRdep1']."'";
+	$calDc2     =   "'".$_POST['txtCRdep2']."'";
+	$calDc3     =   "'".$_POST['txtCRdep3']."'";
+	$calDc4     =   "'".$_POST['txtCRdep4']."'";
+	$calDc5     =   "'".$_POST['txtCRdep5']."'";
+	$calDc6     =   "'".$_POST['txtCRdep6']."'";
+	$calDc7     =   "'".$_POST['txtCRdep7']."'";
+	$calDc8     =   "'".$_POST['txtCRdep8']."'";
+	$calDc9     =   "'".$_POST['txtCRdep9']."'";
+	$calDc10     =   "'".$_POST['txtCRdep10']."'";
+
+	$qrycalifR	=	sprintf("UPDATE reportes 
+							SET calDc1=%s,calDc2=%s,calDc3=%s,calDc4=%s,calDc5=%s,
+							    calDc6=%s,calDc7=%s,calDc8=%s,calDc9=%s,calDc10=%s,
+							    estadoempresa=1 WHERE cvereporte=%s",$calDc1,$calDc2,$calDc3,$calDc4,$calDc5,$calDc6,$calDc7,$calDc8,$calDc9,$calDc10,$cvereporte);
+	$res		=	mysql_query($qrycalifR);
+	if($row= mysql_affected_rows()>0){
+		$respuesta 		= true;
+		$mensaje		= "Se guardaron calificaciones correctamente";
+
+	}
+	$arrayJSON = array('respuesta' => $respuesta, 'mensaje'=>$mensaje);
+	print json_encode($arrayJSON); 
+}
+
+
+
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -758,6 +790,9 @@ switch ($opc){
 		break;
 	case 'agregarDepartamentoDep':
 		agregarDepartamentoDep();
+		break;
+	case 'guardarCalificacionRep';
+		guardarCalificacionRep();
 		break;
 }
 ?>
