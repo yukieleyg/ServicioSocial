@@ -565,7 +565,62 @@ var vacanteenPrograma	=	function(){
 				}
 		});
 	}
+	var mostrarAlumnosSeg = function(){
+		var usuario = $("#txtUsuario").val();
+		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/dependencia.php",
+			data: parametros,
+			success: function(data){
+				$('#opcDependencia>div').hide();
+				$("#tablaAlumnosSeg").html("");
+				$("#tablaAlumnosSeg").append(data.tabla);
+				$("#seguimientoAlumnos").show();
+			}
+		});
+	}
+	var filtrosAlumnosSeg = function(){
+		var usuario 	= $('#txtUsuario').val();//from login
+		var value 		= $("#filtrosAlumnosSeg").val();
+		switch(value){
+			case '0':  
+					opcs="<option value='0'>Captura</option><option value='1'>Finalizado</option>";
+					$("#opcionAlumnosSeg").find('option').remove();
+					$("#opcionAlumnosSeg").append(opcs).html();
+					$("#opcionAlumnosSeg").material_select();
+					$("#divOpcionAlumnosSeg").show();
+			break;
+			case '1': 
+				var parametros = "opc=consultaFiltroSolicitudesDP"+"&usuario="+usuario;
+				var opcs= "";
+				$.ajax({
+					type: "POST",
+					dataType: "json",
+					url:"../datos/dependencia.php",
+					data: parametros,
+					success: function(data){
+					 if(data.respuesta==true){
+					  	opcs=data.opciones;
+					 	$("#opcionAlumnosSeg").find('option').remove();
+					 	$("#opcionAlumnosSeg").append(opcs).html();
+					 	$("#opcionAlumnosSeg").material_select();
+						$("#divOpcionAlumnosSeg").show();
+					 }			 
+					}
+				});
+			break;
+			case '2':
+				opcs="<option value='0'>Uno</option><option value='1'>Dos</option><option value='2'>Tres</option>";
+				$("#opcionAlumnosSeg").find('option').remove();
+				$("#opcionAlumnosSeg").append(opcs).html();
+				$("#opcionAlumnosSeg").material_select();
+				$("#divOpcionAlumnosSeg").show();
+			break;
+		}
 
+	}
 	var obtenerDptosDep=function(){
 		var claved=$("#userid").val();
 		var parametros = "opc=obtenerDptosDep"+"&clavedep="+claved;
@@ -581,7 +636,6 @@ var vacanteenPrograma	=	function(){
 				}
 		});
 	}
-
 	var mostrarAgregarDptoDep = function(){
 		$.confirm({
 		    title: 'Agregar departamento',
@@ -617,7 +671,6 @@ var vacanteenPrograma	=	function(){
 		    }
 		});
 	}
-
 	var agregarDptoDep = function(nomdpto,cvedep){
 		var parametros = "opc=agregarDepartamentoDep"+"&dependencia="+cvedep+"&nombre="+nomdpto+"&id="+Math.random();
 		$.ajax({
@@ -724,7 +777,8 @@ $("#paginacionSolicitudesDP").on("click","#btnPreviousN",filtrarSolicitudes);
 $("#paginacionSolicitudesDP").on("click","#btnPagI",mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnNextNI",mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnPreviousNI",mostrarSolicitudesSeg);
-
+$("#menuAlumnosSeg").on("click",mostrarAlumnosSeg);
+$("#filtrosAlumnosSeg").on("change",filtrosAlumnosSeg);
 
 $("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
