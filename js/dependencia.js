@@ -640,6 +640,25 @@ var vacanteenPrograma	=	function(){
 			});
 	}
 
+	var detallesCalifRep =function(){
+		$('#opcDependencia>div').hide();
+		$("#txtcalifCRdep").html("0");
+		$("#calificarReporteDep").show("slow");
+	}
+	var cambiaCalifFinal=function(){
+		var txtCalificaciones = $("#frmCalificacionRepDep").find("input").not(':hidden,:submit');
+		var sumaTot=0;
+		$.each(txtCalificaciones, function( valores, calif ) {
+					var cal=Number($(calif).val());
+					sumaTot+=cal;
+			 	});
+		$("#txtcalifCRdep").html(sumaTot+"");
+	}
+	var guardarCalificarReporte=function(){
+		$("#txtcalifCRdep").html("0");
+		//limpiar form
+	}
+
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
@@ -667,6 +686,8 @@ $("#btnCancelarVac").on("click",cancelarModifVac);
 $("#menuaperturaPrograma").on("click",mostrarAperturaProg);
 $("#frmDepSSProgramas").on("submit",solicitarApPrograma);
 $("#btnagregardptoDep").on("click",mostrarAgregarDptoDep);
-
+$("#frmCalificacionRepDep").on("submit",guardarCalificarReporte);
+$(".calsDep").on("click",cambiaCalifFinal);
+$("#btnTEST").on("click",detallesCalifRep);
 }
 $(document).on("ready",dependencia);

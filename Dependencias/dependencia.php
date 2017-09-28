@@ -51,6 +51,9 @@
 	<div id="seguimientoAlumnos" class="card">
 		<?php include 'divAlumnosSeg.php' ?>
 	</div>
+	<div id="calificarReporteDep" class="card">
+		<?php include 'divCalificacionReporte.php' ?>
+	</div>
 </section>
 </body>
 </html>
