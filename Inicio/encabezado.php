@@ -9,4 +9,5 @@
 			</div>	
 		</div>
 		<div class="right" id="user"></div>
+		<input type="hidden" id="userid">
 </header>

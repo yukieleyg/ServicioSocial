@@ -37,6 +37,7 @@
 								$("#user").html(" ");
 								$("#user").append("<i class='material-icons'>perm_identity</i>"+data.nombre+"<br><br>");
 								$("#user").show("slow");
+								obtenerIDusuario(usuario);
 								break;
 							case 3:
 								if(data.creditos){
@@ -95,6 +96,22 @@
 			val.html("visibility");
 		}
 
+	}
+
+	var obtenerIDusuario = function(usuario){
+		var parametros="opc=obtenerClaveDep"+"&usuariodep="+usuario;
+		$.ajax({
+				type: "POST",
+				dataType: "json",
+				url:"../datos/dependencia.php",
+				data: parametros,
+				success: function(data){
+				 if(data.respuesta==true){
+				 	var claveusuario=data.clavedep;
+				 	$("#userid").val(claveusuario);
+				 }			 
+				}
+		});
 	}
 
 	const TECLA_ENTER = 13;
