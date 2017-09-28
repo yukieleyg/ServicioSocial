@@ -127,10 +127,6 @@ function mostrarSolicitudesSeg(){
 	$usuario	= "'".$_POST["usuario"]."'";
 	$conexion 	= conexionLocal();
 	mysql_query("set NAMES utf8");
-	/*$qry 		= sprintf("SELECT cvedependencia FROM dependencias WHERE cveusuario_1 = %s",$usuario);
-	$res 		= mysql_query($qry);
-	$row		= mysql_fetch_array($res);
-	$cvedependencia = $row['cvedependencia'];*/
 	$pdoAct 		= getPeriodoAct();
 	$conexion 		= conexionLocal();
 	$qrySolicitudes = sprintf("SELECT s.estado, s.cveusuario_1 , s.cvesolicitud, s.cveprograma_1, p.nombre FROM solicitudes AS s INNER JOIN programas AS p  ON p.cveprograma = s.cveprograma_1 
@@ -653,7 +649,90 @@ function obtenerClaveDep(){
 	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
 	print json_encode($arrayJSON);
 }
+function mostrarAlumnosSeg(){
+	$usuario 		= "'".$_POST['usuario']."'";
+	$inicio  		= 0;
+	$respuesta 		= false;
+	$pdoAct 		= getPeriodoAct();
+	$conexion 		= conexionLocal();
+	$qryExpedientes = sprintf("SELECT ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre, rp.noreporte, rp.estado AS estadoreporte
+		 	FROM expedientes AS ex
+		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
+		 	 INNER JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente 
+		 	 LIMIT 10 OFFSET %s",$usuario, $inicio);
+	//var_dump($qryExpedientes);
+	$resExpedientes = mysql_query($qryExpedientes);
+	$tabla		= "";
+	$tabla		.= "<thead><tr>";
+	$tabla		.= "<th>No. de Control</th>";
+	$tabla		.=	"<th>Nombre</th>";
+	$tabla		.=	"<th>Programa</th>";
+	$tabla		.=	"<th>Reporte uno</th>";
+	$tabla		.=	"<th>Reporte dos</th>";
+	$tabla		.=	"<th>Reporte tres</th>";
+	$tabla		.=	"<th>Estado</th>";
+	$tabla		.=	"</thead></tr>";
+	while($row = mysql_fetch_array($resExpedientes)){
+		$respuesta = true;
+		$nombrePrograma = $row["nombre"]; 
+		$cveusuario  	= $row["cveusuario_1"];
+		$cveprograma 	= $row["cveprograma_1"];
+		$cvesolicitud 	= $row["cvesolicitud"];
+		$noreporte 		= $row["noreporte"];
+		$estadoreporte	= $row["estadoreporte"];
+		$cn 		= conexionBD();
+		$qryvalida	= sprintf("SELECT DA.ALUNOM, DA.ALUAPP, DA.ALUAPM FROM DALUMN AS DA 
+			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
+			WHERE DA.ALUCTR = %s
+			",$cveusuario);
+		$res		= mysql_query($qryvalida);
+		$row1 		= mysql_fetch_array($res);
+		$tabla		.= "<tr>";
+		$tabla		.= "<td>".$cveusuario."</td>";
+		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
+		$tabla 		.= "<td>".$nombrePrograma."</td>";
+		switch ($estadoreporte) {
+			case '0':
+				$estadoreporte = "Pendiente"; 
+				break;
+			case '1':
+			 	$estadoreporte = "Aceptado";
+			 	break;
+			 case '2':
+			 	$estadoreporte = "Rechazado";
+			 	break;
 
+		}
+		if($noreporte == 1){
+				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+		}else{
+				$tabla 		.= "<td></td>";
+		}
+		if($noreporte == 2){
+				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+		}else{
+				$tabla 		.= "<td></td>";
+		}
+		if($noreporte == 3){
+				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+		}else{
+				$tabla 		.= "<td></td>";
+		}
+		if($row["estado"]==1){
+			$tabla		.= "<td>"."CAPTURA"."</td>";
+		}else{
+			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
+		}
+		$tabla		.= "</tr>";
+
+	}
+	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta);
+	print json_encode($arrayJSON); 
+
+
+}
 $opc= $_POST["opc"];
 switch ($opc){
 	case 'mostrarMisDatos':
@@ -706,6 +785,9 @@ switch ($opc){
 		break;
 	case 'obtenerClaveDep':
 		obtenerClaveDep();
+		break;
+	case 'mostrarAlumnosSeg':
+		mostrarAlumnosSeg();
 		break;
 }
 ?>
