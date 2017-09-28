@@ -620,10 +620,7 @@ var filtrosAlumnosSeg = function(){
 		break;
 	}
 
-
-<<<<<<< HEAD
 }
-=======
 	var obtenerDptosDep=function(){
 		var claved=$("#userid").val();
 		var parametros = "opc=obtenerDptosDep"+"&clavedep="+claved;
@@ -698,7 +695,6 @@ var filtrosAlumnosSeg = function(){
 			});
 	}
 
->>>>>>> bce02dd3620590ee13b31035b902ea667fa17030
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
 $("#btnModificarDatos").on("click", modificarDatos);
