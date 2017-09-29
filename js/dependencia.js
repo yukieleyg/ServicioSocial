@@ -231,10 +231,10 @@ var aceptarSolicitudes = function(){
 										var opcion = 	$("#opcionEstadoSol").val();
 										if(opcion == 1){
 												Materialize.toast("Solicitud Rechazada",4500);
-												filtrarSolicitudes();
+												mostrarSolicitudesSeg();												
 										}else{
 												Materialize.toast("Solicitud Rechazada",4500);
-												mostrarSolicitudesSeg();
+												filtrarSolicitudes();
 
 										}
 									}else{
@@ -258,6 +258,7 @@ var aceptarSolicitudes = function(){
 		$("#solicitarSSVacantes").show("slow");
 	}
 	var mostrarSolicitudesSeg = function(){
+		$("#opcionEstadoSol").val(1);
 		try{
 			var pagina = $(this).val();
 			$("#valorPagina").val(pagina);
@@ -325,6 +326,7 @@ var aceptarSolicitudes = function(){
 		}
 	}
 	var filtrarSolicitudes = function(){
+		$("#opcionEstadoSol").val(2);	
 		try{
 			var pagina = $(this).val();
 			$("#valorPaginaFiltro").val(pagina);
@@ -567,7 +569,8 @@ var vacanteenPrograma	=	function(){
 	}
 	var mostrarAlumnosSeg = function(){
 		var usuario = $("#txtUsuario").val();
-		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario;
+		var pagina 		= $("#paginaActualAl").val();
+		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario+"&pagina="+pagina;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -576,6 +579,7 @@ var vacanteenPrograma	=	function(){
 			success: function(data){
 				$('#opcDependencia>div').hide();
 				$("#tablaAlumnosSeg").html("");
+				$("#paginacionAlumnos").append(data.botones);
 				$("#tablaAlumnosSeg").append(data.tabla);
 				$("#seguimientoAlumnos").show();
 			}

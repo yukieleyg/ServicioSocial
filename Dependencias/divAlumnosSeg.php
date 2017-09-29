@@ -1,7 +1,7 @@
 <div id="divAlumnosSeg" class="card-panel"><br>
 	<h1>Listado de Alumnos</h1>
 		<div class="row inline" id="rowFiltroAlumnos"><br>
-			<input type="hidden" id="paginaActualAl">
+			<input type="hidden" id="paginaActualAl" value=1>
 			<input type="hidden" id="opcionActualAl">
 			<div class="col s3" id="divfiltrosAlumnosSeg">
 				<select name="" id="filtrosAlumnosSeg">

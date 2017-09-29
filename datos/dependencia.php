@@ -299,7 +299,7 @@ function consultaFiltroSolicitudesDP(){
 	print json_encode($arrayJSON);
 
 }
-function filtrarSolicitudesEstado(){	
+function filtrarSolicitudesEstado(){
 	$pagina 	= $_POST["pagina"];
 	$inicio 	= ($pagina-1)*10;
 	$estado 	= $_POST["estado"];
@@ -652,7 +652,8 @@ function obtenerClaveDep(){
 }
 function mostrarAlumnosSeg(){
 	$usuario 		= "'".$_POST['usuario']."'";
-	$inicio  		= 0;
+	$pagina 		= $_POST['pagina'];
+	$inicio  		= ($pagina-1)*10;;
 	$respuesta 		= false;
 	$pdoAct 		= getPeriodoAct();
 	$conexion 		= conexionLocal();
@@ -728,7 +729,48 @@ function mostrarAlumnosSeg(){
 		$tabla		.= "</tr>";
 
 	}
-	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta);
+	$conexion 		= conexionLocal();
+	$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL
+		 	FROM expedientes AS ex
+		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
+		 	 INNER JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente 
+		 	 LIMIT 10 OFFSET %s",$usuario, $inicio);
+
+	$resExpedientesCount 	= mysql_query($qryExpedientesCount);
+	$rowCount		 		= mysql_fetch_array($resExpedientesCount);
+	$total 					= $rowCount["TOTAL"];	 
+	$botonesTotal 			= intval($total/10);
+	$restante 				= $total - ($botonesTotal*10);
+	$previo 				= $pagina-1;
+	$siguiente 				= $pagina+1;
+	if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousN" value='.$previo.'><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina==$botonesTotal or $botonesTotal== 0){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextN" value ='.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
+		}
+	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones);
 	print json_encode($arrayJSON); 
 
 

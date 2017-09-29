@@ -1,8 +1,8 @@
 <div class="card-panel" id="divSolicitudesSeg">
 	<h1>Listado de Solicitudes</h1>
 	<div class="row inline" id="rowFiltroSolicitudes"><br>
-			<input type="hidden" id="paginaActualSol">
-			<input type="hidden" id="opcionActualSol">
+			<!--input type="hidden" id="paginaActualSol">
+			<input type="hidden" id="opcionActualSol"-->
 			<div class="col s3">
 				<select name="filtroSolicitudesDependencia" id="filtroSolicitudesDependencia">
 					<option value="" disabled selected>Seleccione...</option>
