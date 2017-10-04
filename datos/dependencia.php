@@ -662,9 +662,9 @@ function mostrarAlumnosSeg(){
 		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
 		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
 		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
-		 	 INNER JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente 
-		 	 LIMIT 10 OFFSET %s",$usuario, $inicio);
-	//var_dump($qryExpedientes);
+		 	 LEFT JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente
+		 	 WHERE s.pdocve_1 = %s
+		 	 LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
 	$resExpedientes = mysql_query($qryExpedientes);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -707,19 +707,19 @@ function mostrarAlumnosSeg(){
 			 	break;
 		}
 		if($noreporte == 1){
-				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
 		}else{
-				$tabla 		.= "<td></td>";
+				$tabla 		.= "<td><a href =''>Crear</a></td>";
 		}
 		if($noreporte == 2){
-				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
 		}else{
-				$tabla 		.= "<td></td>";
+				$tabla 		.= "<td><a href =''>Crear</a></td>";
 		}
 		if($noreporte == 3){
-				$tabla 		.= "<td><a href=''>".$estadoreporte."</a></td>";
+				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
 		}else{
-				$tabla 		.= "<td></td>";
+				$tabla 		.= "<td><a href =''>Crear</a></td>";
 		}
 		if($row["estado"]==1){
 			$tabla		.= "<td>"."CAPTURA"."</td>";
