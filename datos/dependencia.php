@@ -650,6 +650,7 @@ function obtenerClaveDep(){
 	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
 	print json_encode($arrayJSON);
 }
+
 function mostrarAlumnosSeg(){
 	$usuario 		= "'".$_POST['usuario']."'";
 	$pagina 		= $_POST['pagina'];
@@ -657,7 +658,7 @@ function mostrarAlumnosSeg(){
 	$respuesta 		= false;
 	$pdoAct 		= getPeriodoAct();
 	$conexion 		= conexionLocal();
-	$qryExpedientes = sprintf("SELECT ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre, rp.noreporte, rp.estado AS estadoreporte
+	$qryExpedientes = sprintf("SELECT ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre, rp.noreporte, rp.cvereporte, rp.estado  AS estadoreporte
 		 	FROM expedientes AS ex
 		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
 		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
@@ -666,6 +667,38 @@ function mostrarAlumnosSeg(){
 		 	 WHERE s.pdocve_1 = %s
 		 	 LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
 	$resExpedientes = mysql_query($qryExpedientes);
+	$alumnos[]=array();
+	while($row=mysql_fetch_assoc($resExpedientes)){
+		$ncontrol=$row['cveusuario_1'];
+		$edoExpediente 	= $row["estado"];
+		$nombrePrograma = $row["nombre"];
+		$cveprograma 	= $row["cveprograma_1"];
+		$cvesolicitud 	= $row["cvesolicitud"];
+		$noreporte 		= $row["noreporte"];
+		$estadoreporte	= $row["estadoreporte"];
+		$cvereporte 	= $row['cvereporte'];
+		if(empty($alumnos[$row['cveusuario_1']])){
+			$alumnos[$ncontrol]=array(	"edoExpediente" =>$edoExpediente,
+										"nombrePrograma"=>$nombrePrograma,
+										'cveprograma'	=>$cveprograma,
+										'cvesolicitud'	=>$cvesolicitud,
+										'reportes'=>
+											array(''.$noreporte.''=>$reportesArray = 
+																	array('clave' =>$cvereporte,'estado'=>($estadoreporte==1)?'Aceptado':(($estadoreporte==2)?'Rechazado':'Pendiente') )));
+		}else{
+			$alumnos[$ncontrol]['reportes'][''.$noreporte.'']['clave']=$cvereporte;
+			$alumnos[$ncontrol]['reportes'][''.$noreporte.'']['estado']=($estadoreporte==1)?'Aceptado':(($estadoreporte==2)?'Rechazado':'Pendiente');	
+			
+		}
+	} //hasta aqui todo lo de la tabla queda en un arreglo
+	$listadencontrol="'".implode("','", array_keys($alumnos))."'";
+	$cnapi=conexionBD();
+	$qrynombres=sprintf("SELECT DA.ALUCTR AS NCONTROL, CONCAT(DA.ALUNOM,' ', DA.ALUAPP,' ', DA.ALUAPM) AS NOMBRE FROM DALUMN DA WHERE DA.ALUCTR in (%s)",$listadencontrol);
+	$resnom=mysql_query($qrynombres); //solo va una vez a la bd por todos los nombres
+	while($row=mysql_fetch_assoc($resnom)){ 
+		$alumnos[$row["NCONTROL"]]['nombre']=$row["NOMBRE"];
+	}
+	//intento de adaptar en un renglon
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
 	$tabla		.= "<th>No. de Control</th>";
@@ -676,59 +709,43 @@ function mostrarAlumnosSeg(){
 	$tabla		.=	"<th>Reporte tres</th>";
 	$tabla		.=	"<th>Estado</th>";
 	$tabla		.=	"</thead></tr>";
-	while($row = mysql_fetch_array($resExpedientes)){
-		$respuesta = true;
-		$nombrePrograma = $row["nombre"]; 
-		$cveusuario  	= $row["cveusuario_1"];
-		$cveprograma 	= $row["cveprograma_1"];
-		$cvesolicitud 	= $row["cvesolicitud"];
-		$noreporte 		= $row["noreporte"];
-		$estadoreporte	= $row["estadoreporte"];
-		$cn 		= conexionBD();
-		$qryvalida	= sprintf("SELECT DA.ALUNOM, DA.ALUAPP, DA.ALUAPM FROM DALUMN AS DA 
-			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
-			WHERE DA.ALUCTR = %s
-			",$cveusuario);
-		$res		= mysql_query($qryvalida);
-		$row1 		= mysql_fetch_array($res);
+
+	foreach ($alumnos as $ncontrol => $value) {
+
+		if($ncontrol=='0'){
+			continue;}
 		$tabla		.= "<tr>";
-		$tabla		.= "<td>".$cveusuario."</td>";
-		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
-		$tabla 		.= "<td>".$nombrePrograma."</td>";
-		switch ($estadoreporte) {
-			case '0':
-				$estadoreporte = "Pendiente"; 
-				break;
-			case '1':
-			 	$estadoreporte = "Aceptado";
-			 	break;
-			 case '2':
-			 	$estadoreporte = "Rechazado";
-			 	break;
-		}
-		if($noreporte == 1){
-				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
-		}else{
-				$tabla 		.= "<td><a href =''>Crear</a></td>";
-		}
-		if($noreporte == 2){
-				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
-		}else{
-				$tabla 		.= "<td><a href =''>Crear</a></td>";
-		}
-		if($noreporte == 3){
-				$tabla 		.= "<td><a href =''>".$estadoreporte."</a></td>";
-		}else{
-				$tabla 		.= "<td><a href =''>Crear</a></td>";
-		}
-		if($row["estado"]==1){
+		$tabla		.= "<td>".$ncontrol."</td>";
+		$tabla		.= "<td>".$value["nombre"]."</td>";
+		$tabla 		.= "<td>".$value["nombrePrograma"]."</td>";
+		
+		//si no se repiten los estados
+				if(!empty($value['reportes']['1'])){
+					$tabla.="<td><a href ='".$value['reportes']['1']['clave']."'>".$value['reportes']['1']['estado']."</a></td>";
+				}else{
+					$tabla.= "<td><a href ='#'>Crear</a></td>";
+				}
+				if(!empty($value['reportes']['2'])){
+					$tabla.="<td><a href ='".$value['reportes']['2']['clave']."'>".$value['reportes']['2']['estado']."</a></td>";
+				}else{
+					$tabla.= "<td><a href ='#'>Crear</a></td>";
+				}
+				if(!empty($value['reportes']['3'])){
+					$tabla.="<td><a href ='".$value['reportes']['3']['clave']."'>".$value['reportes']['3']['estado']."</a></td>";
+				}else{
+					$tabla.= "<td><a href ='#'>Crear</a></td>";
+				}
+
+		
+		if($value["edoExpediente"]==1){
 			$tabla		.= "<td>"."CAPTURA"."</td>";
 		}else{
 			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
 		}
 		$tabla		.= "</tr>";
-
-	}
+	
+	}//end foreach
+	//copiado de la parte de paginacion
 	$conexion 		= conexionLocal();
 	$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL
 		 	FROM expedientes AS ex
@@ -770,11 +787,11 @@ function mostrarAlumnosSeg(){
 		}else{
   			$botones .= '<li class="waves-effect" id="btnNextN" value ='.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
 		}
+
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones);
 	print json_encode($arrayJSON); 
-
-
 }
+
 function obtenerDptosDep(){
 	$respuesta	=false;	
 	$msj 		="no se han podiso obtener los departamentos de la dependencia";
