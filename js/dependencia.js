@@ -710,6 +710,8 @@ var vacanteenPrograma	=	function(){
 	}
 
 	var detallesCalifRep =function(){
+		var clavereporteActual=$(this).find("input").val(); 
+		$("#cvereporteDep").val(clavereporteActual);
 		$('#opcDependencia>div').hide();
 		$("#txtcalifCRdep").html("0");
 		$("#calificarReporteDep").show("slow");
@@ -773,6 +775,7 @@ var vacanteenPrograma	=	function(){
 				}
 
 			});
+		mostrarAlumnosSeg();
 	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
@@ -806,6 +809,7 @@ $("#btnagregardptoDep").on("click",mostrarAgregarDptoDep);
 $("#frmCalificacionRepDep").on("submit",confguardarCalificarReporte);
 $(".calsDep").on("click",cambiaCalifFinal);
 //nombre del boton de detalles
-//$("#linkReporte1").on("click",detallesCalifRep);
+$("#tablaAlumnosSeg").on("click","#btnCalificaReporte",detallesCalifRep);
+$("#btnCancelarCalifRep").on("click",mostrarAlumnosSeg);
 }
 $(document).on("ready",dependencia);

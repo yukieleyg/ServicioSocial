@@ -97,8 +97,9 @@
 			</tr>
 
 		</table>
-		<input type="submit" class="btn btn-lg btn-block btn-success right" value="CALIFICAR">
+		<input type="submit" class="btn waves-effect waves-light right" value="CALIFICAR">
 	</form>
+	<a href="#" id="btnCancelarCalifRep" class="btn waves-effect waves-light red right">CANCELAR</a>
 	<br><br><br>
 	<div>
 </div>
