@@ -650,7 +650,6 @@ function obtenerClaveDep(){
 	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
 	print json_encode($arrayJSON);
 }
-
 function mostrarAlumnosSeg(){
 	$usuario 		= "'".$_POST['usuario']."'";
 	$pagina 		= $_POST['pagina'];
@@ -658,47 +657,14 @@ function mostrarAlumnosSeg(){
 	$respuesta 		= false;
 	$pdoAct 		= getPeriodoAct();
 	$conexion 		= conexionLocal();
-	$qryExpedientes = sprintf("SELECT ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre, rp.noreporte, rp.cvereporte, rp.estado  AS estadoreporte
+	$qryExpedientes = sprintf("SELECT ex.cveexpediente, ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre
 		 	FROM expedientes AS ex
 		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
 		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
 		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
-		 	 LEFT JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente
 		 	 WHERE s.pdocve_1 = %s
 		 	 LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
 	$resExpedientes = mysql_query($qryExpedientes);
-	$alumnos[]=array();
-	while($row=mysql_fetch_assoc($resExpedientes)){
-		$ncontrol=$row['cveusuario_1'];
-		$edoExpediente 	= $row["estado"];
-		$nombrePrograma = $row["nombre"];
-		$cveprograma 	= $row["cveprograma_1"];
-		$cvesolicitud 	= $row["cvesolicitud"];
-		$noreporte 		= $row["noreporte"];
-		$estadoreporte	= $row["estadoreporte"];
-		$cvereporte 	= $row['cvereporte'];
-		if(empty($alumnos[$row['cveusuario_1']])){
-			$alumnos[$ncontrol]=array(	"edoExpediente" =>$edoExpediente,
-										"nombrePrograma"=>$nombrePrograma,
-										'cveprograma'	=>$cveprograma,
-										'cvesolicitud'	=>$cvesolicitud,
-										'reportes'=>
-											array(''.$noreporte.''=>$reportesArray = 
-																	array('clave' =>$cvereporte,'estado'=>($estadoreporte==1)?'Aceptado':(($estadoreporte==2)?'Rechazado':'Pendiente') )));
-		}else{
-			$alumnos[$ncontrol]['reportes'][''.$noreporte.'']['clave']=$cvereporte;
-			$alumnos[$ncontrol]['reportes'][''.$noreporte.'']['estado']=($estadoreporte==1)?'Aceptado':(($estadoreporte==2)?'Rechazado':'Pendiente');	
-			
-		}
-	} //hasta aqui todo lo de la tabla queda en un arreglo
-	$listadencontrol="'".implode("','", array_keys($alumnos))."'";
-	$cnapi=conexionBD();
-	$qrynombres=sprintf("SELECT DA.ALUCTR AS NCONTROL, CONCAT(DA.ALUNOM,' ', DA.ALUAPP,' ', DA.ALUAPM) AS NOMBRE FROM DALUMN DA WHERE DA.ALUCTR in (%s)",$listadencontrol);
-	$resnom=mysql_query($qrynombres); //solo va una vez a la bd por todos los nombres
-	while($row=mysql_fetch_assoc($resnom)){ 
-		$alumnos[$row["NCONTROL"]]['nombre']=$row["NOMBRE"];
-	}
-	//intento de adaptar en un renglon
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
 	$tabla		.= "<th>No. de Control</th>";
@@ -709,55 +675,76 @@ function mostrarAlumnosSeg(){
 	$tabla		.=	"<th>Reporte tres</th>";
 	$tabla		.=	"<th>Estado</th>";
 	$tabla		.=	"</thead></tr>";
-
-	foreach ($alumnos as $ncontrol => $value) {
-
-		if($ncontrol=='0'){
-			continue;}
+	while($row = mysql_fetch_array($resExpedientes)){
+		$respuesta = true;
+		$nombrePrograma = $row["nombre"]; 
+		$cveusuario  	= $row["cveusuario_1"];
+		$cveprograma 	= $row["cveprograma_1"];
+		$cvesolicitud 	= $row["cvesolicitud"];
+		$cveexpediente 	= $row["cveexpediente"];
+		$cn 		= conexionBD();
+		$qryvalida	= sprintf("SELECT DA.ALUNOM, DA.ALUAPP, DA.ALUAPM FROM DALUMN AS DA 
+			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
+			WHERE DA.ALUCTR = %s
+			",$cveusuario);
+		$res		= mysql_query($qryvalida);
+		$row1 		= mysql_fetch_array($res);
 		$tabla		.= "<tr>";
-		$tabla		.= "<td>".$ncontrol."</td>";
-		$tabla		.= "<td>".$value["nombre"]."</td>";
-		$tabla 		.= "<td>".$value["nombrePrograma"]."</td>";
-		
-		//si no se repiten los estados
-				if(!empty($value['reportes']['1'])){
-					$tabla.="<td><a href ='".$value['reportes']['1']['clave']."'>".$value['reportes']['1']['estado']."</a></td>";
-				}else{
-					$tabla.= "<td><a href ='#'>Crear</a></td>";
+		$tabla		.= "<td>".$cveusuario."</td>";
+		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
+		$tabla 		.= "<td>".$nombrePrograma."</td>";
+		$conexionLocal 	= conexionLocal();
+		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
+		$reporteUno 	="<td><a href=''>Crear</a></td>";
+		$reporteDos 	="<td><a href=''>Crear</a></td>";
+		$reporteTres 	="<td><a href=''>Crear</a></td>";
+		if($resReportes = mysql_query($qryReportes)){
+			while($rowReportes = mysql_fetch_array($resReportes)){
+				$estadoreporte = $rowReportes["estado"];
+				$noreporte 	   = $rowReportes["noreporte"];
+				$cvereporte 	=$rowReportes["cvereporte"];
+				switch ($estadoreporte) {
+					case '0':
+						$estadoreporte = "Pendiente"; 
+						break;
+					case '1':
+					 	$estadoreporte = "Aceptado";
+					 	break;
+					 case '2':
+					 	$estadoreporte = "Rechazado";
+					 	break;
 				}
-				if(!empty($value['reportes']['2'])){
-					$tabla.="<td><a href ='".$value['reportes']['2']['clave']."'>".$value['reportes']['2']['estado']."</a></td>";
-				}else{
-					$tabla.= "<td><a href ='#'>Crear</a></td>";
-				}
-				if(!empty($value['reportes']['3'])){
-					$tabla.="<td><a href ='".$value['reportes']['3']['clave']."'>".$value['reportes']['3']['estado']."</a></td>";
-				}else{
-					$tabla.= "<td><a href ='#'>Crear</a></td>";
+				switch ($noreporte) {
+					case 1:
+						$reporteUno = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
+					case 2:
+						$reporteDos = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
+					case 3:
+						$reporteTres = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
 				}
 
-		
-		if($value["edoExpediente"]==1){
+			}
+		}
+		$tabla .= $reporteUno.$reporteDos.$reporteTres;
+		if($row["estado"]==1){
 			$tabla		.= "<td>"."CAPTURA"."</td>";
 		}else{
 			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
 		}
 		$tabla		.= "</tr>";
-	
-	}//end foreach
-	//copiado de la parte de paginacion
+	}
 	$conexion 		= conexionLocal();
-	$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL
-		 	FROM expedientes AS ex
-		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
-		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
-		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
-		 	 INNER JOIN reportes AS rp ON rp.cveexpediente_1 = ex.cveexpediente 
-		 	 LIMIT 10 OFFSET %s",$usuario, $inicio);
-
+	$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL FROM expedientes AS ex
+	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud 
+	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1 
+	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
+	 WHERE s.pdocve_1 = %s",$usuario,$pdoAct);
 	$resExpedientesCount 	= mysql_query($qryExpedientesCount);
 	$rowCount		 		= mysql_fetch_array($resExpedientesCount);
-	$total 					= $rowCount["TOTAL"];	 
+	$total 					= $rowCount["TOTAL"];
 	$botonesTotal 			= intval($total/10);
 	$restante 				= $total - ($botonesTotal*10);
 	$previo 				= $pagina-1;
@@ -770,28 +757,26 @@ function mostrarAlumnosSeg(){
 		}
 		$botones = '<ul class="pagination" id="botonesPaginacion">';
 		if($pagina==1){
-			$botones .= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>  ';
+			$botones .= '<li class="disabled"><a><i class="material-icons" value='.$previo.'>chevron_left</i></a></li>  ';
 		}else{	
-			$botones .= '<li class="waves-effect" id="btnPreviousN" value='.$previo.'><a><i class="material-icons">chevron_left</i></a></li>  ';
+			$botones .= '<li class="waves-effect" id="btnPreviousNI" value='.$previo.'><a><i class="material-icons">chevron_left</i></a></li>  ';
 		}
 		for($i=0;$i<$botonesTotal;$i++){
 			$numero  	= $i+1;
 			if($numero==$pagina){
-				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPagI"><a>'.$numero.'</a></li>  ';	
 			}else{
-				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPag"><a>'.$numero.'</a></li>  ';	
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagI"><a>'.$numero.'</a></li>  ';	
 			}
 		}
-		if($pagina==$botonesTotal or $botonesTotal== 0){
+		if($pagina== $botonesTotal or $botonesTotal== 0){
   			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
 		}else{
-  			$botones .= '<li class="waves-effect" id="btnNextN" value ='.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
+  			$botones .= '<li class="waves-effect" id="btnNextNI" value='.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
 		}
-
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones);
 	print json_encode($arrayJSON); 
 }
-
 function obtenerDptosDep(){
 	$respuesta	=false;	
 	$msj 		="no se han podiso obtener los departamentos de la dependencia";

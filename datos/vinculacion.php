@@ -113,9 +113,10 @@ function aceptarSolicitudes (){
 	$qryvalidaU	= sprintf("UPDATE solicitudes SET estado = %s WHERE cvesolicitud = %s",$aceptado,$solicitud);	
 	$resU 		= mysql_query($qryvalidaU);
 	if($resU){
+		$cn 		= conexionLocal();
 		$respuesta = true;
-		$consulta = sprintf("INSERT INTO  expedientes VALUES (NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0)",$solicitud,$usuario,$programa);
-		$resconsulta= mysql_query($consulta);	
+		$consulta = sprintf("INSERT INTO  expedientes VALUES (NULL,%s,%s,%s,CURRENT_TIMESTAMP,' ',1,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL)",$solicitud,$usuario,$programa);
+		$resconsulta= mysql_query($consulta);
 	}
 	$arrayJSON = array('respuesta' => $respuesta);
 	print json_encode($arrayJSON);

@@ -24,7 +24,10 @@
 			<input type="hidden" value=1 id= "opcionEstadoSol">
 
 	</div>				
-	<div class="row" id="divTablaAlumnos">	
+	<div class="row" id="divTablaAlumnos">
+		<div class="progress" id="loadSolicitudesSeg" style="display: none">
+				<div class="indeterminate"></div>
+		</div>	
 		<table id="tblAlumnos">
 		</table>
 		<div id="paginacionSolicitudesDP">

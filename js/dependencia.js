@@ -258,6 +258,11 @@ var aceptarSolicitudes = function(){
 		$("#solicitarSSVacantes").show("slow");
 	}
 	var mostrarSolicitudesSeg = function(){
+		$('#tblAlumnos').hide();
+		$('#opcDependencia>div').hide();
+		$("#loadSolicitudesSeg").attr('style',"display:inline-block");
+		$("#seguimientoSolicitudes").show("slow");
+
 		$("#opcionEstadoSol").val(1);
 		try{
 			var pagina = $(this).val();
@@ -286,10 +291,11 @@ var aceptarSolicitudes = function(){
 				$("#filtroSolicitudesDependencia").material_select();
 				$('#tblAlumnos').html("");
 				$('#tblAlumnos').append(data.tabla);
-				$("#divTablaAlumnos").show("slow");
-				$('#opcDependencia>div').hide();
-				$("#btnClearFiltroSolDP").attr('disabled',true);
+				$('#tblAlumnos').show();
+				$("#loadSolicitudesSeg").attr('style',"display:none");
 				$("#seguimientoSolicitudes").show("slow");
+				$("#divTablaAlumnos").show("slow");
+				$("#btnClearFiltroSolDP").attr('disabled',true);
 			}
 		});
 	}
@@ -568,6 +574,10 @@ var vacanteenPrograma	=	function(){
 		});
 	}
 	var mostrarAlumnosSeg = function(){
+		$('#opcDependencia>div').hide();
+		$("#tablaAlumnosSeg").hide();
+		$("#loadAlumnosSeg").attr("style","display:inline-block");
+		$("#seguimientoAlumnos").show();
 		var usuario = $("#txtUsuario").val();
 		var pagina 		= $("#paginaActualAl").val();
 		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario+"&pagina="+pagina;
@@ -577,11 +587,13 @@ var vacanteenPrograma	=	function(){
 			url:"../datos/dependencia.php",
 			data: parametros,
 			success: function(data){
-				$('#opcDependencia>div').hide();
+				$("#loadAlumnosSeg").attr("style","display:none");
 				$("#tablaAlumnosSeg").html("");
-				$("#paginacionAlumnos").append(data.botones);
+				$("#tablaAlumnosSeg").show();
+				console.log("botones"+data.botones);
+				$("#paginacionAlumnosSeg").append(data.botones);
 				$("#tablaAlumnosSeg").append(data.tabla);
-				$("#seguimientoAlumnos").show();
+				$("#paginacionAlumnos").show();
 			}
 		});
 	}
@@ -794,6 +806,6 @@ $("#btnagregardptoDep").on("click",mostrarAgregarDptoDep);
 $("#frmCalificacionRepDep").on("submit",confguardarCalificarReporte);
 $(".calsDep").on("click",cambiaCalifFinal);
 //nombre del boton de detalles
-$("#btnTEST").on("click",detallesCalifRep);
+//$("#linkReporte1").on("click",detallesCalifRep);
 }
 $(document).on("ready",dependencia);

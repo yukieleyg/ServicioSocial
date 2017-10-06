@@ -28,7 +28,10 @@
 	<div class="row" id="divSeguimientoAlumnos">	
 		<table id="tablaAlumnosSeg">
 		</table>
-		<div id="paginacionAlumnos">
+		<div id="paginacionAlumnosSeg">
 		</div>
+		<div class="progress" id="loadAlumnosSeg" style="display: none">
+				<div class="indeterminate"></div>
+		</div>	
 	</div>
 </div>
