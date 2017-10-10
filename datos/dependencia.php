@@ -650,6 +650,133 @@ function obtenerClaveDep(){
 	$arrayJSON = array('clavedep' => $clavedep, 'respuesta' => $respuesta, 'mensaje'=> $msj );
 	print json_encode($arrayJSON);
 }
+function filtrarAlumnosSeg(){
+	$usuario 		= "'".$_POST['usuario']."'";
+	$pagina 		= $_POST['pagina'];
+	$filtro 		= $_POST['filtro'];
+	$opcion 		= $_POST['opcion'];
+	$inicio  		= ($pagina-1)*10;;
+	$respuesta 		= true;
+	$pdoAct 		= getPeriodoAct();
+	$filtroText 	="";
+	$conexion 		= conexionLocal();
+	switch ($filtro) {
+		case '0':
+			$filtroText = "estado";
+			break;
+		case '1':
+			$filtroText = "cveprograma_1";
+			break;
+		case '2':
+			switch ($opcion) {
+				case '1':
+					$filtroText = "reporteUno";
+					break;
+				case '2':
+					$filtroText = "reporteDos";
+					break;
+				case '2':
+					$filtroText = "reporteTres";
+					break;
+			}
+			break;
+		
+	}
+	if($filtro == '0' || $filtro == '1'){
+		$qryExpedientes = sprintf("SELECT ex.cveexpediente, ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre
+			 	FROM expedientes AS ex
+			 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+			 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+			 	 WHERE dp.cveusuario_1 = %s AND s.pdocve_1 = %s AND ex.".$filtroText."=".$opcion.
+			 	 " LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+	}else{
+		$qryExpedientes = sprintf("SELECT ex.cveexpediente, ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre
+			 	FROM expedientes AS ex
+			 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+			 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+			 	 WHERE dp.cveusuario_1= %s AND s.pdocve_1 = %s AND ex.".$filtroText."!= NULL LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+	}
+	//var_dump($qryExpedientes);
+	$resExpedientes = mysql_query($qryExpedientes);
+	$tabla		= "";
+	$tabla		.= "<thead><tr>";
+	$tabla		.= "<th>No. de Control</th>";
+	$tabla		.=	"<th>Nombre</th>";
+	$tabla		.=	"<th>Programa</th>";
+	$tabla		.=	"<th>Reporte uno</th>";
+	$tabla		.=	"<th>Reporte dos</th>";
+	$tabla		.=	"<th>Reporte tres</th>";
+	$tabla		.=	"<th>Estado</th>";
+	$tabla		.=	"</thead></tr>";
+	while($row = mysql_fetch_array($resExpedientes)){
+		$respuesta = true;
+		$nombrePrograma = $row["nombre"]; 
+		$cveusuario  	= $row["cveusuario_1"];
+		$cveprograma 	= $row["cveprograma_1"];
+		$cvesolicitud 	= $row["cvesolicitud"];
+		$cveexpediente 	= $row["cveexpediente"];
+		$cn 		= conexionBD();
+		$qryvalida	= sprintf("SELECT DA.ALUNOM, DA.ALUAPP, DA.ALUAPM FROM DALUMN AS DA 
+			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
+			WHERE DA.ALUCTR = %s
+			",$cveusuario);
+		$res		= mysql_query($qryvalida);
+		$row1 		= mysql_fetch_array($res);
+		$tabla		.= "<tr>";
+		$tabla		.= "<td>".$cveusuario."</td>";
+		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
+		$tabla 		.= "<td>".$nombrePrograma."</td>";
+		$conexionLocal 	= conexionLocal();
+		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
+		$reporteUno 	="<td><a href=''>Crear</a></td>";
+		$reporteDos 	="<td><a href=''>Crear</a></td>";
+		$reporteTres 	="<td><a href=''>Crear</a></td>";
+		if($resReportes = mysql_query($qryReportes)){
+			while($rowReportes = mysql_fetch_array($resReportes)){
+				$estadoreporte = $rowReportes["estado"];
+				$noreporte 	   = $rowReportes["noreporte"];
+				$cvereporte 	=$rowReportes["cvereporte"];
+				switch ($estadoreporte) {
+					case '0':
+						$estadoreporte = "Pendiente"; 
+						break;
+					case '1':
+					 	$estadoreporte = "Aceptado";
+					 	break;
+					 case '2':
+					 	$estadoreporte = "Rechazado";
+					 	break;
+				}
+				switch ($noreporte) {
+					case 1:
+						$reporteUno = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
+					case 2:
+						$reporteDos = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
+					case 3:
+						$reporteTres = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						break;
+				}
+
+			}
+		}
+		$tabla .= $reporteUno.$reporteDos.$reporteTres;
+		if($row["estado"]==1){
+			$tabla		.= "<td>"."CAPTURA"."</td>";
+		}else{
+			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
+		}
+		$tabla		.= "</tr>";
+	}
+	$botones ="";
+	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones);
+	print json_encode($arrayJSON); 
+
+
+}
 function mostrarAlumnosSeg(){
 	$usuario 		= "'".$_POST['usuario']."'";
 	$pagina 		= $_POST['pagina'];
@@ -661,9 +788,9 @@ function mostrarAlumnosSeg(){
 		 	FROM expedientes AS ex
 		 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
 		 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
-		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
-		 	 WHERE s.pdocve_1 = %s
-		 	 LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+		 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+		 	 WHERE s.pdocve_1 = %s AND dp.cveusuario_1 =%s
+		 	 LIMIT 10 OFFSET %s",$pdoAct,$usuario, $inicio);
 	$resExpedientes = mysql_query($qryExpedientes);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -740,8 +867,8 @@ function mostrarAlumnosSeg(){
 	$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL FROM expedientes AS ex
 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud 
 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1 
-	 INNER JOIN dependencias AS dp ON dp.cvedependencia = %s 
-	 WHERE s.pdocve_1 = %s",$usuario,$pdoAct);
+	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+	 WHERE s.pdocve_1 = %s AND dp.cveusuario_1 = %s",$pdoAct,$usuario);
 	$resExpedientesCount 	= mysql_query($qryExpedientesCount);
 	$rowCount		 		= mysql_fetch_array($resExpedientesCount);
 	$total 					= $rowCount["TOTAL"];
@@ -916,6 +1043,8 @@ switch ($opc){
 	case 'guardarCalificacionRep';
 		guardarCalificacionRep();
 		break;
+	case 'filtrarAlumnosSeg':
+		filtrarAlumnosSeg();
+		break;
 }
 ?>
-

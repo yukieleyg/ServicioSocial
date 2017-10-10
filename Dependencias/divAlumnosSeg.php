@@ -15,10 +15,10 @@
 				<select name="" id="opcionAlumnosSeg"></select>
 			</div>
 			<div class="col s2">	
-				<button class="btn" id="" value="1"><i class="material-icons">search</i></button>
+				<button class="btn" id="btnSearchAlumnos" value="1"><i class="material-icons">search</i></button>
 			</div>	
 			<div class="col s2 " id="">
-				<button class="btn" id="" value="1"><i class="material-icons">loop</i></button>
+				<button class="btn" id="btnRefreshAlumnos" value="1" disabled="true"><i class="material-icons">loop</i></button>
 			</div>
 			<input type="hidden" value=1 id="">
 			<input type="hidden" value=1 id="">

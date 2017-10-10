@@ -573,14 +573,31 @@ var vacanteenPrograma	=	function(){
 				}
 		});
 	}
-	var mostrarAlumnosSeg = function(){
+	var filtrarAlumnosSeg = function(){
+		$("#filtrosAlumnosSeg").attr("disabled",true);
+		$("#opcionAlumnosSeg").attr("disabled",true);
+		$("#opcionAlumnosSeg").material_select();
+		$("#filtrosAlumnosSeg").material_select();
+		$("#btnRefreshAlumnos").attr("disabled",false);
+		$("#btnSearchAlumnos").attr("disabled","disabled");
+		$("#paginacionAlumnosSeg").html("");
 		$('#opcDependencia>div').hide();
 		$("#tablaAlumnosSeg").hide();
 		$("#loadAlumnosSeg").attr("style","display:inline-block");
 		$("#seguimientoAlumnos").show();
 		var usuario = $("#txtUsuario").val();
-		var pagina 		= $("#paginaActualAl").val();
-		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario+"&pagina="+pagina;
+		var filtro = $("#filtrosAlumnosSeg").val();
+		var opcion = $("#opcionAlumnosSeg").val();
+		try{
+			var pagina = $(this).val();
+			$("#paginaActualAl").val(pagina);
+		}catch(error){
+			var pagina = $("#paginaActualAl").val();
+		}
+		if(pagina == ""){
+			pagina 		= 1;
+		}
+		var parametros = "opc="+"filtrarAlumnosSeg"+"&usuario="+usuario+"&pagina="+pagina+"&filtro="+filtro+"&opcion="+opcion;
 		$.ajax({
 			type: "POST",
 			dataType: "json",
@@ -590,7 +607,44 @@ var vacanteenPrograma	=	function(){
 				$("#loadAlumnosSeg").attr("style","display:none");
 				$("#tablaAlumnosSeg").html("");
 				$("#tablaAlumnosSeg").show();
-				console.log("botones"+data.botones);
+				$("#paginacionAlumnosSeg").append(data.botones);
+				$("#tablaAlumnosSeg").append(data.tabla);
+				$("#paginacionAlumnos").show();
+			}
+		});
+	}
+	var mostrarAlumnosSeg = function(){
+		$("#btnRefreshAlumnos").attr("disabled","disabled");
+		$("#paginacionAlumnosSeg").html("");
+		$('#opcDependencia>div').hide();
+		$("#tablaAlumnosSeg").hide();
+		$("#loadAlumnosSeg").attr("style","display:inline-block");
+		$("#seguimientoAlumnos").show();
+		var usuario = $("#txtUsuario").val();
+		try{
+			var pagina = $(this).val();
+			$("#paginaActualAl").val(pagina);
+		}catch(error){
+			var pagina = $("#paginaActualAl").val();
+		}
+		if(pagina == ""){
+			pagina 		= 1;
+		}
+		var parametros = "opc="+"mostrarAlumnosSeg"+"&usuario="+usuario+"&pagina="+pagina;
+		$.ajax({
+			type: "POST",
+			dataType: "json",
+			url:"../datos/dependencia.php",
+			data: parametros,
+			success: function(data){
+				$("#btnSearchAlumnos").attr("disabled",false);
+				$("#filtrosAlumnosSeg").attr("disabled",false);
+				$("#opcionAlumnosSeg").attr("disabled",false);
+				$("#opcionAlumnosSeg").material_select();
+				$("#filtrosAlumnosSeg").material_select();
+				$("#loadAlumnosSeg").attr("style","display:none");
+				$("#tablaAlumnosSeg").html("");
+				$("#tablaAlumnosSeg").show();
 				$("#paginacionAlumnosSeg").append(data.botones);
 				$("#tablaAlumnosSeg").append(data.tabla);
 				$("#paginacionAlumnos").show();
@@ -602,7 +656,7 @@ var vacanteenPrograma	=	function(){
 		var value 		= $("#filtrosAlumnosSeg").val();
 		switch(value){
 			case '0':  
-					opcs="<option value='0'>Captura</option><option value='1'>Finalizado</option>";
+					opcs="<option value='1'>Captura</option><option value='2'>Finalizado</option>";
 					$("#opcionAlumnosSeg").find('option').remove();
 					$("#opcionAlumnosSeg").append(opcs).html();
 					$("#opcionAlumnosSeg").material_select();
@@ -795,6 +849,11 @@ $("#paginacionSolicitudesDP").on("click","#btnNextNI",mostrarSolicitudesSeg);
 $("#paginacionSolicitudesDP").on("click","#btnPreviousNI",mostrarSolicitudesSeg);
 $("#menuAlumnosSeg").on("click",mostrarAlumnosSeg);
 $("#filtrosAlumnosSeg").on("change",filtrosAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnPagI",mostrarAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnNextNI",mostrarAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnPreviousNI",mostrarAlumnosSeg);
+$("#btnSearchAlumnos").on("click",filtrarAlumnosSeg);
+$("#btnRefreshAlumnos").on("click",mostrarAlumnosSeg);
 
 $("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
