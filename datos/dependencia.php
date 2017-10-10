@@ -670,13 +670,13 @@ function filtrarAlumnosSeg(){
 		case '2':
 			switch ($opcion) {
 				case '1':
-					$filtroText = "reporteUno";
+					$filtroText = "reporteuno";
 					break;
 				case '2':
-					$filtroText = "reporteDos";
+					$filtroText = "reportedos";
 					break;
-				case '2':
-					$filtroText = "reporteTres";
+				case '3':
+					$filtroText = "reportetres";
 					break;
 			}
 			break;
@@ -690,13 +690,26 @@ function filtrarAlumnosSeg(){
 			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
 			 	 WHERE dp.cveusuario_1 = %s AND s.pdocve_1 = %s AND ex.".$filtroText."=".$opcion.
 			 	 " LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+		$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL
+			 	FROM expedientes AS ex
+			 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+			 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+			 	 WHERE dp.cveusuario_1 = %s AND s.pdocve_1 = %s AND ex.".$filtroText."=".$opcion.
+			 	 " ",$usuario,$pdoAct);
 	}else{
 		$qryExpedientes = sprintf("SELECT ex.cveexpediente, ex.estado, s.cveusuario_1, s.cveprograma_1, s.cvesolicitud, p.nombre
 			 	FROM expedientes AS ex
 			 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
 			 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
 			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
-			 	 WHERE dp.cveusuario_1= %s AND s.pdocve_1 = %s AND ex.".$filtroText."!= NULL LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+			 	 WHERE dp.cveusuario_1= %s AND s.pdocve_1 = %s AND ex.".$filtroText." IS NOT NULL LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
+		$qryExpedientesCount = sprintf("SELECT COUNT(*) AS TOTAL
+			 	FROM expedientes AS ex
+			 	 INNER JOIN solicitudes AS s ON s.cvesolicitud = ex.cvesolicitud
+			 	 INNER JOIN programas AS p ON p.cveprograma = s.cveprograma_1
+			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
+			 	 WHERE dp.cveusuario_1= %s AND s.pdocve_1 = %s AND ex.".$filtroText." IS NOT NULL LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
 	}
 	//var_dump($qryExpedientes);
 	$resExpedientes = mysql_query($qryExpedientes);
@@ -772,10 +785,40 @@ function filtrarAlumnosSeg(){
 		$tabla		.= "</tr>";
 	}
 	$botones ="";
+	$resExpedientesCount 	= mysql_query($qryExpedientesCount);
+	$rowCount		 		= mysql_fetch_array($resExpedientesCount);
+	$total 					= $rowCount["TOTAL"];
+	$botonesTotal 			= intval($total/10);
+	$restante 				= $total - ($botonesTotal*10);
+	$previo 				= $pagina-1;
+	$siguiente 				= $pagina+1;
+	if($restante>0){
+			$botonesTotal = $botonesTotal+1;
+		}		
+		if($botonesTotal==1){
+			$botonesTotal = 0;
+		}
+		$botones = '<ul class="pagination" id="botonesPaginacion">';
+		if($pagina==1){
+			$botones .= '<li class="disabled"><a><i class="material-icons" value='.$previo.'>chevron_left</i></a></li>  ';
+		}else{	
+			$botones .= '<li class="waves-effect" id="btnPreviousNF" value='.$previo.'><a><i class="material-icons">chevron_left</i></a></li>  ';
+		}
+		for($i=0;$i<$botonesTotal;$i++){
+			$numero  	= $i+1;
+			if($numero==$pagina){
+				$botones 	.='<li class="teal lighten-2 active" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}else{
+				$botones 	.='<li class="waves-effect" value ='.$numero.' id="btnPagF"><a>'.$numero.'</a></li>  ';	
+			}
+		}
+		if($pagina== $botonesTotal or $botonesTotal== 0){
+  			$botones .= '<li class="disabled" ><a><i class="material-icons">chevron_right</i></a></li>';
+		}else{
+  			$botones .= '<li class="waves-effect" id="btnNextNF" value='.$siguiente.'><a><i class="material-icons">chevron_right</i></a></li>';
+		}
 	$arrayJSON = array('tabla' => $tabla, 'respuesta' => $respuesta, 'botones' =>$botones);
 	print json_encode($arrayJSON); 
-
-
 }
 function mostrarAlumnosSeg(){
 	$usuario 		= "'".$_POST['usuario']."'";

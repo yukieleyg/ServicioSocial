@@ -682,7 +682,7 @@ var vacanteenPrograma	=	function(){
 				});
 			break;
 			case '2':
-				opcs="<option value='0'>Uno</option><option value='1'>Dos</option><option value='2'>Tres</option>";
+				opcs="<option value='1'>Uno</option><option value='2'>Dos</option><option value='3'>Tres</option>";
 				$("#opcionAlumnosSeg").find('option').remove();
 				$("#opcionAlumnosSeg").append(opcs).html();
 				$("#opcionAlumnosSeg").material_select();
@@ -854,6 +854,9 @@ $("#paginacionAlumnosSeg").on("click","#btnNextNI",mostrarAlumnosSeg);
 $("#paginacionAlumnosSeg").on("click","#btnPreviousNI",mostrarAlumnosSeg);
 $("#btnSearchAlumnos").on("click",filtrarAlumnosSeg);
 $("#btnRefreshAlumnos").on("click",mostrarAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnPagF",filtrarAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnNextNF",filtrarAlumnosSeg);
+$("#paginacionAlumnosSeg").on("click","#btnPreviousNF",filtrarAlumnosSeg);
 
 $("#selProgramasV").on("change",vacanteenPrograma);
 $("#btnModificarVacantes").on("click", modificarVacantes);
