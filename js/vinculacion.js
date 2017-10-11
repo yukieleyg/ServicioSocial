@@ -693,6 +693,9 @@ var admin = function (){
 						  	$("#btnmc1").val(value.cvereporte);						  	
 							$("#estadoRepUno").val(estado);
 							if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
+							if(value.estado==1){
+								$("#irepouno").attr("href", '../datos/descargarReporte.php?reporte='+value.cvereporte);
+							}
 						  	$("#calEmpR1").val(value.califEmp);				  							  	
 						  		break;
 						  	case '2': 
@@ -703,6 +706,9 @@ var admin = function (){
 						  	$("#btnmc2").val(value.cvereporte);									  	
 						  	$("#estadoRepDos").val(estado);
 						  	if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
+						  	if(value.estado==1){
+								$("#irepodos").attr("href", '../datos/descargarReporte.php?reporte='+value.cvereporte);
+							}
 						  	$("#calEmpR2").val(value.califEmp);						  							  	
 						  		break;
 						  	case '3': 
@@ -713,6 +719,9 @@ var admin = function (){
 							$("#btnmc3").val(value.cvereporte);									  	
 							$("#estadoRepTres").val(estado);
 							if(value.estado==0){$("#btnmodalcalificar[value='"+i+"']").attr("disabled",false);}
+							if(value.estado==1){
+								$("#irepotres").attr("href", '../datos/descargarReporte.php?reporte='+value.cvereporte);
+							}
 						  	$("#calEmpR3").val(value.califEmp);						  	
 						  		break;
 						  }
