@@ -333,6 +333,15 @@ var aceptarSolicitudes = function(){
 	}
 	var filtrarSolicitudes = function(){
 		$("#opcionEstadoSol").val(2);	
+		$("#loadSolicitudesSeg").attr('style',"display:inline-block");	
+		$("#filtroSolicitudesDependencia").attr('disabled',true);
+		$("#opcionSolicitudesDP").attr('disabled',true);
+		$("#btnClearFiltroSolDP").attr('disabled',false);
+		$("#opcionSolicitudesDP").material_select();
+		$("#filtroSolicitudesDependencia").material_select();
+		$("#btnFiltroSolicitudesDP").attr('disabled',true);	
+		$('#tblAlumnos').html("");
+		$("#paginacionSolicitudesDP").html("");
 		try{
 			var pagina = $(this).val();
 			$("#valorPaginaFiltro").val(pagina);
@@ -352,15 +361,8 @@ var aceptarSolicitudes = function(){
 					url:"../datos/dependencia.php",
 					data: parametros,
 					success: function(data){
-						$("#filtroSolicitudesDependencia").attr('disabled',true);
-						$("#opcionSolicitudesDP").attr('disabled',true);
-						$("#btnClearFiltroSolDP").attr('disabled',false);
-						$("#opcionSolicitudesDP").material_select();
-						$("#filtroSolicitudesDependencia").material_select();
-						$("#btnFiltroSolicitudesDP").attr('disabled',true);
-						$("#paginacionSolicitudesDP").html("");
+						$("#loadSolicitudesSeg").attr('style',"display:none");	
 						$("#paginacionSolicitudesDP").append(data.botones);
-						$('#tblAlumnos').html("");
 						$('#tblAlumnos').append(data.tabla);
 						$("#divTablaAlumnos").show("slow");
 						$('#opcDependencia>div').hide();
