@@ -711,7 +711,6 @@ function filtrarAlumnosSeg(){
 			 	 INNER JOIN dependencias AS dp ON dp.cvedependencia = p.cvedependencia
 			 	 WHERE dp.cveusuario_1= %s AND s.pdocve_1 = %s AND ex.".$filtroText." IS NOT NULL LIMIT 10 OFFSET %s",$usuario,$pdoAct, $inicio);
 	}
-	//var_dump($qryExpedientes);
 	$resExpedientes = mysql_query($qryExpedientes);
 	$tabla		= "";
 	$tabla		.= "<thead><tr>";
@@ -742,24 +741,21 @@ function filtrarAlumnosSeg(){
 		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
 		$tabla 		.= "<td>".$nombrePrograma."</td>";
 		$conexionLocal 	= conexionLocal();
-		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
-		$reporteUno 	="<td><a href='#'>Crear</a></td>";
-		$reporteDos 	="<td><a href='#'>Crear</a></td>";
-		$reporteTres 	="<td><a href='#'>Crear</a></td>";
+		$qryReportes 	= sprintf("SELECT estadoempresa, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
+		$reporteUno 	="<td>Pendiente</td>";
+		$reporteDos 	="<td>Pendiente</td>";
+		$reporteTres 	="<td>Pendiente</td>";
 		if($resReportes = mysql_query($qryReportes)){
 			while($rowReportes = mysql_fetch_array($resReportes)){
-				$estadoreporte = $rowReportes["estado"];
+				$estadoreporte = $rowReportes["estadoempresa"];
 				$noreporte 	   = $rowReportes["noreporte"];
 				$cvereporte 	=$rowReportes["cvereporte"];
 				switch ($estadoreporte) {
 					case '0':
-						$estadoreporte = "Pendiente"; 
+						$estadoreporte = "Sin revisar"; 
 						break;
 					case '1':
-					 	$estadoreporte = "Aceptado";
-					 	break;
-					 case '2':
-					 	$estadoreporte = "Rechazado";
+					 	$estadoreporte = "Revisado";
 					 	break;
 				}
 				switch ($noreporte) {
@@ -789,7 +785,7 @@ function filtrarAlumnosSeg(){
 		if($row["estado"]==1){
 			$tabla		.= "<td>"."CAPTURA"."</td>";
 		}else{
-			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
+			$tabla		.="<td>"."FINALIZADO"."</td>";
 		}
 		$tabla		.= "</tr>";
 	}
@@ -873,24 +869,21 @@ function mostrarAlumnosSeg(){
 		$tabla		.= "<td>".$row1["ALUNOM"]." ".$row1["ALUAPP"]." ".$row1["ALUAPM"]."</td>";
 		$tabla 		.= "<td>".$nombrePrograma."</td>";
 		$conexionLocal 	= conexionLocal();
-		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
-		$reporteUno 	="<td><a href='#'>Crear</a></td>";
-		$reporteDos 	="<td><a href='#'>Crear</a></td>";
-		$reporteTres 	="<td><a href='#'>Crear</a></td>";
+		$qryReportes 	= sprintf("SELECT estadoempresa, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
+		$reporteUno 	="<td>Pendiente</td>";
+		$reporteDos 	="<td>Pendiente</td>";
+		$reporteTres 	="<td>Pendiente</td>";
 		if($resReportes = mysql_query($qryReportes)){
 			while($rowReportes = mysql_fetch_array($resReportes)){
-				$estadoreporte = $rowReportes["estado"];
+				$estadoreporte = $rowReportes["estadoempresa"];
 				$noreporte 	   = $rowReportes["noreporte"];
 				$cvereporte 	=$rowReportes["cvereporte"];
 				switch ($estadoreporte) {
 					case '0':
-						$estadoreporte = "Pendiente"; 
+						$estadoreporte = "Sin revisar"; 
 						break;
 					case '1':
-					 	$estadoreporte = "Aceptado";
-					 	break;
-					 case '2':
-					 	$estadoreporte = "Rechazado";
+					 	$estadoreporte = "Revisado";
 					 	break;
 				}
 				switch ($noreporte) {
@@ -920,7 +913,7 @@ function mostrarAlumnosSeg(){
 		if($row["estado"]==1){
 			$tabla		.= "<td>"."CAPTURA"."</td>";
 		}else{
-			$tabla		.="<td><a>"."FINALIZADO"."</a></td>";
+			$tabla		.="<td>"."FINALIZADO"."</td>";
 		}
 		$tabla		.= "</tr>";
 	}

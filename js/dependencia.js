@@ -829,8 +829,7 @@ var vacanteenPrograma	=	function(){
 				}
 
 			});
-		mostrarAlumnosSeg();
-	}
+		mostrarAlumnosSeg();	}
 
 $("#btnCambioClaveDep").on("click",cambioClave);
 $("#btnMisDatosDep").on("click",mostrarMisDatos);
