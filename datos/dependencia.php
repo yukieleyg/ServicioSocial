@@ -743,9 +743,9 @@ function filtrarAlumnosSeg(){
 		$tabla 		.= "<td>".$nombrePrograma."</td>";
 		$conexionLocal 	= conexionLocal();
 		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
-		$reporteUno 	="<td><a href=''>Crear</a></td>";
-		$reporteDos 	="<td><a href=''>Crear</a></td>";
-		$reporteTres 	="<td><a href=''>Crear</a></td>";
+		$reporteUno 	="<td><a href='#'>Crear</a></td>";
+		$reporteDos 	="<td><a href='#'>Crear</a></td>";
+		$reporteTres 	="<td><a href='#'>Crear</a></td>";
 		if($resReportes = mysql_query($qryReportes)){
 			while($rowReportes = mysql_fetch_array($resReportes)){
 				$estadoreporte = $rowReportes["estado"];
@@ -764,13 +764,22 @@ function filtrarAlumnosSeg(){
 				}
 				switch ($noreporte) {
 					case 1:
-						$reporteUno = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						$reporteUno = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
+						if($estadoreporte=="Pendiente"){
+							$reporteUno = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
+						}
 						break;
 					case 2:
-						$reporteDos = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						$reporteDos = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
+						if($estadoreporte=="Pendiente"){
+							$reporteDos = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
+						}
 						break;
 					case 3:
-						$reporteTres = "<td><a value=".$cvereporte."onclick='detallesCalifRep()'>".$estadoreporte."</a></td>";
+						$reporteTres = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
+						if($estadoreporte=="Pendiente"){
+							$reporteTres = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
+						}
 						break;
 				}
 
@@ -865,9 +874,9 @@ function mostrarAlumnosSeg(){
 		$tabla 		.= "<td>".$nombrePrograma."</td>";
 		$conexionLocal 	= conexionLocal();
 		$qryReportes 	= sprintf("SELECT estado, noreporte,cvereporte FROM reportes WHERE cveexpediente_1 = %s",$cveexpediente);
-		$reporteUno 	="<td><a href=''>Crear</a></td>";
-		$reporteDos 	="<td><a href=''>Crear</a></td>";
-		$reporteTres 	="<td><a href=''>Crear</a></td>";
+		$reporteUno 	="<td><a href='#'>Crear</a></td>";
+		$reporteDos 	="<td><a href='#'>Crear</a></td>";
+		$reporteTres 	="<td><a href='#'>Crear</a></td>";
 		if($resReportes = mysql_query($qryReportes)){
 			while($rowReportes = mysql_fetch_array($resReportes)){
 				$estadoreporte = $rowReportes["estado"];
@@ -888,7 +897,7 @@ function mostrarAlumnosSeg(){
 					case 1:
 						$reporteUno = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
 						if($estadoreporte=="Pendiente"){
-							$reporteUno = "<td><a id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
+							$reporteUno = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
 					case 2:
