@@ -332,10 +332,11 @@ function filtrarSolicitudesEstado(){
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
 		$cn 		= conexionBD();
-		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE, DCRR.CARNOM FROM DALUMN AS DA 
-			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
-			INNER JOIN DCARRE AS DCRR ON DC.CARCVE = DC.CARCVE
-			WHERE DA.ALUCTR = %s",$cveusuario);
+		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE, DCRR.CARNOM 
+			FROM DALUMN AS DA INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR
+			INNER JOIN DCARRE AS DCRR ON DCRR.CARCVE = DC.CARCVE
+		 	WHERE DA.ALUCTR = %s",$cveusuario);
+		//var_dump($qryvalida);
 		$res		= mysql_query($qryvalida);
 		$row 		= mysql_fetch_array($res);
 		$semestre	= $row["CALNPE"];
@@ -441,11 +442,10 @@ function filtrarSolicitudesProgramas(){
 		$cveprograma = $row0["cveprograma_1"];
 		$cvesolicitud = $row0["cvesolicitud"];
 		$cn 		= conexionBD();
-		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE,DCRR.CARNOM FROM DALUMN AS DA 
-			INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR 
-			INNER JOIN DCARRE as DCRR ON DCRR.CARCVE = DC.CARCVE
-			WHERE DA.ALUCTR = %s
-			",$cveusuario);
+		$qryvalida	= sprintf("SELECT DA.ALUCTR, DA.ALUNOM, DA.ALUAPP, DA.ALUAPM, DC.CARCVE, DC.CALNPE, DCRR.CARNOM 
+			FROM DALUMN AS DA INNER JOIN DCALUM AS DC ON DA.ALUCTR = DC.ALUCTR
+			INNER JOIN DCARRE AS DCRR ON DCRR.CARCVE = DC.CARCVE
+		 	WHERE DA.ALUCTR = %s",$cveusuario);
 		$res		= mysql_query($qryvalida);
 		$row 		= mysql_fetch_array($res);
 		$cvecarrera = $row["CARCVE"];	

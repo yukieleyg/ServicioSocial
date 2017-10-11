@@ -379,6 +379,7 @@ var aceptarSolicitudes = function(){
 					url:"../datos/dependencia.php",
 					data: parametros,
 					success: function(data){
+						$("#loadSolicitudesSeg").attr('style',"display:none");	
 						$("#filtroSolicitudesDependencia").attr('disabled',true);
 						$("#opcionSolicitudesDP").attr('disabled',true);
 						$("#btnClearFiltroSolDP").attr('disabled',false);
