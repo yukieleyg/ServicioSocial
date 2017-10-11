@@ -39,16 +39,18 @@ require('fpdf.php');
 	$calVc1		= $rowR['calVc1']; 
 	$calVc2		= $rowR['calVc2'];
 	$obs		= $rowR['observaciones'];
-	$pdf->Text(70,70,$horas);
+	$numreporte = $rowR['noreporte'];
+	$pdf->Text(70,69,$horas);
+	$pdf->Text(95,72,$numreporte);
 	$pdf->Text(177,95,$calDc1);
 	$pdf->Text(177,102,$calDc2);
 	$pdf->Text(177,109,$calDc3);
 	$pdf->Text(177,116,$calDc4);
 	$pdf->Text(177,123,$calDc5);
 	$pdf->Text(177,130,$calDc6);
-	$pdf->Text(177,137,$calDc7);
-	$pdf->Text(177,144,$calDc8);
-	$pdf->Text(177,151,$calDc9);
+	$pdf->Text(177,136,$calDc7);
+	$pdf->Text(177,143,$calDc8);
+	$pdf->Text(177,150,$calDc9);
 	$pdf->Text(177,157,$calDc10);
 	$pdf->Text(177,163,$calVc1);
 	$pdf->Text(177,170,$calVc2);
@@ -63,6 +65,7 @@ require('fpdf.php');
 	$rowE 		= mysql_fetch_array($resE);
 	$cveusuario	= $rowE["cveusuario_1"];
 	$cveprograma = $rowE["cveprograma_1"];
+	$pdf->Text(150,62,$cveusuario);
 
 	//DATOS DEL PROGRAMA 
 	$qryprograma = sprintf("SELECT * FROM programas WHERE cveprograma = %s",$cveprograma);
@@ -76,40 +79,34 @@ require('fpdf.php');
 
 
 	//HORAS ACUMULADAS
-	$qryvalidaTH	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1 =%s",$expediente);
+	$qryvalidaTH 	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1=%s", $expediente);
+	switch ($numreporte) {
+		case '1':
+		$qryvalidaTH 	= sprintf("SELECT horas AS Total_Horas FROM reportes where noreporte=1");
+			break;
+		case '2':
+		$qryvalidaTH 	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1=%s AND noreporte!=3", $expediente);
+			break;
+		case '3':
+		$qryvalidaTH 	= sprintf("SELECT SUM(horas) AS Total_Horas FROM reportes WHERE cveexpediente_1=%s", $expediente);
+		$pdf->Text(119,72.5,'x');
+			break;
+	}
 	$resTH			= mysql_query($qryvalidaTH);
 	$rowTH 			= mysql_fetch_array($resTH);
 	$Total_Horas 	= $rowTH['Total_Horas'];
-	$pdf->Text(140,70,$Total_Horas);
+	$pdf->Text(140,69,$Total_Horas);
+	
 	
 	//DATOS DEL ALUMNO
 	$cn			= conexionBD();
-	$qryvalidaA	= sprintf("SELECT * FROM DALUMN WHERE ALUCTR = %s",$cveusuario);
+	$qryvalidaA	= sprintf("SELECT CONCAT(A.ALUAPP,' ', A.ALUAPM,' ',A.ALUNOM) AS NOMBRE, D.CARCVE, C.CARNCO FROM DALUMN A INNER JOIN DCALUM D ON A.ALUCTR = D.ALUCTR INNER JOIN DCARRE C ON C.CARCVE = D.CARCVE WHERE A.ALUCTR = %s",$cveusuario);
 	$resA		= mysql_query($qryvalidaA);
 	$rowA 		= mysql_fetch_array($resA);
-	$nombre		=	$rowA["ALUNOM"];
-	$apellidopa	=	$rowA["ALUAPP"];
-	$apellidoma	=	$rowA["ALUAPM"];
+	$nombre		=	$rowA["NOMBRE"];
+	$nombreC	= $rowA["CARNCO"];
 	$pdf->Text(90,58,$nombre);
-	$pdf->Text(115,58,$apellidopa);
-	$pdf->Text(125,58,$apellidoma);
-
-
-	//DATOS CARRERA
-	$qryvalidaCa	= sprintf("SELECT CARCVE,CALNPE FROM DCALUM WHERE ALUCTR = %s",$cveusuario);
-	$resCa		= mysql_query($qryvalidaCa);
-	$rowCa 		= mysql_fetch_array($resCa);
-	$cve 		= $rowCa["CARCVE"];
-	$periodo	= $rowCa["CALNPE"];
-	$pdf->Text(150,62,$cveusuario);
-	$pdf->Text(95,73,$periodo);
-
-
-	$qryvalida	= sprintf("SELECT CARNCO FROM DCARRE WHERE CARCVE = %s",$cve);
-	$res		= mysql_query($qryvalida);
-	$row 		= mysql_fetch_array($res);
-	$nombreC	= $row["CARNCO"];
-	$pdf->Text(55,62,$nombreC);
+	$pdf->Text(55,61.5,$nombreC);
 
 	//DATOS PERIODO
 	$qryvalidaP	= sprintf("SELECT PARFOL1 FROM DPARAM WHERE PARCVE= 'PRDO'");
