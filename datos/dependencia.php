@@ -761,19 +761,19 @@ function filtrarAlumnosSeg(){
 				switch ($noreporte) {
 					case 1:
 						$reporteUno = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteUno = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
 					case 2:
 						$reporteDos = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteDos = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
 					case 3:
 						$reporteTres = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteTres = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
@@ -889,19 +889,19 @@ function mostrarAlumnosSeg(){
 				switch ($noreporte) {
 					case 1:
 						$reporteUno = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteUno = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
 					case 2:
 						$reporteDos = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteDos = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
 					case 3:
 						$reporteTres = "<td><a target=_blank href='../datos/descargarReporte.php?reporte=".$cvereporte."'>".$estadoreporte."</a></td>";
-						if($estadoreporte=="Pendiente"){
+						if($estadoreporte=="Sin revisar"){
 							$reporteTres = "<td><a href='#' id='btnCalificaReporte'><input type='hidden' id='repoActual' value='".$cvereporte."'>".$estadoreporte."</a></td>";
 						}
 						break;
